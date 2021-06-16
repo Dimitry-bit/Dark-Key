@@ -2,20 +2,49 @@ using UnityEngine;
 
 namespace DarkKey.Core
 {
+    [RequireComponent(typeof(InputHandler))]
     public class CamMovement : MonoBehaviour
     {
-        [SerializeField] private Transform cam; 
+        private InputHandler _inputHandler;
+        [SerializeField] private Transform cam;
+        [SerializeField] private Vector3 camOffSet = Vector3.up;
+
+        [Header("Debug")] 
+        [SerializeField] private bool lockCursor;
         
-        private Vector2 _mouseInput;
-        [SerializeField] [Range(1,5)] private float mouseSensitivity;
+#region Unity Methods
+
+        private void Start() => _inputHandler = GetComponent<InputHandler>();
 
         private void Update()
         {
-            _mouseInput.x += Input.GetAxis("Mouse X") * mouseSensitivity;
-            _mouseInput.y += Input.GetAxis("Mouse Y") * mouseSensitivity;
-
-            cam.localRotation = Quaternion.Euler(-_mouseInput.y, _mouseInput.x, 0);
-            transform.localRotation = Quaternion.Euler(0, _mouseInput.x, 0);
+            var mouseInput = _inputHandler.MouseInput;
+            
+            PlayerRotation(mouseInput.x);
+            CamRotation(mouseInput);
+            
+            LockCursor();
         }
+
+#endregion
+
+#region private Methods
+
+        private void PlayerRotation(float mouseX) => transform.localRotation = Quaternion.Euler(0, mouseX, 0);
+
+        private void CamRotation(Vector2 mouseInput)
+        {
+            cam.localRotation = Quaternion.Euler(-mouseInput.y, mouseInput.x, 0);
+            cam.transform.position = transform.position + camOffSet;
+        }
+
+        // Debug Only
+        private void LockCursor()
+        {
+            Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !lockCursor;
+        }
+        
+#endregion
     }
 }
