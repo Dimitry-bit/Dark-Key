@@ -26,6 +26,7 @@ namespace DarkKey.Core
         private void Move(Vector3 inputDirection)
         {
             var moveDirection = new Vector3();
+            
 
             // Horizontal Input
             if (inputDirection.y > 0) moveDirection += transform.forward;
@@ -34,6 +35,8 @@ namespace DarkKey.Core
             // Vertical Input
             if (inputDirection.x > 0) moveDirection += transform.right;
             if (inputDirection.x < 0) moveDirection -= transform.right;
+
+            moveDirection = moveDirection.normalized;
             
             _rb.MovePosition(transform.position + moveDirection * (moveSpeed * Time.deltaTime));
         }
