@@ -6,24 +6,33 @@ namespace DarkKey.Core
     public class CamMovement : MonoBehaviour
     {
         private InputHandler _inputHandler;
+        
         [SerializeField] private Transform cam;
-        [SerializeField] private Vector3 camOffSet = Vector3.up;
+        [SerializeField] private float camMaxRotationAngleY;
+        [SerializeField] private Vector3 camOffSet = Vector3.up * 0.5f;
 
         [Header("Debug")] 
         [SerializeField] private bool lockCursor;
         
 #region Unity Methods
 
-        private void Start() => _inputHandler = GetComponent<InputHandler>();
+        private void Start()
+        {
+            _inputHandler = GetComponent<InputHandler>();
+            _inputHandler.SetMouseClamp(camMaxRotationAngleY);
+
+            if (cam == null) cam = Camera.main.transform;
+        }
 
         private void Update()
         {
-            var mouseInput = _inputHandler.MouseInput;
-            
-            PlayerRotation(mouseInput.x);
-            CamRotation(mouseInput);
-            
             LockCursor();
+        }
+
+        private void FixedUpdate()
+        {
+            CamRotation(_inputHandler.MouseInput);
+            PlayerRotation(_inputHandler.MouseInput.x);
         }
 
 #endregion
