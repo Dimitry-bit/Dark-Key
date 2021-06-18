@@ -28,7 +28,6 @@ namespace DarkKey
             NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
         }
 
-
         private void OnDestroy()
         {
             if (NetworkManager.Singleton == null) return;
@@ -38,7 +37,7 @@ namespace DarkKey
             NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
         }
 
-        private void Update()
+        private void Leave()
         {
             if (NetworkManager.Singleton.IsHost)
             {
@@ -98,12 +97,6 @@ namespace DarkKey
             }
             
             callback(true, null, isApproved, null, null);
-            if (!isApproved)
-            {
-                if (_errorMessageCoroutine != null) StopCoroutine(_errorMessageCoroutine);
-                errorText.text = "Wrong Password.";
-                _errorMessageCoroutine = StartCoroutine(TimedErrorMessage(5f));
-            }
         }
         
         private void HandleClientDisconnect(ulong clientId)
