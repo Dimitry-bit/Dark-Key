@@ -62,3 +62,6 @@ sysinfo.txt
 crashlytics-build.properties
 
 [Aa]ssets/SandboxAssets/
+
+# Rider cache directory
+.idea/
