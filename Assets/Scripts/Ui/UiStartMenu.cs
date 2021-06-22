@@ -10,8 +10,6 @@ namespace DarkKey.Ui
 {
     public class UiStartMenu : NetworkBehaviour
     {
-        private NetPortal _netPortal;
-
         [SerializeField] private GameObject mainPanel;
         [SerializeField] private InputField ipInputField;
         [SerializeField] private InputField passwordInputField;
@@ -23,6 +21,7 @@ namespace DarkKey.Ui
         [Header("Debug")] [SerializeField] private bool debug;
         
         private Coroutine _errorMessageCoroutine;
+        private NetPortal _netPortal;
 
         private void Start()
         {
