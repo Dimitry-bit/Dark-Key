@@ -15,30 +15,32 @@ namespace DarkKey.Ui
         [SerializeField] private GameObject mainPanel;
         [SerializeField] private InputField ipInputField;
         [SerializeField] private InputField passwordInputField;
-        [SerializeField] private Button leaveButton;
         [SerializeField] private Text errorText;
-        
-        [Header("Optional")]
-        [SerializeField] [Tooltip("If left empty it will grab Camera.Main")] private Camera lobbyCam;
 
+        [Header("Optional")] [SerializeField] [Tooltip("If left empty it will grab Camera.Main")]
+        private Camera lobbyCam;
+
+        [Header("Debug")] [SerializeField] private bool debug;
+        
         private Coroutine _errorMessageCoroutine;
 
         private void Start()
         {
             _netPortal = FindObjectOfType<NetPortal>();
-            if (_netPortal == null) Debug.LogError("[UiStartMenu]: NetPortal not found. Please place NetPortal script on an object.");
+            if (_netPortal == null)
+                Log("NetPortal not found. Please place NetPortal script on an object.");
             if (lobbyCam == null) lobbyCam = Camera.main;
-            
-            _netPortal.OnConnection += () => ToggleMenuItems(false);
-            _netPortal.OnDisconnection += () => ToggleMenuItems(true);
+
+            _netPortal.OnConnection += DisableMenu;
+            _netPortal.OnDisconnection += EnableMenu;
         }
 
         private void OnDestroy()
         {
             if (_netPortal == null) return;
-            
-            _netPortal.OnConnection -= () => ToggleMenuItems(false);
-            _netPortal.OnDisconnection -= () => ToggleMenuItems(true);
+
+            _netPortal.OnConnection -= DisableMenu;
+            _netPortal.OnDisconnection -= EnableMenu;
         }
 
         public void HostButton()
@@ -57,14 +59,20 @@ namespace DarkKey.Ui
             _netPortal.Join(ipInputField.text, passwordInputField.text);
         }
 
-        public void LeaveButton() => _netPortal.Leave();
-
-        private void ToggleMenuItems(bool state)
+        private void EnableMenu()
         {
-            lobbyCam.gameObject.SetActive(state);
-            mainPanel.SetActive(state);
-            leaveButton.gameObject.SetActive(!state);
-            NetworkLog.LogInfoServer("ToggleMenuItems is called");
+            lobbyCam.gameObject.SetActive(true);
+            mainPanel.SetActive(true);
+            CursorManager.ShowCursor();
+            Log("EnableMenu Executed");
+        }
+
+        private void DisableMenu()
+        {
+            lobbyCam.gameObject.SetActive(false);
+            mainPanel.SetActive(false);
+            CursorManager.HideCursor();
+            Log("DisableMenu Executed");
         }
 
         private bool IsValidIp()
@@ -85,6 +93,15 @@ namespace DarkKey.Ui
             errorText.gameObject.SetActive(true);
             yield return new WaitForSeconds(waitTime);
             errorText.gameObject.SetActive(false);
+        }
+
+        private void Log(string msg)
+        {
+           if (!debug) return;
+           if (NetworkManager.IsConnectedClient)
+            NetworkLog.LogInfoServer($"[UiStartMenu]: {msg}");
+           else
+               Debug.Log($"[UiPauseMenu]: {msg}");
         }
     }
 }
