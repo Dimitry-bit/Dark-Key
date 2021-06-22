@@ -1,32 +1,37 @@
+using MLAPI;
 using UnityEngine;
 
 namespace DarkKey.Core
 {
     [RequireComponent(typeof(Rigidbody), typeof(InputHandler))]
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerMovement : NetworkBehaviour
     {
         private Rigidbody _rb;
         private InputHandler _inputHandler;
         [SerializeField] private float moveSpeed;
 
-#region Unity Methods
-        
+        #region Unity Methods
+
         private void Start()
         {
+            if (!IsLocalPlayer) return;
             _rb = GetComponent<Rigidbody>();
             _inputHandler = GetComponent<InputHandler>();
         }
 
-        private void FixedUpdate() => Move(_inputHandler.InputVector);
+        private void FixedUpdate()
+        {
+            if (!IsLocalPlayer) return;
+            Move(_inputHandler.MovementInput);
+        }
 
-#endregion
+        #endregion
 
-#region Private Methods
+        #region Private Methods
 
         private void Move(Vector3 inputDirection)
         {
             var moveDirection = new Vector3();
-            
 
             // Horizontal Input
             if (inputDirection.y > 0) moveDirection += transform.forward;
@@ -37,10 +42,10 @@ namespace DarkKey.Core
             if (inputDirection.x < 0) moveDirection -= transform.right;
 
             moveDirection = moveDirection.normalized;
-            
+
             _rb.MovePosition(transform.position + moveDirection * (moveSpeed * Time.deltaTime));
         }
 
-#endregion
+        #endregion
     }
 }
