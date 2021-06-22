@@ -10,30 +10,35 @@ namespace DarkKey.Ui
 {
     public class UiStartMenu : NetworkBehaviour
     {
-        [SerializeField] private NetPortal netPortal;
+        private NetPortal _netPortal;
 
+        [SerializeField] private GameObject mainPanel;
         [SerializeField] private InputField ipInputField;
         [SerializeField] private InputField passwordInputField;
-
-        [SerializeField] private GameObject startPanel;
+        [SerializeField] private Button leaveButton;
         [SerializeField] private Text errorText;
-        [SerializeField] private Button leaveBtn;
-        [SerializeField] private Camera lobbyCam;
+        
+        [Header("Optional")]
+        [SerializeField] [Tooltip("If left empty it will grab Camera.Main")] private Camera lobbyCam;
 
         private Coroutine _errorMessageCoroutine;
 
         private void Start()
         {
-            netPortal.OnConnection += () => ToggleMenuItems(false);
-            netPortal.OnDisconnection += () => ToggleMenuItems(true);
+            _netPortal = FindObjectOfType<NetPortal>();
+            if (_netPortal == null) Debug.LogError("[UiStartMenu]: NetPortal not found. Please place NetPortal script on an object.");
+            if (lobbyCam == null) lobbyCam = Camera.main;
+            
+            _netPortal.OnConnection += () => ToggleMenuItems(false);
+            _netPortal.OnDisconnection += () => ToggleMenuItems(true);
         }
 
         private void OnDestroy()
         {
-            if (netPortal == null) return;
+            if (_netPortal == null) return;
             
-            netPortal.OnConnection -= () => ToggleMenuItems(false);
-            netPortal.OnDisconnection -= () => ToggleMenuItems(true);
+            _netPortal.OnConnection -= () => ToggleMenuItems(false);
+            _netPortal.OnDisconnection -= () => ToggleMenuItems(true);
         }
 
         public void HostButton()
@@ -41,7 +46,7 @@ namespace DarkKey.Ui
             if (string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = "127.0.0.1";
             else if (!IsValidIp()) return;
 
-            netPortal.Host(ipInputField.text, passwordInputField.text);
+            _netPortal.Host(ipInputField.text, passwordInputField.text);
         }
 
         public void JoinButton()
@@ -49,16 +54,16 @@ namespace DarkKey.Ui
             if (string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = "127.0.0.1";
             else if (!IsValidIp()) return;
 
-            netPortal.Join(ipInputField.text, passwordInputField.text);
+            _netPortal.Join(ipInputField.text, passwordInputField.text);
         }
 
-        public void LeaveButton() => netPortal.Leave();
+        public void LeaveButton() => _netPortal.Leave();
 
         private void ToggleMenuItems(bool state)
         {
             lobbyCam.gameObject.SetActive(state);
-            startPanel.SetActive(state);
-            leaveBtn.gameObject.SetActive(!state);
+            mainPanel.SetActive(state);
+            leaveButton.gameObject.SetActive(!state);
             NetworkLog.LogInfoServer("ToggleMenuItems is called");
         }
 
