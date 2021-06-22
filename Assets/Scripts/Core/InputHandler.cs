@@ -1,15 +1,20 @@
-﻿using MLAPI;
+﻿using System;
+using MLAPI;
 using UnityEngine;
 
 namespace DarkKey.Core
 {
     public class InputHandler : NetworkBehaviour
     {
-        public Vector2 MovementInput { get; private set; }
-
-        public Vector2 MouseInput { get; private set; }
-        private float _mouseClampY;
         [SerializeField] [Range(1, 5)] private float mouseSensitivity;
+        private float _horizontalMouseClamp;
+
+        public Vector2 MovementInput { get; private set; }
+        public Vector2 MouseInput { get; private set; }
+
+        public event Action OnInteract;
+        public event Action OnJump;
+        public event Action OnEscape;
 
         #region Unity Methods
 
@@ -18,13 +23,14 @@ namespace DarkKey.Core
             if (!IsLocalPlayer) return;
             GetMovementInput();
             GetMouseInput();
+            GetInteractionInput();
         }
 
         #endregion
 
         #region Public Methods
 
-        public void SetMouseClamp(float clampValue) => _mouseClampY = clampValue;
+        public void SetMouseClamp(float clampValue) => _horizontalMouseClamp = clampValue;
 
         #endregion
 
@@ -43,9 +49,16 @@ namespace DarkKey.Core
             var input = MouseInput;
             input.x += Input.GetAxis("Mouse X") * mouseSensitivity;
             input.y += Input.GetAxis("Mouse Y") * mouseSensitivity;
-            input.y = Mathf.Clamp(input.y, -_mouseClampY, _mouseClampY);
+            input.y = Mathf.Clamp(input.y, -_horizontalMouseClamp, _horizontalMouseClamp);
 
             MouseInput = input;
+        }
+
+        private void GetInteractionInput()
+        {
+            if (Input.GetKeyDown(KeyCode.E)) OnInteract?.Invoke();
+            if (Input.GetKeyDown(KeyCode.Space)) OnJump?.Invoke();
+            if (Input.GetKeyDown(KeyCode.Escape)) OnEscape?.Invoke();
         }
 
         #endregion

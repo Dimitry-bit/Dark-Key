@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/TestScenes/PauseMenu_Test.unity
+    guid: ed99e38d06d8a924eb8e2602eec7c7d8
+  - enabled: 1
     path: Assets/Scenes/TestScenes/Multiplayer_Test.unity
     guid: 8ad760b29c713b545b54df4119312b12
   m_configObjects: {}
