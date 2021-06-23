@@ -21,6 +21,14 @@ namespace DarkKey.Editor
         private Vector2 _scrollPos;
         private bool _showPosition;
 
+        private string _modelFolder;
+        private string _prefabFolder;
+        private string _textureFolder;
+        private string _materialFolder;
+        private string _shaderFolder;
+
+        private Dictionary<string, string> _folderPaths;
+
         [MenuItem("Tools/Asset Cleaner")]
         public static void ShowWindow() => GetWindow<AssetCleaner>("Asset Cleaner");
 
@@ -35,21 +43,39 @@ namespace DarkKey.Editor
             if (!CheckForNull()) return;
             if (!AreValidGameObjects()) return;
 
-            _destinationFolder = EditorGUILayout.TextField("Destination (FullPath)", _destinationFolder);
+            //_destinationFolder = EditorGUILayout.TextField("Destination (FullPath)", _destinationFolder);
 
-            if (!IsValidPath()) return;
+            _modelFolder = EditorGUILayout.TextField("Model Path", _modelFolder);
+            _prefabFolder = EditorGUILayout.TextField("Prefab Path", _prefabFolder);
+            _materialFolder = EditorGUILayout.TextField("Material Path", _materialFolder);
+            _textureFolder = EditorGUILayout.TextField("Texture Path", _textureFolder);
 
-            _assetName = EditorGUILayout.TextField("Asset Folder Name", _assetName);
-            _assetPath = $"{_destinationFolder}/{_assetName}";
+            _folderPaths = new Dictionary<string, string>
+            {
+                {"Model", _modelFolder},
+                {"Prefab", _prefabFolder},
+                {"Material", _materialFolder},
+                {"Texture", _textureFolder}
+            };
 
-            if (string.IsNullOrEmpty(_assetName))
-                _assetPath = $"{_destinationFolder}/{_model.name}";
+            foreach (var folder in _folderPaths)
+            {
+                if (!IsValidPath(folder.Key, folder.Value)) return;
+            }
 
-            EditorGUILayout.HelpBox(_assetPath, MessageType.None, false);
+            // if (!IsValidPath()) return;
+
+            //_assetName = EditorGUILayout.TextField("Asset Folder Name", _assetName);
+            //_assetPath = $"{_destinationFolder}/{_assetName}";
+
+            // if (string.IsNullOrEmpty(_assetName))
+            //     _assetPath = $"{_destinationFolder}/{_model.name}";
+            //
+            // EditorGUILayout.HelpBox(_assetPath, MessageType.None, false);
 
             EditorGUILayout.Space();
 
-            if (!GetRenderer()) return;
+            if (!HasRender()) return;
 
             // Get Model and Prefab paths
             _modelPath = AssetDatabase.GetAssetPath(_model);
@@ -61,8 +87,8 @@ namespace DarkKey.Editor
 
             MoveAllObjectAssets();
         }
-        
-        private bool GetRenderer()
+
+        private bool HasRender()
         {
             if (_prefab.TryGetComponent(out Renderer r))
             {
@@ -147,31 +173,61 @@ namespace DarkKey.Editor
                 AssetDatabase.MoveAsset(path,
                     $"{_destinationFolder}/{assetFolderName}/{newFolderName}/{assetName}{assetExtension}");
         }
+        
+        private void MoveObjectAssets(string oldPath, string newPath)
+        {
+            var assetName = Path.GetFileNameWithoutExtension(oldPath);
+            var assetExtension = Path.GetExtension(oldPath);
 
+            if (AssetDatabase.ValidateMoveAsset(oldPath, $"{newPath}/{assetName}{assetExtension}") == "")
+                AssetDatabase.MoveAsset(oldPath, $"{newPath}/{assetName}{assetExtension}");
+        }
+        
         private void MoveAllObjectAssets()
         {
-            var tmpAssetName = _assetName;
-            if (string.IsNullOrEmpty(_assetName)) tmpAssetName = _model.name;
-
             // Move Model
-            MoveObjectAssets(tmpAssetName, "Models", _modelPath);
+            MoveObjectAssets(_modelPath, _modelFolder);
 
             // Move Prefab
-            MoveObjectAssets(tmpAssetName, "Prefabs", _prefabPath);
+            MoveObjectAssets(_prefabPath, _prefabFolder);
 
             // Move Materials
             foreach (var materialPath in _materialPaths)
             {
-                MoveObjectAssets(tmpAssetName, "Materials", materialPath.Value);
+                MoveObjectAssets(materialPath.Value, _materialFolder);
             }
 
             // Move Textures
             foreach (var texturePath in _texturesPaths)
             {
-                MoveObjectAssets(tmpAssetName, "Textures", texturePath.Value);
+                MoveObjectAssets(texturePath.Value, _textureFolder);
             }
         }
-        
+
+        // private void MoveAllObjectAssets()
+        // {
+        //     var tmpAssetName = _assetName;
+        //     if (string.IsNullOrEmpty(_assetName)) tmpAssetName = _model.name;
+        //
+        //     // Move Model
+        //     MoveObjectAssets(tmpAssetName, "Models", _modelPath);
+        //
+        //     // Move Prefab
+        //     MoveObjectAssets(tmpAssetName, "Prefabs", _prefabPath);
+        //
+        //     // Move Materials
+        //     foreach (var materialPath in _materialPaths)
+        //     {
+        //         MoveObjectAssets(tmpAssetName, "Materials", materialPath.Value);
+        //     }
+        //
+        //     // Move Textures
+        //     foreach (var texturePath in _texturesPaths)
+        //     {
+        //         MoveObjectAssets(tmpAssetName, "Textures", texturePath.Value);
+        //     }
+        // }
+
         private void LogAllInspector()
         {
             // ScrollView
@@ -209,12 +265,12 @@ namespace DarkKey.Editor
             return false;
         }
 
-        private bool IsValidPath()
+        private bool IsValidPath(string type, string path)
         {
-            if (AssetDatabase.IsValidFolder(_destinationFolder))
+            if (AssetDatabase.IsValidFolder(path))
                 return true;
 
-            EditorGUILayout.HelpBox("Invalid DESTINATION PATH.", MessageType.Error);
+            EditorGUILayout.HelpBox($"Invalid {type} PATH.", MessageType.Error);
             return false;
         }
 
