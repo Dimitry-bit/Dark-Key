@@ -62,7 +62,8 @@ namespace DarkKey.Ui
         private void OnDestroy()
         {
             if (_netPortal == null) return;
-
+            if (_inputHandler == null) return;
+            
             _inputHandler.OnEscape -= Menu;
         }
 
@@ -78,13 +79,13 @@ namespace DarkKey.Ui
         public void Disconnect()
         {
             DisableMenu();
-            _netPortal.Leave();
+            _netPortal.Disconnect();
         }
 
         public void Quit()
         {
             DisableMenu();
-            _netPortal.Leave();
+            _netPortal.Disconnect();
             GameManager.QuitGame();
         }
 

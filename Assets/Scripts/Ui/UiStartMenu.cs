@@ -3,17 +3,17 @@ using System.Text.RegularExpressions;
 using DarkKey.Network;
 using MLAPI;
 using MLAPI.Logging;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace DarkKey.Ui
 {
     public class UiStartMenu : NetworkBehaviour
     {
         [SerializeField] private GameObject mainPanel;
-        [SerializeField] private InputField ipInputField;
-        [SerializeField] private InputField passwordInputField;
-        [SerializeField] private Text errorText;
+        [SerializeField] private TMP_InputField ipInputField;
+        [SerializeField] private TMP_InputField passwordInputField;
+        [SerializeField] private TextMeshProUGUI errorText;
 
         [Header("Optional")] [SerializeField] [Tooltip("If left empty it will grab Camera.Main")]
         private Camera lobbyCam;
@@ -42,7 +42,7 @@ namespace DarkKey.Ui
             _netPortal.OnDisconnection -= EnableMenu;
         }
 
-        public void HostButton()
+        public void Host()
         {
             if (string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = "127.0.0.1";
             else if (!IsValidIp()) return;
@@ -50,12 +50,19 @@ namespace DarkKey.Ui
             _netPortal.Host(ipInputField.text, passwordInputField.text);
         }
 
-        public void JoinButton()
+        public void Join()
         {
             if (string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = "127.0.0.1";
             else if (!IsValidIp()) return;
 
             _netPortal.Join(ipInputField.text, passwordInputField.text);
+        }
+
+        public void Quit()
+        {
+            DisableMenu();
+            _netPortal.Disconnect();
+            GameManager.QuitGame();
         }
 
         private void EnableMenu()

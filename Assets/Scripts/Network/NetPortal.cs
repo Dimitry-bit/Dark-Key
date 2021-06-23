@@ -33,7 +33,7 @@ namespace DarkKey.Network
             NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
         }
 
-        public void Leave()
+        public void Disconnect()
         {
             if (NetworkManager.Singleton.IsHost)
             {
