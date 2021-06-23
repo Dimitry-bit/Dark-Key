@@ -2293,7 +2293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e50700d87ec12a14fbe6b700e86a55c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainPanel: {fileID: 7801430994345479204}
+  mainPanel: {fileID: 5353884587523694657}
   ipInputField: {fileID: 8194843449698288530}
   passwordInputField: {fileID: 8220913853670317437}
   errorText: {fileID: 6292735164556452257}
