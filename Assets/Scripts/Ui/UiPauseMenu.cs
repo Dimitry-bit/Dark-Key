@@ -37,6 +37,7 @@ namespace DarkKey.Ui
                 _localClient = client;
                 if (client.PlayerObject == null)
                 {
+                    // Waits 5sec To make sure player has spawned.
                     Invoke(nameof(GetInputHandler), 5);
                 }
                 else
@@ -84,7 +85,7 @@ namespace DarkKey.Ui
         {
             DisableMenu();
             _netPortal.Leave();
-            // TODO : ADD QUIT
+            GameManager.QuitGame();
         }
 
         #endregion
@@ -108,6 +109,7 @@ namespace DarkKey.Ui
             mainPanel.SetActive(true);
             _isHidden = false;
             CursorManager.ShowCursor();
+            _inputHandler.disabledInput = DisableInput.All;
             Log("EnableMenu Executed");
         }
 
@@ -116,6 +118,7 @@ namespace DarkKey.Ui
             mainPanel.SetActive(false);
             _isHidden = true;
             CursorManager.HideCursor();
+            _inputHandler.disabledInput = DisableInput.None;
             Log("Disable Executed");
         }
         
