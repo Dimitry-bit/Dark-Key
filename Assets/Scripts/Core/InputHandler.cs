@@ -17,6 +17,7 @@ namespace DarkKey.Core
         public event Action OnInteract;
         public event Action OnJump;
         public event Action OnEscape;
+        public event Action OnConsole;
         
         #region Unity Methods
 
@@ -40,8 +41,12 @@ namespace DarkKey.Core
 
         private void GetMovementInput()
         {
-            if (disabledInput == DisableInput.Movement || disabledInput == DisableInput.All) return;
-            
+            if (disabledInput == DisableInput.Movement || disabledInput == DisableInput.All)
+            {
+                MovementInput = Vector2.zero;
+                return;
+            }
+
             var x = Input.GetAxisRaw("Horizontal");
             var y = Input.GetAxisRaw("Vertical");
 
@@ -50,8 +55,11 @@ namespace DarkKey.Core
 
         private void GetMouseInput()
         {
-            if (disabledInput == DisableInput.Camera || disabledInput == DisableInput.All) return;
-            
+            if (disabledInput == DisableInput.Camera || disabledInput == DisableInput.All)
+            {
+                return;
+            }
+
             var input = MouseInput;
             input.x += Input.GetAxis("Mouse X") * mouseSensitivity;
             input.y += Input.GetAxis("Mouse Y") * mouseSensitivity;
@@ -63,6 +71,7 @@ namespace DarkKey.Core
         private void GetInteractionInput()
         {
             if (Input.GetKeyDown(KeyCode.Escape)) OnEscape?.Invoke();
+            if (Input.GetKeyDown(KeyCode.BackQuote)) OnConsole?.Invoke();
             
             if (disabledInput != DisableInput.None) return;
             

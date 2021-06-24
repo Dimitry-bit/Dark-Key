@@ -6,6 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/TestScenes/DebugMenu_Test.unity
+    guid: 230db70c03570bb47b2479284ddfbc7d
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/Movement_Test.unity
+    guid: 7cc3ae51b6872d641bfc8647a7f87f69
+  - enabled: 1
     path: Assets/Scenes/TestScenes/Multiplayer_Test.unity
     guid: 8ad760b29c713b545b54df4119312b12
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/PauseMenu_Test.unity
+    guid: ed99e38d06d8a924eb8e2602eec7c7d8
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/1st Level_Test.unity
+    guid: 71c00ed5a7b5f7d4fb9fb6070d6312b9
   m_configObjects: {}
