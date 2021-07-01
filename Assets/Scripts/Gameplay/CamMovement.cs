@@ -27,7 +27,7 @@ namespace DarkKey.Gameplay
 
             if (IsLocalPlayer)
             {
-                _inputHandler = GetComponent<InputHandler>();
+                TryGetComponent(out _inputHandler);
                 _inputHandler.SetMouseClamp(camMaxRotationAngleY);
             }
             else

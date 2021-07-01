@@ -6,7 +6,7 @@ namespace DarkKey.Gameplay
     [RequireComponent(typeof(Rigidbody), typeof(InputHandler))]
     public class PlayerMovement : NetworkBehaviour
     {
-        private Rigidbody _rb;
+        private Rigidbody _rigidbody;
         private InputHandler _inputHandler;
         [SerializeField] private float moveSpeed;
 
@@ -15,8 +15,8 @@ namespace DarkKey.Gameplay
         private void Start()
         {
             if (!IsLocalPlayer) return;
-            _rb = GetComponent<Rigidbody>();
-            _inputHandler = GetComponent<InputHandler>();
+            TryGetComponent(out _rigidbody);
+            TryGetComponent(out _inputHandler);
         }
 
         private void FixedUpdate()
@@ -43,7 +43,7 @@ namespace DarkKey.Gameplay
 
             moveDirection = moveDirection.normalized;
 
-            _rb.MovePosition(transform.position + moveDirection * (moveSpeed * Time.deltaTime));
+            _rigidbody.MovePosition(transform.position + moveDirection * (moveSpeed * Time.deltaTime));
         }
 
         #endregion
