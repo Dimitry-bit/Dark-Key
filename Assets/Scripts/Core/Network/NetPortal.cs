@@ -5,17 +5,19 @@ using MLAPI.Logging;
 using MLAPI.Transports.UNET;
 using UnityEngine;
 
-namespace DarkKey.Network
+namespace DarkKey.Core.Network
 {
     public class NetPortal : NetworkBehaviour
     {
-        private string passwordText;
+        private string _passwordText;
 
         public event Action OnDisconnection;
         public event Action OnConnection;
 
         [Header("Debug Options")] [SerializeField]
         private bool debug;
+
+        #region Unity Methods
 
         private void Start()
         {
@@ -32,6 +34,10 @@ namespace DarkKey.Network
             NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
         }
+
+        #endregion
+
+        #region Public Methods
 
         public void Disconnect()
         {
@@ -51,7 +57,7 @@ namespace DarkKey.Network
 
         public void Host(string ipAddress, string password)
         {
-            passwordText = password;
+            _passwordText = password;
 
             NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
             NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
@@ -65,11 +71,15 @@ namespace DarkKey.Network
             NetworkManager.Singleton.StartClient();
         }
 
+        #endregion
+
+        #region Private Methods
+
         private void ApprovalCheck(byte[] connectionData, ulong clientId,
             NetworkManager.ConnectionApprovedDelegate callback)
         {
             string password = Encoding.ASCII.GetString(connectionData);
-            bool isApproved = password == passwordText;
+            bool isApproved = password == _passwordText;
 
             Log($"{isApproved}");
 
@@ -113,5 +123,7 @@ namespace DarkKey.Network
             if (!debug) return;
             NetworkLog.LogInfoServer($"[GameNM]: {msg}");
         }
+
+        #endregion
     }
 }

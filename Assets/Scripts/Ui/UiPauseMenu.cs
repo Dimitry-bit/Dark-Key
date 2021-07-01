@@ -1,5 +1,6 @@
 using DarkKey.Core;
-using DarkKey.Network;
+using DarkKey.Core.Network;
+using DarkKey.Gameplay;
 using MLAPI;
 using MLAPI.Connection;
 using MLAPI.Logging;
@@ -12,7 +13,7 @@ namespace DarkKey.Ui
     {
         [SerializeField] private GameObject mainPanel;
         [SerializeField] private TextMeshProUGUI pauseText;
-        
+
         [Header("Debug")] [SerializeField] private bool debug;
 
         private InputHandler _inputHandler;
@@ -63,7 +64,7 @@ namespace DarkKey.Ui
         {
             if (_netPortal == null) return;
             if (_inputHandler == null) return;
-            
+
             _inputHandler.OnEscape -= Menu;
         }
 
@@ -122,14 +123,14 @@ namespace DarkKey.Ui
             _inputHandler.disabledInput = DisableInput.None;
             Log("Disable Executed");
         }
-        
+
         private void Log(string msg)
         {
-           if (!debug) return;
-           if (NetworkManager.IsConnectedClient)
-            NetworkLog.LogInfoServer($"[UiStartMenu]: {msg}");
-           else
-               Debug.Log($"[UiPauseMenu]: {msg}");
+            if (!debug) return;
+            if (NetworkManager.IsConnectedClient)
+                NetworkLog.LogInfoServer($"[UiStartMenu]: {msg}");
+            else
+                Debug.Log($"[UiPauseMenu]: {msg}");
         }
 
         #endregion

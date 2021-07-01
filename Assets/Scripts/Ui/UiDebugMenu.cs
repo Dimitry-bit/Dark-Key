@@ -1,5 +1,6 @@
 using DarkKey.Core;
-using DarkKey.Network;
+using DarkKey.Core.Network;
+using DarkKey.Gameplay;
 using MLAPI;
 using MLAPI.Connection;
 using MLAPI.SceneManagement;
@@ -17,12 +18,15 @@ namespace DarkKey.Ui
 
         [Header("Scene Settings")] [SerializeField]
         private TMP_Dropdown sceneDropdown;
+
         private string _newSceneName;
         private bool _hasNewSelectedScene;
-        
+
         private NetworkClient _localClient;
         private NetPortal _netPortal;
         private InputHandler _inputHandler;
+
+        #region Unity Methods
 
         public override void NetworkStart()
         {
@@ -46,7 +50,7 @@ namespace DarkKey.Ui
                 }
             }
         }
-        
+
         private void OnDestroy()
         {
             if (sceneDropdown != null)
@@ -58,21 +62,47 @@ namespace DarkKey.Ui
             if (_inputHandler == null) return;
             _inputHandler.OnConsole -= ToggleConsole;
         }
+
         private void Start()
         {
             sceneDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(sceneDropdown); });
         }
 
-        private void DropdownValueChanged(TMP_Dropdown change)
-        {
-            _newSceneName = sceneDropdown.options[change.value].text;
-            _hasNewSelectedScene = true;
-        }
+        #endregion
+
+        #region Public Methods
 
         public void DebugCheck()
         {
             if (!(debugInputField.text == "Debug" || debugInputField.text == "debug")) return;
             EnableMenu();
+        }
+
+        public void DisableMenu()
+        {
+            mainPanel.SetActive(false);
+            _hasNewSelectedScene = false;
+            CursorManager.HideCursor();
+            _inputHandler.disabledInput = DisableInput.None;
+        }
+
+        public void ApplyChanges()
+        {
+            if (_hasNewSelectedScene)
+            {
+                DisableMenu();
+                NetworkSceneManager.SwitchScene(_newSceneName);
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void DropdownValueChanged(TMP_Dropdown change)
+        {
+            _newSceneName = sceneDropdown.options[change.value].text;
+            _hasNewSelectedScene = true;
         }
 
         private void ToggleConsole()
@@ -99,23 +129,6 @@ namespace DarkKey.Ui
             SetSceneSettingsData();
         }
 
-        public void DisableMenu()
-        {
-            mainPanel.SetActive(false);
-            _hasNewSelectedScene = false;
-            CursorManager.HideCursor();
-            _inputHandler.disabledInput = DisableInput.None;
-        }
-
-        public void ApplyChanges()
-        {
-            if (_hasNewSelectedScene)
-            {
-                DisableMenu();
-                NetworkSceneManager.SwitchScene(_newSceneName);
-            }
-        }
-
         private void SetSceneSettingsData()
         {
             Debug.Log(NetworkManager.Singleton.NetworkConfig.RegisteredScenes);
@@ -123,7 +136,7 @@ namespace DarkKey.Ui
             sceneDropdown.AddOptions(NetworkManager.Singleton.NetworkConfig.RegisteredScenes);
             sceneDropdown.value = SceneManager.GetActiveScene().buildIndex;
         }
-        
+
         private void GetInputHandler()
         {
             if (_localClient == null) return;
@@ -135,5 +148,7 @@ namespace DarkKey.Ui
 
             _inputHandler.OnConsole += ToggleConsole;
         }
+
+        #endregion
     }
 }

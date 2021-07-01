@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Text.RegularExpressions;
-using DarkKey.Network;
+using DarkKey.Core;
+using DarkKey.Core.Network;
 using MLAPI;
 using MLAPI.Logging;
 using TMPro;
@@ -19,9 +20,11 @@ namespace DarkKey.Ui
         private Camera lobbyCam;
 
         [Header("Debug")] [SerializeField] private bool debug;
-        
+
         private Coroutine _errorMessageCoroutine;
         private NetPortal _netPortal;
+
+        #region Unity Methods
 
         private void Start()
         {
@@ -41,6 +44,10 @@ namespace DarkKey.Ui
             _netPortal.OnConnection -= DisableMenu;
             _netPortal.OnDisconnection -= EnableMenu;
         }
+
+        #endregion
+
+        #region Public Methods
 
         public void Host()
         {
@@ -64,6 +71,10 @@ namespace DarkKey.Ui
             _netPortal.Disconnect();
             GameManager.QuitGame();
         }
+
+        #endregion
+
+        #region Private Methods
 
         private void EnableMenu()
         {
@@ -103,11 +114,13 @@ namespace DarkKey.Ui
 
         private void Log(string msg)
         {
-           if (!debug) return;
-           if (NetworkManager.IsConnectedClient)
-            NetworkLog.LogInfoServer($"[UiStartMenu]: {msg}");
-           else
-               Debug.Log($"[UiPauseMenu]: {msg}");
+            if (!debug) return;
+            if (NetworkManager.IsConnectedClient)
+                NetworkLog.LogInfoServer($"[UiStartMenu]: {msg}");
+            else
+                Debug.Log($"[UiPauseMenu]: {msg}");
         }
+
+        #endregion
     }
 }

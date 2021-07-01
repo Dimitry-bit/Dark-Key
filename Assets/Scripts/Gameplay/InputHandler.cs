@@ -2,7 +2,7 @@
 using MLAPI;
 using UnityEngine;
 
-namespace DarkKey.Core
+namespace DarkKey.Gameplay
 {
     public class InputHandler : NetworkBehaviour
     {

@@ -29,6 +29,8 @@ namespace DarkKey.Editor
 
         private Vector2 _scrollPos;
 
+        #region Unity Methods
+
         [MenuItem("Tools/Asset Cleaner")]
         public static void ShowWindow() => GetWindow<AssetCleaner>("Asset Cleaner");
 
@@ -57,6 +59,10 @@ namespace DarkKey.Editor
             DrawLogs();
             DrawButtons();
         }
+
+        #endregion
+
+        #region Main Logic
 
         private void InitializeAssetPaths()
         {
@@ -165,6 +171,10 @@ namespace DarkKey.Editor
             _prefab = null;
         }
 
+        #endregion
+
+        #region GUI
+
         private void DrawGui()
         {
             _model = EditorGUILayout.ObjectField("Model", _model, typeof(GameObject), false) as GameObject;
@@ -178,7 +188,7 @@ namespace DarkKey.Editor
 
                 // Sanitize _destinationFolder
                 _assetNewPath = $"{_destinationFolder.TrimEnd('/')}";
-                
+
                 if (string.IsNullOrEmpty(_assetName))
                 {
                     if (_model != null)
@@ -251,6 +261,10 @@ namespace DarkKey.Editor
             }
         }
 
+        #endregion
+
+        #region Validation Logic
+
         private static bool IsValidPath(string path)
         {
             var pathRegex = new Regex(@"^Assets(/){1}([0-9a-zA-Z-_\s/.]*/?)*/?$");
@@ -282,5 +296,7 @@ namespace DarkKey.Editor
 
             return true;
         }
+
+        #endregion
     }
 }

@@ -1,7 +1,7 @@
-using UnityEngine;
 using MLAPI;
+using UnityEngine;
 
-namespace DarkKey.Core
+namespace DarkKey.Gameplay
 {
     [RequireComponent(typeof(InputHandler))]
     public class CamMovement : NetworkBehaviour
@@ -46,7 +46,7 @@ namespace DarkKey.Core
 
         #endregion
 
-        #region private Methods
+        #region Private Methods
 
         private void PlayerRotation(float mouseX) => transform.localRotation = Quaternion.Euler(0, mouseX, 0);
 
@@ -55,13 +55,6 @@ namespace DarkKey.Core
             var camTransform = _cam.transform;
             camTransform.localRotation = Quaternion.Euler(-mouseY, 0, 0);
             camTransform.position = transform.position + camOffSet;
-        }
-
-        // Debug Only
-        private void LockCursor()
-        {
-            Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
-            Cursor.visible = !lockCursor;
         }
 
         #endregion
