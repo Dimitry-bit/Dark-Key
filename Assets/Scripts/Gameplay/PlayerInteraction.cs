@@ -10,6 +10,7 @@ namespace DarkKey.Gameplay
         [SerializeField] private float interactionMaxDistance = 5;
         [SerializeField] private Camera playerCamera;
         private InputHandler _inputHandler;
+        private Player _playerScript;
 
         #region Unity Methods
 
@@ -17,6 +18,7 @@ namespace DarkKey.Gameplay
         {
             if (!IsLocalPlayer) return;
             TryGetComponent(out _inputHandler);
+            TryGetComponent(out _playerScript);
 
             _inputHandler.OnInteract += SearchForInteractableObject;
         }
@@ -39,7 +41,7 @@ namespace DarkKey.Gameplay
             if (Physics.Raycast(ray, out RaycastHit hitInfo, interactionMaxDistance, interactionMask))
             {
                 hitInfo.transform.TryGetComponent(out IInteractable interactable);
-                interactable.Interact();
+                interactable.Interact(_playerScript);
             }
         }
 
