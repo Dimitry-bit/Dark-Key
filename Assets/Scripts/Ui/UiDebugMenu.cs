@@ -83,7 +83,7 @@ namespace DarkKey.Ui
             mainPanel.SetActive(false);
             _hasNewSelectedScene = false;
             CursorManager.HideCursor();
-            _inputHandler.disabledInput = DisableInput.None;
+            _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
         }
 
         public void ApplyChanges()
@@ -116,7 +116,7 @@ namespace DarkKey.Ui
             {
                 debugPanel.SetActive(true);
                 CursorManager.ShowCursor();
-                _inputHandler.disabledInput = DisableInput.All;
+                _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
             }
         }
 
@@ -125,7 +125,7 @@ namespace DarkKey.Ui
             debugPanel.SetActive(false);
             mainPanel.SetActive(true);
             CursorManager.ShowCursor();
-            _inputHandler.disabledInput = DisableInput.All;
+            _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
             SetSceneSettingsData();
         }
 

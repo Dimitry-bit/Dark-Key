@@ -111,7 +111,7 @@ namespace DarkKey.Ui
             mainPanel.SetActive(true);
             _isHidden = false;
             CursorManager.ShowCursor();
-            _inputHandler.disabledInput = DisableInput.All;
+            _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
             Log("EnableMenu Executed");
         }
 
@@ -120,7 +120,7 @@ namespace DarkKey.Ui
             mainPanel.SetActive(false);
             _isHidden = true;
             CursorManager.HideCursor();
-            _inputHandler.disabledInput = DisableInput.None;
+            _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
             Log("Disable Executed");
         }
 

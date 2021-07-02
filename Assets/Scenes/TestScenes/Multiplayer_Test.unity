@@ -683,6 +683,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Debug Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 4161237069489516222, guid: 858ab873bf1e9874387c07f8c03d8622, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 858ab873bf1e9874387c07f8c03d8622, type: 3}
 --- !u!43 &243640776
@@ -2052,6 +2056,10 @@ PrefabInstance:
     - target: {fileID: 4727987228849020543, guid: 32dae4078ee1b1b43aecde29e7665ef4, type: 3}
       propertyPath: m_Name
       value: Pause Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4727987228849020543, guid: 32dae4078ee1b1b43aecde29e7665ef4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32dae4078ee1b1b43aecde29e7665ef4, type: 3}
