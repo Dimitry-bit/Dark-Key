@@ -2110,7 +2110,7 @@ GameObject:
   - component: {fileID: 4161237069489516165}
   - component: {fileID: 4161237069489516164}
   m_Layer: 5
-  m_Name: Debug Menu
+  m_Name: Ui_Debug_Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

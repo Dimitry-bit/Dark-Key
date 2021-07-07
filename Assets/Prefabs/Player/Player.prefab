@@ -208,7 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35e531913bcd44b9bce98ace29ccd4a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rightHand: {fileID: 9040054142985831940}
+  rightHandSlot: {fileID: 9040054142985831940}
+  itemLaunchForce: 500
 --- !u!1 &2083589168440067038
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,7 +682,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9040054142985831940}
   m_Layer: 0
-  m_Name: Hand
+  m_Name: Right Hand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
