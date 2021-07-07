@@ -39,15 +39,9 @@ namespace DarkKey.Ui
                 out NetworkClient client))
             {
                 _localClient = client;
-                if (client.PlayerObject == null)
-                {
-                    // Waits 5sec To make sure player has spawned.
-                    Invoke(nameof(GetInputHandler), 5);
-                }
-                else
-                {
-                    GetInputHandler();
-                }
+                
+                // Waits 5sec To make sure player has spawned.
+                Invoke(nameof(GetInputHandlerAndAssignEvent), 5);
             }
         }
 
@@ -137,7 +131,7 @@ namespace DarkKey.Ui
             sceneDropdown.value = SceneManager.GetActiveScene().buildIndex;
         }
 
-        private void GetInputHandler()
+        private void GetInputHandlerAndAssignEvent()
         {
             if (_localClient == null) return;
             if (_localClient.PlayerObject == null) return;

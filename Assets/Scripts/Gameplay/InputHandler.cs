@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices.WindowsRuntime;
 using MLAPI;
 using UnityEngine;
 
@@ -22,6 +21,7 @@ namespace DarkKey.Gameplay
         public event Action OnJump;
         public event Action OnEscape;
         public event Action OnConsole;
+        public event Action OnDrop;
 
         public Vector2 MovementInput { get; private set; }
         public Vector2 MouseInput { get; private set; }
@@ -32,7 +32,7 @@ namespace DarkKey.Gameplay
         {
             if (!IsLocalPlayer) return;
 
-            CheckInputState();
+            CheckInputMap();
         }
 
         #endregion
@@ -45,7 +45,7 @@ namespace DarkKey.Gameplay
 
         #region Private Methods
 
-        private void CheckInputState()
+        private void CheckInputMap()
         {
             switch (actionMap)
             {
@@ -94,6 +94,7 @@ namespace DarkKey.Gameplay
         private void GetInteractionInput()
         {
             if (Input.GetKeyDown(KeyCode.E)) OnInteract?.Invoke();
+            if (Input.GetKeyDown(KeyCode.G)) OnDrop?.Invoke();
         }
 
         private void GetUiInput()

@@ -1,4 +1,4 @@
-﻿namespace DarkKey.Gameplay
+﻿namespace DarkKey.Gameplay.Interfaces
 {
     public interface IInteractable
     {

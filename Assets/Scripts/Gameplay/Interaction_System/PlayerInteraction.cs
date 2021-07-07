@@ -1,4 +1,5 @@
-﻿using MLAPI;
+﻿using DarkKey.Gameplay.Interfaces;
+using MLAPI;
 using UnityEngine;
 
 namespace DarkKey.Gameplay
@@ -20,29 +21,28 @@ namespace DarkKey.Gameplay
             TryGetComponent(out _inputHandler);
             TryGetComponent(out _playerScript);
 
-            _inputHandler.OnInteract += SearchForInteractableObject;
+            _inputHandler.OnInteract += SearchForInteractableObjectAndInteract;
         }
 
         private void OnDestroy()
         {
             if (_inputHandler == null) return;
-            _inputHandler.OnInteract -= SearchForInteractableObject;
+            _inputHandler.OnInteract -= SearchForInteractableObjectAndInteract;
         }
 
         #endregion
 
         #region Private Methods
 
-        private void SearchForInteractableObject()
+        private void SearchForInteractableObjectAndInteract()
         {
             var camTransform = playerCamera.transform;
             var ray = new Ray(camTransform.position, camTransform.forward);
 
-            if (Physics.Raycast(ray, out RaycastHit hitInfo, interactionMaxDistance, interactionMask))
-            {
-                hitInfo.transform.TryGetComponent(out IInteractable interactable);
-                interactable.Interact(_playerScript);
-            }
+            if (!Physics.Raycast(ray, out RaycastHit hitInfo, interactionMaxDistance, interactionMask)) return;
+
+            hitInfo.transform.TryGetComponent(out IInteractable interactable);
+            interactable.Interact(_playerScript);
         }
 
         #endregion
