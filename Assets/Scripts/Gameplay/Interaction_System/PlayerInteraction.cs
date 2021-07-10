@@ -30,6 +30,16 @@ namespace DarkKey.Gameplay
             _inputHandler.OnInteract -= SearchForInteractableObjectAndInteract;
         }
 
+#if UNITY_EDITOR
+        private void OnDrawGizmos()
+        {
+            var camTransform = playerCamera.transform;
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawRay(camTransform.position, camTransform.forward * interactionMaxDistance);
+        }
+#endif
+
         #endregion
 
         #region Private Methods
