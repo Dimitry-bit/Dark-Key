@@ -95,7 +95,7 @@ namespace DarkKey.Core.Network
         {
             if (clientId == NetworkManager.Singleton.LocalClientId)
             {
-                // EnableMenuItems
+                Log($"[Client] : ({clientId}) disconnected successfully");
                 OnDisconnection?.Invoke();
             }
         }
@@ -104,7 +104,7 @@ namespace DarkKey.Core.Network
         {
             if (clientId == NetworkManager.Singleton.LocalClientId)
             {
-                // DisableMenuItems
+                Log($"[Client] : ({clientId}) connected successfully");
                 OnConnection?.Invoke();
             }
         }
@@ -113,7 +113,7 @@ namespace DarkKey.Core.Network
         {
             if (NetworkManager.Singleton.IsHost)
             {
-                // DisableMenuItems
+                Log($"hosting started successfully");
                 OnConnection?.Invoke();
             }
         }

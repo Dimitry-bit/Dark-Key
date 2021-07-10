@@ -19,11 +19,10 @@ namespace DarkKey.Ui
         private InputHandler _inputHandler;
         private NetPortal _netPortal;
         private bool _isHidden;
-        private NetworkClient _localClient;
 
         #region Unity Methods
 
-        public override void NetworkStart()
+        private void Start()
         {
             _netPortal = FindObjectOfType<NetPortal>();
             if (_netPortal == null)
@@ -31,30 +30,18 @@ namespace DarkKey.Ui
 
             _isHidden = !mainPanel.activeSelf;
 
-            // Get LocalClient GameObject
-            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.LocalClientId,
-                out NetworkClient client))
-            {
-                _localClient = client;
-                if (client.PlayerObject == null)
-                {
-                    // Waits 5sec To make sure player has spawned.
-                    Invoke(nameof(GetInputHandler), 5);
-                }
-                else
-                {
-                    GetInputHandler();
-                }
-            }
+            _netPortal.OnConnection += GetInputHandlerAndAssignEvent;
         }
 
-        private void GetInputHandler()
+        private void GetInputHandlerAndAssignEvent()
         {
-            if (_localClient == null) return;
-            if (_localClient.PlayerObject == null) return;
-            if (!_localClient.PlayerObject.IsSpawned) return;
+            if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.LocalClientId,
+                out NetworkClient client)) return;
 
-            if (_localClient.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
+            if (client.PlayerObject == null) return;
+            if (!client.PlayerObject.IsSpawned) return;
+
+            if (client.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
                 _inputHandler = inputHandler;
 
             _inputHandler.OnEscape += Menu;
@@ -62,10 +49,11 @@ namespace DarkKey.Ui
 
         private void OnDestroy()
         {
-            if (_netPortal == null) return;
-            if (_inputHandler == null) return;
+            if (_netPortal != null)
+                _netPortal.OnConnection -= GetInputHandlerAndAssignEvent;
 
-            _inputHandler.OnEscape -= Menu;
+            if (_inputHandler != null)
+                _inputHandler.OnEscape -= Menu;
         }
 
         #endregion

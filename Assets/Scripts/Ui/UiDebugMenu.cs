@@ -22,44 +22,32 @@ namespace DarkKey.Ui
         private string _newSceneName;
         private bool _hasNewSelectedScene;
 
-        private NetworkClient _localClient;
         private NetPortal _netPortal;
         private InputHandler _inputHandler;
 
         #region Unity Methods
 
-        public override void NetworkStart()
+        private void Start()
         {
+            sceneDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(sceneDropdown); });
+
             _netPortal = FindObjectOfType<NetPortal>();
             if (_netPortal == null)
                 Debug.LogError("[UiPauseMenu]: NetPortal not found. Please place NetPortal script on an object.");
 
-            // Get LocalClient GameObject
-            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.LocalClientId,
-                out NetworkClient client))
-            {
-                _localClient = client;
-                
-                // Waits 5sec To make sure player has spawned.
-                Invoke(nameof(GetInputHandlerAndAssignEvent), 5);
-            }
+            _netPortal.OnConnection += GetInputHandlerAndAssignEvent;
         }
 
         private void OnDestroy()
         {
             if (sceneDropdown != null)
-            {
                 sceneDropdown.onValueChanged.RemoveListener(delegate { DropdownValueChanged(sceneDropdown); });
-            }
 
-            if (_netPortal == null) return;
-            if (_inputHandler == null) return;
-            _inputHandler.OnConsole -= ToggleConsole;
-        }
+            if (_netPortal != null)
+                _netPortal.OnConnection -= GetInputHandlerAndAssignEvent;
 
-        private void Start()
-        {
-            sceneDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(sceneDropdown); });
+            if (_inputHandler != null)
+                _inputHandler.OnConsole -= ToggleConsole;
         }
 
         #endregion
@@ -82,11 +70,10 @@ namespace DarkKey.Ui
 
         public void ApplyChanges()
         {
-            if (_hasNewSelectedScene)
-            {
-                DisableMenu();
-                NetworkSceneManager.SwitchScene(_newSceneName);
-            }
+            if (!_hasNewSelectedScene) return;
+
+            DisableMenu();
+            NetworkSceneManager.SwitchScene(_newSceneName);
         }
 
         #endregion
@@ -101,6 +88,8 @@ namespace DarkKey.Ui
 
         private void ToggleConsole()
         {
+            if (!IsServer) return;
+
             if (debugPanel.activeSelf)
             {
                 debugPanel.SetActive(false);
@@ -133,11 +122,13 @@ namespace DarkKey.Ui
 
         private void GetInputHandlerAndAssignEvent()
         {
-            if (_localClient == null) return;
-            if (_localClient.PlayerObject == null) return;
-            if (!_localClient.PlayerObject.IsSpawned) return;
+            if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.LocalClientId,
+                out NetworkClient client)) return;
 
-            if (_localClient.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
+            if (client.PlayerObject == null) return;
+            if (!client.PlayerObject.IsSpawned) return;
+
+            if (client.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
                 _inputHandler = inputHandler;
 
             _inputHandler.OnConsole += ToggleConsole;
