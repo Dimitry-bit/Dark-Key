@@ -3,7 +3,6 @@ using DarkKey.Core.Network;
 using DarkKey.Gameplay;
 using MLAPI;
 using MLAPI.Connection;
-using MLAPI.Logging;
 using TMPro;
 using UnityEngine;
 
@@ -13,8 +12,6 @@ namespace DarkKey.Ui
     {
         [SerializeField] private GameObject mainPanel;
         [SerializeField] private TextMeshProUGUI pauseText;
-
-        [Header("Debug")] [SerializeField] private bool debug;
 
         private InputHandler _inputHandler;
         private NetPortal _netPortal;
@@ -26,7 +23,8 @@ namespace DarkKey.Ui
         {
             _netPortal = FindObjectOfType<NetPortal>();
             if (_netPortal == null)
-                Debug.LogError("[UiPauseMenu]: NetPortal not found. Please place NetPortal script on an object.");
+                CustomDebugger.Instance.LogError("UiPauseMenu",
+                    "NetPortal not found. Please place NetPortal script on an object.");
 
             _isHidden = !mainPanel.activeSelf;
 
@@ -85,13 +83,9 @@ namespace DarkKey.Ui
         private void Menu()
         {
             if (_isHidden)
-            {
                 EnableMenu();
-            }
             else
-            {
                 DisableMenu();
-            }
         }
 
         private void EnableMenu()
@@ -100,7 +94,7 @@ namespace DarkKey.Ui
             _isHidden = false;
             CursorManager.ShowCursor();
             _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
-            Log("EnableMenu Executed");
+            CustomDebugger.Instance.LogInfo("UiPauseMenu", "EnableMenu Executed");
         }
 
         private void DisableMenu()
@@ -109,16 +103,7 @@ namespace DarkKey.Ui
             _isHidden = true;
             CursorManager.HideCursor();
             _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
-            Log("Disable Executed");
-        }
-
-        private void Log(string msg)
-        {
-            if (!debug) return;
-            if (NetworkManager.IsConnectedClient)
-                NetworkLog.LogInfoServer($"[UiStartMenu]: {msg}");
-            else
-                Debug.Log($"[UiPauseMenu]: {msg}");
+            CustomDebugger.Instance.LogInfo("UiPauseMenu", "Disable Executed");
         }
 
         #endregion

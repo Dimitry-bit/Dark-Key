@@ -33,7 +33,7 @@ namespace DarkKey.Ui
 
             _netPortal = FindObjectOfType<NetPortal>();
             if (_netPortal == null)
-                Debug.LogError("[UiPauseMenu]: NetPortal not found. Please place NetPortal script on an object.");
+                CustomDebugger.Instance.LogError("UiDebugMenu", "NetPortal not found. Please place NetPortal script on an object.");
 
             _netPortal.OnConnection += GetInputHandlerAndAssignEvent;
         }
@@ -114,7 +114,6 @@ namespace DarkKey.Ui
 
         private void SetSceneSettingsData()
         {
-            Debug.Log(NetworkManager.Singleton.NetworkConfig.RegisteredScenes);
             sceneDropdown.ClearOptions();
             sceneDropdown.AddOptions(NetworkManager.Singleton.NetworkConfig.RegisteredScenes);
             sceneDropdown.value = SceneManager.GetActiveScene().buildIndex;

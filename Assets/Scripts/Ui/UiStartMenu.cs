@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using DarkKey.Core;
 using DarkKey.Core.Network;
 using MLAPI;
-using MLAPI.Logging;
 using TMPro;
 using UnityEngine;
 
@@ -16,11 +15,9 @@ namespace DarkKey.Ui
         [SerializeField] private TMP_InputField passwordInputField;
         [SerializeField] private TextMeshProUGUI errorText;
 
-        [Header("Optional")] [SerializeField] [Tooltip("If left empty it will grab Camera.Main")]
-        private Camera lobbyCam;
-
-        [Header("Debug")] [SerializeField] private bool debug;
-
+        [Header("Optional")]
+        [Tooltip("If left empty it will grab Camera.Main")]
+        [SerializeField] private Camera lobbyCam;
         private Coroutine _errorMessageCoroutine;
         private NetPortal _netPortal;
 
@@ -30,7 +27,8 @@ namespace DarkKey.Ui
         {
             _netPortal = FindObjectOfType<NetPortal>();
             if (_netPortal == null)
-                Log("NetPortal not found. Please place NetPortal script on an object.");
+                CustomDebugger.Instance.LogError("UiStartMenu",
+                    "NetPortal not found. Please place NetPortal script on an object.");
             if (lobbyCam == null) lobbyCam = Camera.main;
 
             _netPortal.OnConnection += DisableMenu;
@@ -81,7 +79,7 @@ namespace DarkKey.Ui
             lobbyCam.gameObject.SetActive(true);
             mainPanel.SetActive(true);
             CursorManager.ShowCursor();
-            Log("EnableMenu Executed");
+            CustomDebugger.Instance.LogError("UiStartMenu", "EnableMenu Executed");
         }
 
         private void DisableMenu()
@@ -89,7 +87,7 @@ namespace DarkKey.Ui
             lobbyCam.gameObject.SetActive(false);
             mainPanel.SetActive(false);
             CursorManager.HideCursor();
-            Log("DisableMenu Executed");
+            CustomDebugger.Instance.LogInfo("UiStartMenu", "DisableMenu Executed");
         }
 
         private bool IsValidIp()
@@ -110,15 +108,6 @@ namespace DarkKey.Ui
             errorText.gameObject.SetActive(true);
             yield return new WaitForSeconds(waitTime);
             errorText.gameObject.SetActive(false);
-        }
-
-        private void Log(string msg)
-        {
-            if (!debug) return;
-            if (NetworkManager.IsConnectedClient)
-                NetworkLog.LogInfoServer($"[UiStartMenu]: {msg}");
-            else
-                Debug.Log($"[UiPauseMenu]: {msg}");
         }
 
         #endregion

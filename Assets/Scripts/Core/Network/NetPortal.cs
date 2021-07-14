@@ -1,9 +1,7 @@
 using System;
 using System.Text;
 using MLAPI;
-using MLAPI.Logging;
 using MLAPI.Transports.UNET;
-using UnityEngine;
 
 namespace DarkKey.Core.Network
 {
@@ -11,13 +9,20 @@ namespace DarkKey.Core.Network
     {
         private string _passwordText;
 
+        public static NetPortal Instance { get; private set; }
         public event Action OnDisconnection;
         public event Action OnConnection;
-
-        [Header("Debug Options")] [SerializeField]
-        private bool debug;
+        public event Action OnSceneLoaded;
 
         #region Unity Methods
+
+        private void Awake()
+        {
+            if (Instance == null)
+                Instance = this;
+            else if (Instance != this)
+                Destroy(gameObject);
+        }
 
         private void Start()
         {
@@ -51,7 +56,6 @@ namespace DarkKey.Core.Network
                 NetworkManager.Singleton.StopClient();
             }
 
-            // EnableMenuItems
             OnDisconnection?.Invoke();
         }
 
@@ -81,47 +85,33 @@ namespace DarkKey.Core.Network
             string password = Encoding.ASCII.GetString(connectionData);
             bool isApproved = password == _passwordText;
 
-            Log($"{isApproved}");
-
-            // if (!isApproved)
-            // {
-            //     // TODO: Call UiStartMenu.ErrorLog;
-            // }
-
+            CustomDebugger.Instance.LogInfo($"{isApproved}");
+            
             callback(true, null, isApproved, null, null);
         }
 
         private void HandleClientDisconnect(ulong clientId)
         {
-            if (clientId == NetworkManager.Singleton.LocalClientId)
-            {
-                Log($"[Client] : ({clientId}) disconnected successfully");
-                OnDisconnection?.Invoke();
-            }
+            if (clientId != NetworkManager.Singleton.LocalClientId) return;
+            
+            CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) disconnected successfully");
+            OnDisconnection?.Invoke();
         }
 
         private void HandleClientConnected(ulong clientId)
         {
-            if (clientId == NetworkManager.Singleton.LocalClientId)
-            {
-                Log($"[Client] : ({clientId}) connected successfully");
-                OnConnection?.Invoke();
-            }
+            if (clientId != NetworkManager.Singleton.LocalClientId) return;
+            
+            CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) connected successfully");
+            OnConnection?.Invoke();
         }
 
         private void HandleServerStarted()
         {
-            if (NetworkManager.Singleton.IsHost)
-            {
-                Log($"hosting started successfully");
-                OnConnection?.Invoke();
-            }
-        }
-
-        private void Log(string msg)
-        {
-            if (!debug) return;
-            NetworkLog.LogInfoServer($"[GameNM]: {msg}");
+            if (!NetworkManager.Singleton.IsHost) return;
+            
+            CustomDebugger.Instance.LogInfo("NetPortal", $"hosting started successfully");
+            OnConnection?.Invoke();
         }
 
         #endregion
