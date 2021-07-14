@@ -3,7 +3,6 @@ using DarkKey.Core.Network;
 using DarkKey.Gameplay;
 using MLAPI;
 using MLAPI.Connection;
-using TMPro;
 using UnityEngine;
 
 namespace DarkKey.Ui
@@ -11,24 +10,16 @@ namespace DarkKey.Ui
     public class UiPauseMenu : NetworkBehaviour
     {
         [SerializeField] private GameObject mainPanel;
-        [SerializeField] private TextMeshProUGUI pauseText;
 
         private InputHandler _inputHandler;
-        private NetPortal _netPortal;
         private bool _isHidden;
 
         #region Unity Methods
 
         private void Start()
         {
-            _netPortal = FindObjectOfType<NetPortal>();
-            if (_netPortal == null)
-                CustomDebugger.Instance.LogError("UiPauseMenu",
-                    "NetPortal not found. Please place NetPortal script on an object.");
-
             _isHidden = !mainPanel.activeSelf;
-
-            _netPortal.OnConnection += GetInputHandlerAndAssignEvent;
+            NetPortal.Instance.OnConnection += GetInputHandlerAndAssignEvent;
         }
 
         private void GetInputHandlerAndAssignEvent()
@@ -47,8 +38,8 @@ namespace DarkKey.Ui
 
         private void OnDestroy()
         {
-            if (_netPortal != null)
-                _netPortal.OnConnection -= GetInputHandlerAndAssignEvent;
+            if (NetPortal.Instance != null)
+                NetPortal.Instance.OnConnection -= GetInputHandlerAndAssignEvent;
 
             if (_inputHandler != null)
                 _inputHandler.OnEscape -= Menu;
@@ -66,13 +57,13 @@ namespace DarkKey.Ui
         public void Disconnect()
         {
             DisableMenu();
-            _netPortal.Disconnect();
+            NetPortal.Instance.Disconnect();
         }
 
         public void Quit()
         {
             DisableMenu();
-            _netPortal.Disconnect();
+            NetPortal.Instance.Disconnect();
             GameManager.QuitGame();
         }
 

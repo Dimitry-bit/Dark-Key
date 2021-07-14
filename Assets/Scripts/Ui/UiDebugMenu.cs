@@ -21,8 +21,6 @@ namespace DarkKey.Ui
 
         private string _newSceneName;
         private bool _hasNewSelectedScene;
-
-        private NetPortal _netPortal;
         private InputHandler _inputHandler;
 
         #region Unity Methods
@@ -30,12 +28,7 @@ namespace DarkKey.Ui
         private void Start()
         {
             sceneDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(sceneDropdown); });
-
-            _netPortal = FindObjectOfType<NetPortal>();
-            if (_netPortal == null)
-                CustomDebugger.Instance.LogError("UiDebugMenu", "NetPortal not found. Please place NetPortal script on an object.");
-
-            _netPortal.OnConnection += GetInputHandlerAndAssignEvent;
+            NetPortal.Instance.OnConnection += GetInputHandlerAndAssignEvent;
         }
 
         private void OnDestroy()
@@ -43,8 +36,8 @@ namespace DarkKey.Ui
             if (sceneDropdown != null)
                 sceneDropdown.onValueChanged.RemoveListener(delegate { DropdownValueChanged(sceneDropdown); });
 
-            if (_netPortal != null)
-                _netPortal.OnConnection -= GetInputHandlerAndAssignEvent;
+            if (NetPortal.Instance != null)
+                NetPortal.Instance.OnConnection -= GetInputHandlerAndAssignEvent;
 
             if (_inputHandler != null)
                 _inputHandler.OnConsole -= ToggleConsole;

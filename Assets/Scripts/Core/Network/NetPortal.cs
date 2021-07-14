@@ -8,8 +8,17 @@ namespace DarkKey.Core.Network
     public class NetPortal : NetworkBehaviour
     {
         private string _passwordText;
+        private static NetPortal _instance;
+        
+        public static NetPortal Instance
+        {
+            get
+            {
+                if (_instance == null) CustomDebugger.Instance.LogError("NetPortal", "NetPortal instance is null");
+                return _instance;
+            }
+        }
 
-        public static NetPortal Instance { get; private set; }
         public event Action OnDisconnection;
         public event Action OnConnection;
         public event Action OnSceneLoaded;
@@ -18,9 +27,9 @@ namespace DarkKey.Core.Network
 
         private void Awake()
         {
-            if (Instance == null)
-                Instance = this;
-            else if (Instance != this)
+            if (_instance == null)
+                _instance = this;
+            else if (_instance != this)
                 Destroy(gameObject);
         }
 
@@ -86,14 +95,14 @@ namespace DarkKey.Core.Network
             bool isApproved = password == _passwordText;
 
             CustomDebugger.Instance.LogInfo($"{isApproved}");
-            
+
             callback(true, null, isApproved, null, null);
         }
 
         private void HandleClientDisconnect(ulong clientId)
         {
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
-            
+
             CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) disconnected successfully");
             OnDisconnection?.Invoke();
         }
@@ -101,7 +110,7 @@ namespace DarkKey.Core.Network
         private void HandleClientConnected(ulong clientId)
         {
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
-            
+
             CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) connected successfully");
             OnConnection?.Invoke();
         }
@@ -109,7 +118,7 @@ namespace DarkKey.Core.Network
         private void HandleServerStarted()
         {
             if (!NetworkManager.Singleton.IsHost) return;
-            
+
             CustomDebugger.Instance.LogInfo("NetPortal", $"hosting started successfully");
             OnConnection?.Invoke();
         }

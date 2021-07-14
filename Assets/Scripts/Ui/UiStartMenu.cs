@@ -19,28 +19,23 @@ namespace DarkKey.Ui
         [Tooltip("If left empty it will grab Camera.Main")]
         [SerializeField] private Camera lobbyCam;
         private Coroutine _errorMessageCoroutine;
-        private NetPortal _netPortal;
 
         #region Unity Methods
 
         private void Start()
         {
-            _netPortal = FindObjectOfType<NetPortal>();
-            if (_netPortal == null)
-                CustomDebugger.Instance.LogError("UiStartMenu",
-                    "NetPortal not found. Please place NetPortal script on an object.");
             if (lobbyCam == null) lobbyCam = Camera.main;
 
-            _netPortal.OnConnection += DisableMenu;
-            _netPortal.OnDisconnection += EnableMenu;
+            NetPortal.Instance.OnConnection += DisableMenu;
+            NetPortal.Instance.OnDisconnection += EnableMenu;
         }
 
         private void OnDestroy()
         {
-            if (_netPortal == null) return;
+            if (NetPortal.Instance == null) return;
 
-            _netPortal.OnConnection -= DisableMenu;
-            _netPortal.OnDisconnection -= EnableMenu;
+            NetPortal.Instance.OnConnection -= DisableMenu;
+            NetPortal.Instance.OnDisconnection -= EnableMenu;
         }
 
         #endregion
@@ -52,7 +47,7 @@ namespace DarkKey.Ui
             if (string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = "127.0.0.1";
             else if (!IsValidIp()) return;
 
-            _netPortal.Host(ipInputField.text, passwordInputField.text);
+            NetPortal.Instance.Host(ipInputField.text, passwordInputField.text);
         }
 
         public void Join()
@@ -60,13 +55,13 @@ namespace DarkKey.Ui
             if (string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = "127.0.0.1";
             else if (!IsValidIp()) return;
 
-            _netPortal.Join(ipInputField.text, passwordInputField.text);
+            NetPortal.Instance.Join(ipInputField.text, passwordInputField.text);
         }
 
         public void Quit()
         {
             DisableMenu();
-            _netPortal.Disconnect();
+            NetPortal.Instance.Disconnect();
             GameManager.QuitGame();
         }
 
