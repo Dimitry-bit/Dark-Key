@@ -9,7 +9,7 @@ namespace DarkKey.Core.Network
     {
         private string _passwordText;
         private static NetPortal _instance;
-        
+
         public static NetPortal Instance
         {
             get
@@ -82,6 +82,10 @@ namespace DarkKey.Core.Network
             NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
             NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(password);
             NetworkManager.Singleton.StartClient();
+        }
+
+        public void StartGame()
+        {
         }
 
         #endregion

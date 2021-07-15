@@ -79,9 +79,9 @@ namespace DarkKey.Ui
 
         private void DisableMenu()
         {
-            lobbyCam.gameObject.SetActive(false);
+            // lobbyCam.gameObject.SetActive(false);
             mainPanel.SetActive(false);
-            CursorManager.HideCursor();
+            // CursorManager.HideCursor();
             CustomDebugger.Instance.LogInfo("UiStartMenu", "DisableMenu Executed");
         }
 
