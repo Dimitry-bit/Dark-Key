@@ -1,3 +1,4 @@
+using System;
 using DarkKey.Core;
 using DarkKey.Core.Network;
 using MLAPI;
@@ -28,40 +29,32 @@ namespace DarkKey
         {
             base.NetworkStart();
 
-            NetPortal.Instance.OnConnection += DisableUnusedLobbyUi;
+            NetPortal.Instance.OnConnection += InitInstance;
             NetPortal.Instance.OnConnection += UpdateReadyStatus;
+            NetPortal.Instance.OnDisconnection += RemoveInstanceFromRoomPlayers;
             isReady.OnValueChanged += HandleReadyStatusChanged;
-            isReady.OnValueChanged += HandleNameChanged;
         }
 
         private void OnDestroy()
         {
             if (NetPortal.Instance != null)
             {
-                NetPortal.Instance.OnConnection -= DisableUnusedLobbyUi;
+                NetPortal.Instance.OnConnection -= InitInstance;
                 NetPortal.Instance.OnConnection -= UpdateReadyStatus;
+                NetPortal.Instance.OnDisconnection -= RemoveInstanceFromRoomPlayers;
             }
 
             isReady.OnValueChanged -= HandleReadyStatusChanged;
-            isReady.OnValueChanged -= HandleNameChanged;
         }
 
         #endregion
 
         #region Public Methods
 
-        public void StartGame()
-        {
-            lobbyPanel.SetActive(false);
-            NetPortal.Instance.StartGame();
-        }
-
         public void Ready()
         {
             if (!IsLocalPlayer) return;
-
             isReady.Value = !isReady.Value;
-            UpdateReadyStatus();
         }
 
         public void LeaveGame() => NetPortal.Instance.Disconnect();
@@ -72,61 +65,56 @@ namespace DarkKey
 
         #region Private Methods
 
-        private bool IsAllReady()
-        {
-            foreach (var client in NetworkManager.ConnectedClientsList)
-            {
-                var lobbyObject = client.PlayerObject.GetComponent<LobbyPlayer>();
-                if (!lobbyObject.isReady.Value) return false;
-            }
-
-            return true;
-        }
-
         private void HandleReadyStatusChanged(bool previousValue, bool newValue) => UpdateReadyStatus();
-
-        private void HandleNameChanged(bool previousValue, bool newValue) => UpdateName();
 
         private void UpdateReadyStatus()
         {
-            // if (IsLocalPlayer)
-            // {
-            //     foreach (var client in NetworkManager.ConnectedClientsList)
-            //     {
-            //         var lobbyObject = client.PlayerObject.GetComponent<LobbyPlayer>();
-            //         var panelId = client.PlayerObject.NetworkManager.IsHost ? 0 : 1;
-            //
-            //         var panelText = lobbyObject.isReady.Value ? "Ready" : "Not Ready";
-            //         var color = lobbyObject.isReady.Value ? Color.green : Color.red;
-            //
-            //         readyStatus[panelId].text = panelText;
-            //         readyStatus[panelId].color = color;
-            //     }
-            // }
-
-            if (!IsHost) return;
-            if (!IsAllReady()) return;
-
-            startButton.gameObject.SetActive(true);
-        }
-
-        private void UpdateName()
-        {
-            foreach (var client in NetworkManager.ConnectedClientsList)
+            if (!IsOwner)
             {
-                var lobbyObject = client.PlayerObject.GetComponent<LobbyPlayer>();
-                var panelId = client.PlayerObject.NetworkManager.IsHost ? 0 : 1;
-                var panelText = lobbyObject.NetworkManager.IsHost ? "P_1" : "P_2";
+                foreach (var client in NetPortal.Instance.roomPlayer)
+                {
+                    if (client.IsOwner)
+                    {
+                        client.UpdateReadyStatus();
+                        break;
+                    }
+                }
 
-                playerNames[panelId].text = panelText;
+                return;
+            }
+
+            for (int i = 0; i < playerNames.Length; i++)
+            {
+                playerNames[i].text = "Waiting For Player";
+                readyStatus[i].text = String.Empty;
+            }
+
+            for (int i = 0; i < NetPortal.Instance.roomPlayer.Count; i++)
+            {
+                playerNames[i].text = NetPortal.Instance.roomPlayer[i].IsHost ? "P_1" : "P_2";
+
+                readyStatus[i].text = NetPortal.Instance.roomPlayer[i].isReady.Value ? "Ready" : "Not Ready";
+                readyStatus[i].color = NetPortal.Instance.roomPlayer[i].isReady.Value ? Color.green : Color.red;
             }
         }
 
-        private void DisableUnusedLobbyUi()
+        private void InitInstance()
+        {
+            NetPortal.Instance.AddLobbyPlayer(this);
+
+            if (!IsLocalPlayer) return;
+            lobbyPanel.gameObject.SetActive(true);
+            startButton.gameObject.SetActive(false);
+
+            if (!IsHost) return;
+            startButton.gameObject.SetActive(true);
+        }
+
+        private void RemoveInstanceFromRoomPlayers()
         {
             if (!IsLocalPlayer) return;
-            CustomDebugger.Instance.LogInfo("asss");
-            lobbyPanel.gameObject.SetActive(true);
+            
+            NetPortal.Instance.roomPlayer.Remove(this);
         }
 
         #endregion

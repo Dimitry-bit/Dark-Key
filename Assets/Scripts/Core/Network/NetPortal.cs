@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using MLAPI;
 using MLAPI.Transports.UNET;
@@ -18,6 +19,8 @@ namespace DarkKey.Core.Network
                 return _instance;
             }
         }
+
+        public List<LobbyPlayer> roomPlayer = new List<LobbyPlayer>();
 
         public event Action OnDisconnection;
         public event Action OnConnection;
@@ -84,8 +87,15 @@ namespace DarkKey.Core.Network
             NetworkManager.Singleton.StartClient();
         }
 
-        public void StartGame()
+        public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
         {
+            var playerID = new List<ulong>();
+            
+            foreach (var player in roomPlayer) playerID.Add(player.OwnerClientId);
+
+            if (playerID.Contains(lobbyPlayer.OwnerClientId)) return;
+            
+            roomPlayer.Add(lobbyPlayer);
         }
 
         #endregion
@@ -105,18 +115,18 @@ namespace DarkKey.Core.Network
 
         private void HandleClientDisconnect(ulong clientId)
         {
-            if (clientId != NetworkManager.Singleton.LocalClientId) return;
-
-            CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) disconnected successfully");
             OnDisconnection?.Invoke();
+
+            if (clientId != NetworkManager.Singleton.LocalClientId) return;
+            CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) disconnected successfully");
         }
 
         private void HandleClientConnected(ulong clientId)
         {
-            if (clientId != NetworkManager.Singleton.LocalClientId) return;
-
-            CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) connected successfully");
             OnConnection?.Invoke();
+
+            if (clientId != NetworkManager.Singleton.LocalClientId) return;
+            CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) connected successfully");
         }
 
         private void HandleServerStarted()
