@@ -1,7 +1,6 @@
 using DarkKey.Core;
 using DarkKey.Core.Network;
 using MLAPI;
-using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using TMPro;
 using UnityEngine;
@@ -25,9 +24,12 @@ namespace DarkKey
 
         #region Unity Methods
 
-        private void Start()
+        public override void NetworkStart()
         {
-            NetPortal.Instance.OnConnection += UpdateReadyStatusServerRPC;
+            base.NetworkStart();
+
+            NetPortal.Instance.OnConnection += DisableUnusedLobbyUi;
+            NetPortal.Instance.OnConnection += UpdateReadyStatus;
             isReady.OnValueChanged += HandleReadyStatusChanged;
             isReady.OnValueChanged += HandleNameChanged;
         }
@@ -35,7 +37,10 @@ namespace DarkKey
         private void OnDestroy()
         {
             if (NetPortal.Instance != null)
-                NetPortal.Instance.OnConnection -= UpdateReadyStatusServerRPC;
+            {
+                NetPortal.Instance.OnConnection -= DisableUnusedLobbyUi;
+                NetPortal.Instance.OnConnection -= UpdateReadyStatus;
+            }
 
             isReady.OnValueChanged -= HandleReadyStatusChanged;
             isReady.OnValueChanged -= HandleNameChanged;
@@ -56,6 +61,7 @@ namespace DarkKey
             if (!IsLocalPlayer) return;
 
             isReady.Value = !isReady.Value;
+            UpdateReadyStatus();
         }
 
         public void LeaveGame() => NetPortal.Instance.Disconnect();
@@ -77,34 +83,26 @@ namespace DarkKey
             return true;
         }
 
-        private void HandleReadyStatusChanged(bool previousValue, bool newValue) => UpdateReadyStatusServerRPC();
+        private void HandleReadyStatusChanged(bool previousValue, bool newValue) => UpdateReadyStatus();
 
         private void HandleNameChanged(bool previousValue, bool newValue) => UpdateName();
 
-
-        [ServerRpc(RequireOwnership = false)]
-        private void UpdateReadyStatusServerRPC() => UpdateReadyStatusClientRPC();
-
-        [ClientRpc]
-        private void UpdateReadyStatusClientRPC()
+        private void UpdateReadyStatus()
         {
-            CustomDebugger.Instance.LogInfo("LobbyPlayer", $"[{OwnerClientId}]: Lobby updated");
-            
-            if (!IsLocalPlayer) lobbyPanel.SetActive(false);
-            else
-            {
-                foreach (var client in NetworkManager.ConnectedClientsList)
-                {
-                    var lobbyObject = client.PlayerObject.GetComponent<LobbyPlayer>();
-                    var panelId = client.PlayerObject.NetworkManager.IsHost ? 0 : 1;
-
-                    var panelText = lobbyObject.isReady.Value ? "Ready" : "Not Ready";
-                    var color = lobbyObject.isReady.Value ? Color.green : Color.red;
-
-                    readyStatus[panelId].text = panelText;
-                    readyStatus[panelId].color = color;
-                }
-            }
+            // if (IsLocalPlayer)
+            // {
+            //     foreach (var client in NetworkManager.ConnectedClientsList)
+            //     {
+            //         var lobbyObject = client.PlayerObject.GetComponent<LobbyPlayer>();
+            //         var panelId = client.PlayerObject.NetworkManager.IsHost ? 0 : 1;
+            //
+            //         var panelText = lobbyObject.isReady.Value ? "Ready" : "Not Ready";
+            //         var color = lobbyObject.isReady.Value ? Color.green : Color.red;
+            //
+            //         readyStatus[panelId].text = panelText;
+            //         readyStatus[panelId].color = color;
+            //     }
+            // }
 
             if (!IsHost) return;
             if (!IsAllReady()) return;
@@ -122,6 +120,13 @@ namespace DarkKey
 
                 playerNames[panelId].text = panelText;
             }
+        }
+
+        private void DisableUnusedLobbyUi()
+        {
+            if (!IsLocalPlayer) return;
+            CustomDebugger.Instance.LogInfo("asss");
+            lobbyPanel.gameObject.SetActive(true);
         }
 
         #endregion
