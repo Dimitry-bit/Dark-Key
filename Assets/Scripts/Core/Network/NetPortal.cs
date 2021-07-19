@@ -22,7 +22,7 @@ namespace DarkKey.Core.Network
         {
             get
             {
-                if (_instance == null) CustomDebugger.Instance.LogError("NetPortal", "NetPortal instance is null");
+                if (_instance == null) CustomDebugger.Instance.LogError("NetPortal", "Instance is null");
                 return _instance;
             }
         }
@@ -93,11 +93,11 @@ namespace DarkKey.Core.Network
             OnLocalDisconnection?.Invoke();
         }
 
-        public void Host(string ipAddress, string password)
+        public void Host(string password)
         {
             _passwordText = password;
 
-            NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
+            // NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
             NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
             NetworkManager.Singleton.StartHost();
         }
