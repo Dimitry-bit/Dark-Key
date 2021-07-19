@@ -190,9 +190,9 @@ MonoBehaviour:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 254687796}
     RegisteredScenes:
+    - OfflineScene
     - Multiplayer_Test
     - 1st Level_Test
-    - OfflineScene
     AllowRuntimeSceneChanges: 0
     NetworkPrefabs:
     - Prefab: {fileID: 8513362420426912113, guid: 48b16b030f74dda458e3f9dcbdcd19d5, type: 3}
@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MessageBufferSize: 5120
-  MaxConnections: 5
+  MaxConnections: 2
   MaxSentMessageQueueSize: 128
   ConnectAddress: 127.0.0.1
   ConnectPort: 7777
@@ -275,6 +275,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 724613924}
+  - component: {fileID: 724613925}
   - component: {fileID: 724613923}
   m_Layer: 0
   m_Name: System_CustomDebugger
@@ -312,6 +313,23 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &724613925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724613922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NetworkInstanceId: 0
+  PrefabHash: 313223904893453
+  PrefabHashGenerator: System_CustomDebugger
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
 --- !u!1 &1000268567
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +389,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c691fe569e07284ba669a83be86a6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onlineScene: Multiplayer_Test
+  offlineScene: OfflineScene
+  roomPlayers: []
 --- !u!4 &1365354804
 Transform:
   m_ObjectHideFlags: 0

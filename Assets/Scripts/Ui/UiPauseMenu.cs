@@ -19,7 +19,7 @@ namespace DarkKey.Ui
         private void Start()
         {
             _isHidden = !mainPanel.activeSelf;
-            NetPortal.Instance.OnConnection += GetInputHandlerAndAssignEvent;
+            NetPortal.Instance.OnLocalConnection += GetInputHandlerAndAssignEvent;
         }
 
         private void GetInputHandlerAndAssignEvent()
@@ -39,7 +39,7 @@ namespace DarkKey.Ui
         private void OnDestroy()
         {
             if (NetPortal.Instance != null)
-                NetPortal.Instance.OnConnection -= GetInputHandlerAndAssignEvent;
+                NetPortal.Instance.OnLocalConnection -= GetInputHandlerAndAssignEvent;
 
             if (_inputHandler != null)
                 _inputHandler.OnEscape -= Menu;
