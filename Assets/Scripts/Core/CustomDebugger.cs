@@ -37,7 +37,10 @@ namespace DarkKey.Core
 
             if (isNetworkedDebug)
             {
-                NetworkLog.LogInfoServer($"[{scriptName}]: {msg}");
+                if (NetworkManager == null) return;
+                
+                if (NetworkManager.IsConnectedClient || NetworkManager.IsServer)
+                    NetworkLog.LogInfoServer($"[{scriptName}]: {msg}");
             }
             else
             {
@@ -54,9 +57,16 @@ namespace DarkKey.Core
             }
 
             if (isNetworkedDebug)
-                NetworkLog.LogInfoServer($"{msg}");
+            {
+                if (NetworkManager == null) return;
+                
+                if (NetworkManager.IsConnectedClient || NetworkManager.IsServer)
+                    NetworkLog.LogInfoServer($"{msg}");
+            }
             else
+            {
                 Debug.Log($"[{msg}");
+            }
         }
 
         public void LogWarning(string scriptName, string msg)
@@ -68,9 +78,16 @@ namespace DarkKey.Core
             }
 
             if (isNetworkedDebug)
-                NetworkLog.LogWarningServer($"[{scriptName}]: {msg}");
+            {
+                if (NetworkManager == null) return;
+                
+                if (NetworkManager.IsConnectedClient || NetworkManager.IsServer)
+                    NetworkLog.LogWarningServer($"[{scriptName}]: {msg}");
+            }
             else
+            {
                 Debug.LogWarning($"[{scriptName}]: {msg}");
+            }
         }
 
         public void LogWarning(string msg)
@@ -82,9 +99,16 @@ namespace DarkKey.Core
             }
 
             if (isNetworkedDebug)
-                NetworkLog.LogWarningServer($"{msg}");
+            {
+                if (NetworkManager == null) return;
+                
+                if (NetworkManager.IsConnectedClient || NetworkManager.IsServer)
+                    NetworkLog.LogWarningServer($"{msg}");
+            }
             else
+            {
                 Debug.LogWarning($"[{msg}");
+            }
         }
 
         public void LogError(string scriptName, string msg)
@@ -96,9 +120,16 @@ namespace DarkKey.Core
             }
 
             if (isNetworkedDebug)
-                NetworkLog.LogErrorServer($"[{scriptName}]: {msg}");
+            {
+                if (NetworkManager == null) return;
+                
+                if (NetworkManager.IsConnectedClient || NetworkManager.IsServer)
+                    NetworkLog.LogErrorServer($"[{scriptName}]: {msg}");
+            }
             else
+            {
                 Debug.LogError($"[{scriptName}]: {msg}");
+            }
         }
 
         public void LogError(string msg)
@@ -111,7 +142,10 @@ namespace DarkKey.Core
 
             if (isNetworkedDebug)
             {
-                NetworkLog.LogErrorServer($"{msg}");
+                if (NetworkManager == null) return;
+                
+                if (NetworkManager.IsConnectedClient || NetworkManager.IsServer)
+                    NetworkLog.LogErrorServer($"{msg}");
             }
             else
             {

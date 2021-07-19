@@ -1,13 +1,13 @@
 using System;
-using DarkKey.Core;
 using DarkKey.Core.Network;
 using MLAPI;
+using MLAPI.Messaging;
 using MLAPI.NetworkVariable;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DarkKey
+namespace DarkKey.Core
 {
     public class LobbyPlayer : NetworkBehaviour
     {
@@ -23,26 +23,28 @@ namespace DarkKey
                 WritePermission = NetworkVariablePermission.OwnerOnly
             });
 
+        private GameObject _gameObject;
+        public GameObject gameObject;
+        public event Action OnStart;
+        public GameObject GameObject { get; set; }
+
+
         #region Unity Methods
 
         public override void NetworkStart()
         {
             base.NetworkStart();
 
-            NetPortal.Instance.OnConnection += InitInstance;
-            NetPortal.Instance.OnConnection += UpdateReadyStatus;
-            NetPortal.Instance.OnDisconnection += RemoveInstanceFromRoomPlayers;
+            // TODO: Doing Initialization this way will only sync between the server and the recent client only. (Needs Rework)
+            NetPortal.Instance.OnAnyConnection += InitInstance;
+
             isReady.OnValueChanged += HandleReadyStatusChanged;
         }
 
         private void OnDestroy()
         {
             if (NetPortal.Instance != null)
-            {
-                NetPortal.Instance.OnConnection -= InitInstance;
-                NetPortal.Instance.OnConnection -= UpdateReadyStatus;
-                NetPortal.Instance.OnDisconnection -= RemoveInstanceFromRoomPlayers;
-            }
+                NetPortal.Instance.OnAnyConnection -= InitInstance;
 
             isReady.OnValueChanged -= HandleReadyStatusChanged;
         }
@@ -57,25 +59,61 @@ namespace DarkKey
             isReady.Value = !isReady.Value;
         }
 
-        public void LeaveGame() => NetPortal.Instance.Disconnect();
+        public void LeaveGame()
+        {
+            CustomDebugger.Instance.LogInfo("LobbyPlayer", $"Client({OwnerClientId}) left lobby.");
+            HandleLeaveLobbyServerRpc(OwnerClientId);
+        }
 
-        public void QuitGame() => GameManager.QuitGame();
+        public void QuitGame()
+        {
+            LeaveGame();
+            GameManager.QuitGame();
+        }
 
         #endregion
 
         #region Private Methods
 
-        private void HandleReadyStatusChanged(bool previousValue, bool newValue) => UpdateReadyStatus();
+        private void InitInstance()
+        {
+            NetPortal.Instance.AddLobbyPlayer(this);
 
-        private void UpdateReadyStatus()
+            if (!IsLocalPlayer) return;
+            if (!IsOwner) return;
+
+            lobbyPanel.gameObject.SetActive(true);
+            startButton.gameObject.SetActive(false);
+
+            UpdateLobbyUIServerRpc();
+            InitStartButtonServerRpc();
+
+            CustomDebugger.Instance.LogInfo("LobbyPlayer", "Lobby player initialized.");
+        }
+
+        [ServerRpc]
+        private void InitStartButtonServerRpc()
+        {
+            if (OwnerClientId == NetworkManager.ServerClientId)
+                startButton.gameObject.SetActive(true);
+        }
+
+        [ServerRpc]
+        private void UpdateLobbyUIServerRpc()
+        {
+            UpdateLobbyUIClientRpc();
+        }
+
+        [ClientRpc]
+        private void UpdateLobbyUIClientRpc()
         {
             if (!IsOwner)
             {
-                foreach (var client in NetPortal.Instance.roomPlayer)
+                foreach (var client in NetPortal.Instance.roomPlayers)
                 {
                     if (client.IsOwner)
                     {
-                        client.UpdateReadyStatus();
+                        client.UpdateLobbyUIServerRpc();
                         break;
                     }
                 }
@@ -83,38 +121,69 @@ namespace DarkKey
                 return;
             }
 
+            ResetLobbyUI();
+            AssignPlayersToUI();
+        }
+
+        private void AssignPlayersToUI()
+        {
+            for (int i = 0; i < NetPortal.Instance.roomPlayers.Count; i++)
+            {
+                playerNames[i].text = NetPortal.Instance.roomPlayers[i].OwnerClientId == NetworkManager.ServerClientId
+                    ? "P_1"
+                    : "P_2";
+                playerNames[i].color = Color.black;
+
+                readyStatus[i].text = NetPortal.Instance.roomPlayers[i].isReady.Value ? "Ready" : "Not Ready";
+                readyStatus[i].color = NetPortal.Instance.roomPlayers[i].isReady.Value ? Color.green : Color.red;
+            }
+        }
+
+        private void ResetLobbyUI()
+        {
             for (int i = 0; i < playerNames.Length; i++)
             {
                 playerNames[i].text = "Waiting For Player";
+                playerNames[i].color = Color.white;
+                
                 readyStatus[i].text = String.Empty;
             }
+        }
 
-            for (int i = 0; i < NetPortal.Instance.roomPlayer.Count; i++)
+        private void HandleReadyStatusChanged(bool previousValue, bool newValue)
+        {
+            if (!IsOwner) return;
+            UpdateLobbyUIServerRpc();
+        }
+
+        [ServerRpc]
+        private void HandleLeaveLobbyServerRpc(ulong clientId)
+        {
+            HandleLeaveLobbyClientRpc(clientId);
+            UpdateLobbyUIServerRpc();
+        }
+
+        [ClientRpc]
+        private void HandleLeaveLobbyClientRpc(ulong clientId)
+        {
+            if (OwnerClientId != clientId)
             {
-                playerNames[i].text = NetPortal.Instance.roomPlayer[i].IsHost ? "P_1" : "P_2";
+                foreach (var client in NetPortal.Instance.roomPlayers)
+                {
+                    if (client.OwnerClientId == clientId)
+                    {
+                        client.HandleLeaveLobbyServerRpc(clientId);
+                        break;
+                    }
+                }
 
-                readyStatus[i].text = NetPortal.Instance.roomPlayer[i].isReady.Value ? "Ready" : "Not Ready";
-                readyStatus[i].color = NetPortal.Instance.roomPlayer[i].isReady.Value ? Color.green : Color.red;
+                return;
             }
-        }
 
-        private void InitInstance()
-        {
-            NetPortal.Instance.AddLobbyPlayer(this);
+            NetPortal.Instance.roomPlayers.Remove(this);
 
             if (!IsLocalPlayer) return;
-            lobbyPanel.gameObject.SetActive(true);
-            startButton.gameObject.SetActive(false);
-
-            if (!IsHost) return;
-            startButton.gameObject.SetActive(true);
-        }
-
-        private void RemoveInstanceFromRoomPlayers()
-        {
-            if (!IsLocalPlayer) return;
-            
-            NetPortal.Instance.roomPlayer.Remove(this);
+            NetPortal.Instance.Disconnect();
         }
 
         #endregion

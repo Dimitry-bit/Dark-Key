@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/TestScenes/OfflineScene.unity
+    guid: 1b040fe5b2686bb4096794f8285f6a68
+  - enabled: 1
     path: Assets/Scenes/TestScenes/WhatIsLove_Test.unity
     guid: c1229b3b7b440cf47b44550638e9355d
   m_configObjects: {}

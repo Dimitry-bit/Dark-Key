@@ -26,16 +26,16 @@ namespace DarkKey.Ui
         {
             if (lobbyCam == null) lobbyCam = Camera.main;
 
-            NetPortal.Instance.OnConnection += DisableMenu;
-            NetPortal.Instance.OnDisconnection += EnableMenu;
+            NetPortal.Instance.OnLocalConnection += DisableMenu;
+            // NetPortal.Instance.OnLocalDisconnection += EnableMenu;
         }
 
         private void OnDestroy()
         {
             if (NetPortal.Instance == null) return;
 
-            NetPortal.Instance.OnConnection -= DisableMenu;
-            NetPortal.Instance.OnDisconnection -= EnableMenu;
+            NetPortal.Instance.OnLocalConnection -= DisableMenu;
+            // NetPortal.Instance.OnLocalDisconnection -= EnableMenu;
         }
 
         #endregion
@@ -61,7 +61,7 @@ namespace DarkKey.Ui
         public void Quit()
         {
             DisableMenu();
-            NetPortal.Instance.Disconnect();
+            // NetPortal.Instance.Disconnect();
             GameManager.QuitGame();
         }
 

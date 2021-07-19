@@ -28,7 +28,7 @@ namespace DarkKey.Ui
         private void Start()
         {
             sceneDropdown.onValueChanged.AddListener(delegate { DropdownValueChanged(sceneDropdown); });
-            NetPortal.Instance.OnConnection += GetInputHandlerAndAssignEvent;
+            NetPortal.Instance.OnLocalConnection += GetInputHandlerAndAssignEvent;
         }
 
         private void OnDestroy()
@@ -37,7 +37,7 @@ namespace DarkKey.Ui
                 sceneDropdown.onValueChanged.RemoveListener(delegate { DropdownValueChanged(sceneDropdown); });
 
             if (NetPortal.Instance != null)
-                NetPortal.Instance.OnConnection -= GetInputHandlerAndAssignEvent;
+                NetPortal.Instance.OnLocalConnection -= GetInputHandlerAndAssignEvent;
 
             if (_inputHandler != null)
                 _inputHandler.OnConsole -= ToggleConsole;
