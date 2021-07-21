@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using DarkKey.Core;
+using DarkKey.Core.Debugger;
 using DarkKey.Ui.Pages;
 using UnityEngine;
 
@@ -7,12 +7,14 @@ namespace DarkKey.Ui
 {
     public class PageController : MonoBehaviour
     {
+        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.UI};
+
         private static PageController _instance;
         public static PageController Instance
         {
             get
             {
-                if (_instance == null) CustomDebugger.Instance.LogError("PageController", "Instance is null");
+                if (_instance == null) CustomDebugger.LogError("PageController", "Instance is null", ScriptLogLevel);
                 return _instance;
             }
         }
@@ -44,8 +46,8 @@ namespace DarkKey.Ui
             if (onPage == PageType.None) return;
             if (!PageExists(onPage))
             {
-                CustomDebugger.Instance.LogWarning("PageController",
-                    $"You are trying to turn a page on [{onPage}] that hasn't been registered");
+                CustomDebugger.LogWarning("PageController",
+                    $"You are trying to turn a page on [{onPage}] that hasn't been registered", ScriptLogLevel);
                 return;
             }
 
@@ -58,8 +60,8 @@ namespace DarkKey.Ui
             if (offPage == PageType.None) return;
             if (!PageExists(offPage))
             {
-                CustomDebugger.Instance.LogWarning("PageController",
-                    $"You are trying to turn a page off [{offPage}] that hasn't been registered");
+                CustomDebugger.LogWarning("PageController",
+                    $"You are trying to turn a page off [{offPage}] that hasn't been registered", ScriptLogLevel);
                 return;
             }
 
@@ -78,7 +80,8 @@ namespace DarkKey.Ui
             foreach (var page in menuPages)
             {
                 RegisterPage(page.PageType, page);
-                CustomDebugger.Instance.LogInfo("PageController", $"{page} has been successfully been registered");
+                CustomDebugger.LogInfo("PageController", $"{page} has been successfully been registered",
+                    ScriptLogLevel);
             }
         }
 
@@ -86,8 +89,9 @@ namespace DarkKey.Ui
         {
             if (PageExists(pageType))
             {
-                CustomDebugger.Instance.LogWarning("PageController",
-                    $"You are trying to register a page {pageType} that has already been registered {page}");
+                CustomDebugger.LogWarning("PageController",
+                    $"You are trying to register a page {pageType} that has already been registered {page}",
+                    ScriptLogLevel);
                 return;
             }
 
@@ -98,8 +102,8 @@ namespace DarkKey.Ui
         {
             if (PageExists(type)) return _pages[type];
 
-            CustomDebugger.Instance.LogWarning("PageController",
-                $"You are trying to get a page [{type}] that hasn't been registered");
+            CustomDebugger.LogWarning("PageController",
+                $"You are trying to get a page [{type}] that hasn't been registered", ScriptLogLevel);
             return null;
         }
 

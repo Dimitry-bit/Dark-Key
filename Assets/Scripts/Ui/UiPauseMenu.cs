@@ -1,4 +1,5 @@
 using DarkKey.Core;
+using DarkKey.Core.Debugger;
 using DarkKey.Core.Network;
 using DarkKey.Gameplay;
 using MLAPI;
@@ -9,6 +10,8 @@ namespace DarkKey.Ui
 {
     public class UiPauseMenu : NetworkBehaviour
     {
+        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
+
         [SerializeField] private GameObject mainPanel;
 
         private InputHandler _inputHandler;
@@ -85,7 +88,7 @@ namespace DarkKey.Ui
             _isHidden = false;
             CursorManager.ShowCursor();
             _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
-            CustomDebugger.Instance.LogInfo("UiPauseMenu", "EnableMenu Executed");
+            CustomDebugger.LogInfo("UiPauseMenu", "EnableMenu Executed", ScriptLogLevel);
         }
 
         private void DisableMenu()
@@ -94,7 +97,7 @@ namespace DarkKey.Ui
             _isHidden = true;
             CursorManager.HideCursor();
             _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
-            CustomDebugger.Instance.LogInfo("UiPauseMenu", "Disable Executed");
+            CustomDebugger.LogInfo("UiPauseMenu", "Disable Executed", ScriptLogLevel);
         }
 
         #endregion

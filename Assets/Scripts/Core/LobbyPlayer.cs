@@ -1,4 +1,5 @@
 using System;
+using DarkKey.Core.Debugger;
 using DarkKey.Core.Network;
 using MLAPI;
 using MLAPI.Messaging;
@@ -11,11 +12,14 @@ namespace DarkKey.Core
 {
     public class LobbyPlayer : NetworkBehaviour
     {
+        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Network, DebugLogLevel.Player};
+
         [SerializeField] private GameObject lobbyPanel;
         [SerializeField] private TMP_Text[] playerNames = new TMP_Text[2];
         [SerializeField] private TMP_Text[] readyStatus = new TMP_Text[2];
         [SerializeField] private Button startButton;
 
+        [HideInInspector]
         public NetworkVariableBool isReady = new NetworkVariableBool(
             new NetworkVariableSettings
             {
@@ -24,10 +28,6 @@ namespace DarkKey.Core
             });
 
         private GameObject _gameObject;
-        public GameObject gameObject;
-        public event Action OnStart;
-        public GameObject GameObject { get; set; }
-
 
         #region Unity Methods
 
@@ -61,7 +61,7 @@ namespace DarkKey.Core
 
         public void LeaveGame()
         {
-            CustomDebugger.Instance.LogInfo("LobbyPlayer", $"Client({OwnerClientId}) left lobby.");
+            CustomDebugger.LogInfo("LobbyPlayer", $"Client({OwnerClientId}) left lobby.", ScriptLogLevel);
             HandleLeaveLobbyServerRpc(OwnerClientId);
         }
 
@@ -88,7 +88,7 @@ namespace DarkKey.Core
             UpdateLobbyUIServerRpc();
             InitStartButtonServerRpc();
 
-            CustomDebugger.Instance.LogInfo("LobbyPlayer", "Lobby player initialized.");
+            CustomDebugger.LogInfo("LobbyPlayer", "Lobby player initialized.", ScriptLogLevel);
         }
 
         [ServerRpc]

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using DarkKey.Core.Debugger;
 using MLAPI;
 using MLAPI.SceneManagement;
 using MLAPI.Transports.UNET;
@@ -11,6 +12,10 @@ namespace DarkKey.Core.Network
 {
     public class NetPortal : NetworkBehaviour
     {
+        [Header("Debug")]
+        public DebugLogLevel[] selectedLogs;
+        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
+
         [Header("Scene Settings")]
         [SerializeField] private string onlineScene = "Multiplayer_Test";
         [SerializeField] private string offlineScene = "OfflineScene";
@@ -22,7 +27,8 @@ namespace DarkKey.Core.Network
         {
             get
             {
-                if (_instance == null) CustomDebugger.Instance.LogError("NetPortal", "Instance is null");
+                if (_instance == null)
+                    CustomDebugger.LogCriticalError("NetPortal", "Instance is null");
                 return _instance;
             }
         }
@@ -31,12 +37,8 @@ namespace DarkKey.Core.Network
 
         /// The callback to invoke once a client connects. This callback is only ran on the server and on the local client that connects.
         public event Action OnAnyConnection;
-        /// The callback to invoke once a client connects. This callback is only ran on the local client that connects.
         public event Action OnLocalConnection;
-
-        /// The callback to invoke once a client disconnects. This callback is only ran on the server and on the local client that connects.
         public event Action OnAnyDisconnection;
-        /// The callback to invoke once a client disconnects. This callback is only ran on the local client that connects.
         public event Action OnLocalDisconnection;
 
         #region Unity Methods
@@ -86,7 +88,6 @@ namespace DarkKey.Core.Network
             else if (NetworkManager.Singleton.IsServer)
             {
                 NetworkSceneManager.SwitchScene(offlineScene);
-
                 NetworkManager.Singleton.StopServer();
             }
 
@@ -97,7 +98,6 @@ namespace DarkKey.Core.Network
         {
             _passwordText = password;
 
-            // NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
             NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
             NetworkManager.Singleton.StartHost();
         }
@@ -130,7 +130,7 @@ namespace DarkKey.Core.Network
             string password = Encoding.ASCII.GetString(connectionData);
             bool isApproved = password == _passwordText;
 
-            CustomDebugger.Instance.LogInfo($"{isApproved}");
+            CustomDebugger.LogInfo("NetPortal", $"{isApproved}", ScriptLogLevel);
 
             callback(true, null, isApproved, null, null);
         }
@@ -143,7 +143,7 @@ namespace DarkKey.Core.Network
             
             Disconnect();
 
-            CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) disconnected successfully");
+            CustomDebugger.LogInfo("NetPortal", $"[Client] : ({clientId}) disconnected successfully", ScriptLogLevel);
             OnLocalDisconnection?.Invoke();
         }
 
@@ -153,7 +153,7 @@ namespace DarkKey.Core.Network
 
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
 
-            CustomDebugger.Instance.LogInfo("NetPortal", $"[Client] : ({clientId}) connected successfully");
+            CustomDebugger.LogInfo("NetPortal", $"[Client] : ({clientId}) connected successfully", ScriptLogLevel);
             OnLocalConnection?.Invoke();
         }
 
@@ -163,7 +163,7 @@ namespace DarkKey.Core.Network
 
             if (!NetworkManager.Singleton.IsHost) return;
 
-            CustomDebugger.Instance.LogInfo("NetPortal", $"hosting started successfully");
+            CustomDebugger.LogInfo("NetPortal", $"hosting started successfully", ScriptLogLevel);
             OnLocalConnection?.Invoke();
         }
 
