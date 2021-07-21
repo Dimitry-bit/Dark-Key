@@ -1338,7 +1338,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8513362420426912111}
-        m_TargetAssemblyTypeName: DarkKey.LobbyPlayer, Assembly-CSharp
+        m_TargetAssemblyTypeName: DarkKey.Core.LobbyPlayer, Assembly-CSharp
         m_MethodName: StartGame
         m_Mode: 1
         m_Arguments:

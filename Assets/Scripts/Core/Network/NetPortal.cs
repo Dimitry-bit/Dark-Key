@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DarkKey.Core.Debugger;
 using MLAPI;
@@ -16,13 +17,13 @@ namespace DarkKey.Core.Network
         public DebugLogLevel[] selectedLogs;
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
 
-        [Header("Scene Settings")]
-        [SerializeField] private string onlineScene = "Multiplayer_Test";
         [SerializeField] private string offlineScene = "OfflineScene";
+        
+        [SerializeField] private List<LobbyPlayer> roomPlayers;
+        public List<LobbyPlayer> RoomPlayer => roomPlayers;
 
         private string _passwordText;
         private static NetPortal _instance;
-
         public static NetPortal Instance
         {
             get
@@ -33,9 +34,6 @@ namespace DarkKey.Core.Network
             }
         }
 
-        public List<LobbyPlayer> roomPlayers = new List<LobbyPlayer>();
-
-        /// The callback to invoke once a client connects. This callback is only ran on the server and on the local client that connects.
         public event Action OnAnyConnection;
         public event Action OnLocalConnection;
         public event Action OnAnyDisconnection;
@@ -49,6 +47,8 @@ namespace DarkKey.Core.Network
                 _instance = this;
             else if (_instance != this)
                 Destroy(gameObject);
+
+            DontDestroyOnLoad(this);
         }
 
         private void Start()
@@ -111,12 +111,7 @@ namespace DarkKey.Core.Network
 
         public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
         {
-            var playerID = new List<ulong>();
-
-            foreach (var player in roomPlayers) playerID.Add(player.OwnerClientId);
-
-            if (playerID.Contains(lobbyPlayer.OwnerClientId)) return;
-
+            if (PlayerExists(lobbyPlayer)) return;
             roomPlayers.Add(lobbyPlayer);
         }
 
@@ -165,6 +160,12 @@ namespace DarkKey.Core.Network
 
             CustomDebugger.LogInfo("NetPortal", $"hosting started successfully", ScriptLogLevel);
             OnLocalConnection?.Invoke();
+        }
+
+        private bool PlayerExists(LobbyPlayer lobbyPlayer)
+        {
+            var playerID = roomPlayers.Select(player => player.OwnerClientId).ToList();
+            return playerID.Contains(lobbyPlayer.OwnerClientId);
         }
 
         #endregion

@@ -53,6 +53,12 @@ namespace DarkKey.Core
 
         #region Public Methods
 
+        public void StartGame()
+        {
+            // Todo Validated ability to start game (Check all players are ready)
+            GameManager.Instance.StartGame();
+        }
+
         public void Ready()
         {
             if (!IsLocalPlayer) return;
@@ -109,7 +115,7 @@ namespace DarkKey.Core
         {
             if (!IsOwner)
             {
-                foreach (var client in NetPortal.Instance.roomPlayers)
+                foreach (var client in NetPortal.Instance.RoomPlayer)
                 {
                     if (client.IsOwner)
                     {
@@ -127,15 +133,15 @@ namespace DarkKey.Core
 
         private void AssignPlayersToUI()
         {
-            for (int i = 0; i < NetPortal.Instance.roomPlayers.Count; i++)
+            for (int i = 0; i < NetPortal.Instance.RoomPlayer.Count; i++)
             {
-                playerNames[i].text = NetPortal.Instance.roomPlayers[i].OwnerClientId == NetworkManager.ServerClientId
+                playerNames[i].text = NetPortal.Instance.RoomPlayer[i].OwnerClientId == NetworkManager.ServerClientId
                     ? "P_1"
                     : "P_2";
                 playerNames[i].color = Color.black;
 
-                readyStatus[i].text = NetPortal.Instance.roomPlayers[i].isReady.Value ? "Ready" : "Not Ready";
-                readyStatus[i].color = NetPortal.Instance.roomPlayers[i].isReady.Value ? Color.green : Color.red;
+                readyStatus[i].text = NetPortal.Instance.RoomPlayer[i].isReady.Value ? "Ready" : "Not Ready";
+                readyStatus[i].color = NetPortal.Instance.RoomPlayer[i].isReady.Value ? Color.green : Color.red;
             }
         }
 
@@ -168,7 +174,7 @@ namespace DarkKey.Core
         {
             if (OwnerClientId != clientId)
             {
-                foreach (var client in NetPortal.Instance.roomPlayers)
+                foreach (var client in NetPortal.Instance.RoomPlayer)
                 {
                     if (client.OwnerClientId == clientId)
                     {
@@ -180,7 +186,7 @@ namespace DarkKey.Core
                 return;
             }
 
-            NetPortal.Instance.roomPlayers.Remove(this);
+            NetPortal.Instance.RoomPlayer.Remove(this);
 
             if (!IsLocalPlayer) return;
             NetPortal.Instance.Disconnect();
