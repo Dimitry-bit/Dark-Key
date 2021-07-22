@@ -1,12 +1,11 @@
 ﻿namespace DarkKey.Core.Debugger
 {
+    [System.Flags]
     public enum DebugLogLevel
     {
-        None,
-        Core,
-        Player,
-        UI,
-        Network,
-        All,
+        Core = 1 << 0,
+        Player = 1 << 1,
+        UI = 1 << 2,
+        Network = 1 << 3
     }
 }

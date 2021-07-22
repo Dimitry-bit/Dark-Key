@@ -15,7 +15,7 @@ namespace DarkKey.Core.Network
     public class NetPortal : NetworkBehaviour
     {
         [Header("Debug")]
-        public DebugLogLevel[] selectedLogs;
+        public DebugLogLevel logLevel;
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
 
         [Header("Scene")]

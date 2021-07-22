@@ -542,7 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c691fe569e07284ba669a83be86a6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedLogs: 05000000
+  selectedLogLevel: 0
   offlineScene: OfflineScene
 --- !u!4 &1365354804
 Transform:
