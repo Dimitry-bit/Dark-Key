@@ -23,7 +23,7 @@ namespace DarkKey.Core.Network
 
         [Header("Connection Data")]
         private string _passwordText;
-        public List<LobbyPlayer> lobbyPlayers { get; private set; }
+        public List<LobbyPlayer> LobbyPlayers { get; private set; }
 
         private static NetPortal _instance;
         public static NetPortal Instance
@@ -117,11 +117,11 @@ namespace DarkKey.Core.Network
 
         public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
         {
-            if (lobbyPlayers == null)
-                lobbyPlayers = new List<LobbyPlayer>();
+            if (LobbyPlayers == null)
+                LobbyPlayers = new List<LobbyPlayer>();
 
-            lobbyPlayers.Add(lobbyPlayer);
-            lobbyPlayers = lobbyPlayers.Distinct().ToList();
+            LobbyPlayers.Add(lobbyPlayer);
+            LobbyPlayers = LobbyPlayers.Distinct().ToList();
         }
 
         #endregion
@@ -179,7 +179,7 @@ namespace DarkKey.Core.Network
 
             if (SceneManager.GetActiveScene().name != "Multiplayer_Test") return;
 
-            foreach (var roomPlayer in lobbyPlayers)
+            foreach (var roomPlayer in LobbyPlayers)
             {
                 CustomDebugger.LogInfo("NetPortal", "Player1 Switched Scene", ScriptLogLevel);
                 OnSceneSwitch?.Invoke(roomPlayer.PlayerData);

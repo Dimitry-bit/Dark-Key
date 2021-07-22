@@ -42,7 +42,7 @@ namespace DarkKey.Core
             if (NetPortal.Instance != null)
             {
                 NetPortal.Instance.OnAnyConnection -= InitInstance;
-                NetPortal.Instance.lobbyPlayers.Remove(this);
+                NetPortal.Instance.LobbyPlayers.Remove(this);
             }
 
             isReady.OnValueChanged -= HandleReadyStatusChanged;
@@ -113,7 +113,7 @@ namespace DarkKey.Core
             }
             else
             {
-                NetPortal.Instance.lobbyPlayers.Remove(this);
+                NetPortal.Instance.LobbyPlayers.Remove(this);
 
                 if (!IsLocalPlayer) return;
                 NetPortal.Instance.Disconnect();
@@ -121,7 +121,7 @@ namespace DarkKey.Core
         }
 
         private LobbyPlayer GetOwnedLobbyPlayer(ulong clientId) =>
-            NetPortal.Instance.lobbyPlayers.FirstOrDefault(lobbyPlayer => clientId == lobbyPlayer.OwnerClientId);
+            NetPortal.Instance.LobbyPlayers.FirstOrDefault(lobbyPlayer => clientId == lobbyPlayer.OwnerClientId);
 
         #endregion
     }
