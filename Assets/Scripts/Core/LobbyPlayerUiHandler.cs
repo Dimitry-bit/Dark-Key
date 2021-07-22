@@ -59,19 +59,19 @@ namespace DarkKey.Core
         }
 
         private LobbyPlayer GetOwnedLobbyPlayer() =>
-            NetPortal.Instance.RoomPlayers.FirstOrDefault(client => client.IsOwner);
+            NetPortal.Instance.lobbyPlayers.FirstOrDefault(lobbyPlayer => lobbyPlayer.IsOwner);
 
         private void AssignPlayersToUI()
         {
-            for (int i = 0; i < NetPortal.Instance.RoomPlayers.Count; i++)
+            for (int i = 0; i < NetPortal.Instance.lobbyPlayers.Count; i++)
             {
-                playerNames[i].text = NetPortal.Instance.RoomPlayers[i].OwnerClientId == NetworkManager.ServerClientId
+                playerNames[i].text = NetPortal.Instance.lobbyPlayers[i].OwnerClientId == NetworkManager.ServerClientId
                     ? "P_1"
                     : "P_2";
                 playerNames[i].color = Color.black;
 
-                readyStatus[i].text = NetPortal.Instance.RoomPlayers[i].isReady.Value ? "Ready" : "Not Ready";
-                readyStatus[i].color = NetPortal.Instance.RoomPlayers[i].isReady.Value ? Color.green : Color.red;
+                readyStatus[i].text = NetPortal.Instance.lobbyPlayers[i].isReady.Value ? "Ready" : "Not Ready";
+                readyStatus[i].color = NetPortal.Instance.lobbyPlayers[i].isReady.Value ? Color.green : Color.red;
             }
         }
 
@@ -92,7 +92,7 @@ namespace DarkKey.Core
 
             var isAllReady = true;
 
-            foreach (var roomPlayer in NetPortal.Instance.RoomPlayers)
+            foreach (var roomPlayer in NetPortal.Instance.lobbyPlayers)
             {
                 if (!roomPlayer.isReady.Value)
                     isAllReady = false;
