@@ -2,7 +2,7 @@
 
 namespace DarkKey.Core
 {
-    public class CursorManager : MonoBehaviour
+    public static class CursorManager 
     {
         public static void ShowCursor()
         {
