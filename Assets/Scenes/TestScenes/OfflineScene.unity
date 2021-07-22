@@ -256,7 +256,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MessageBufferSize: 5120
-  MaxConnections: 2
+  MaxConnections: 3
   MaxSentMessageQueueSize: 128
   ConnectAddress: 127.0.0.1
   ConnectPort: 7777
@@ -544,7 +544,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedLogs: 05000000
   offlineScene: OfflineScene
-  roomPlayers: []
 --- !u!4 &1365354804
 Transform:
   m_ObjectHideFlags: 0

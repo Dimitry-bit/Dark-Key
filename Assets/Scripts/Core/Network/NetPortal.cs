@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DarkKey.Core.Debugger;
+using DarkKey.Gameplay;
 using MLAPI;
 using MLAPI.SceneManagement;
 using MLAPI.Transports.UNET;
@@ -17,12 +18,13 @@ namespace DarkKey.Core.Network
         public DebugLogLevel[] selectedLogs;
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
 
+        [Header("Scene")]
         [SerializeField] private string offlineScene = "OfflineScene";
-        
-        [SerializeField] private List<LobbyPlayer> roomPlayers;
-        public List<LobbyPlayer> RoomPlayer => roomPlayers;
 
+        [Header("Connection Data")]
         private string _passwordText;
+        public List<LobbyPlayer> RoomPlayers { get; private set; }
+
         private static NetPortal _instance;
         public static NetPortal Instance
         {
@@ -30,6 +32,7 @@ namespace DarkKey.Core.Network
             {
                 if (_instance == null)
                     CustomDebugger.LogCriticalError("NetPortal", "Instance is null");
+
                 return _instance;
             }
         }
@@ -38,6 +41,7 @@ namespace DarkKey.Core.Network
         public event Action OnLocalConnection;
         public event Action OnAnyDisconnection;
         public event Action OnLocalDisconnection;
+        public event Action<PlayerData> OnSceneSwitch;
 
         #region Unity Methods
 
@@ -56,6 +60,7 @@ namespace DarkKey.Core.Network
             NetworkManager.Singleton.OnServerStarted += HandleServerStarted;
             NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
+            NetworkSceneManager.OnSceneSwitched += HandleSceneSwitched;
         }
 
         private void OnDestroy()
@@ -65,6 +70,7 @@ namespace DarkKey.Core.Network
             NetworkManager.Singleton.OnServerStarted -= HandleServerStarted;
             NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
+            NetworkSceneManager.OnSceneSwitched -= HandleSceneSwitched;
         }
 
         #endregion
@@ -111,8 +117,11 @@ namespace DarkKey.Core.Network
 
         public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
         {
-            if (PlayerExists(lobbyPlayer)) return;
-            roomPlayers.Add(lobbyPlayer);
+            if (RoomPlayers == null)
+                RoomPlayers = new List<LobbyPlayer>();
+
+            RoomPlayers.Add(lobbyPlayer);
+            RoomPlayers = RoomPlayers.Distinct().ToList();
         }
 
         #endregion
@@ -135,7 +144,7 @@ namespace DarkKey.Core.Network
             OnAnyDisconnection?.Invoke();
 
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
-            
+
             Disconnect();
 
             CustomDebugger.LogInfo("NetPortal", $"[Client] : ({clientId}) disconnected successfully", ScriptLogLevel);
@@ -162,10 +171,19 @@ namespace DarkKey.Core.Network
             OnLocalConnection?.Invoke();
         }
 
-        private bool PlayerExists(LobbyPlayer lobbyPlayer)
+        private void HandleSceneSwitched()
         {
-            var playerID = roomPlayers.Select(player => player.OwnerClientId).ToList();
-            return playerID.Contains(lobbyPlayer.OwnerClientId);
+            if (!NetworkManager.Singleton.IsHost) return;
+
+            CustomDebugger.LogInfo("NetPortal", "Switched Scene", ScriptLogLevel);
+
+            if (SceneManager.GetActiveScene().name != "Multiplayer_Test") return;
+
+            foreach (var roomPlayer in RoomPlayers)
+            {
+                CustomDebugger.LogInfo("NetPortal", "Player1 Switched Scene", ScriptLogLevel);
+                OnSceneSwitch?.Invoke(roomPlayer.PlayerData);
+            }
         }
 
         #endregion
