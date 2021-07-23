@@ -36,13 +36,13 @@ namespace DarkKey.Gameplay
 
         #region Private Methods
 
-        private void GiveItemToPlayer(Player player)
+        public void GiveItemToPlayer(Player player)
         {
             player.AssignItemToHand(itemHeld.Value);
             itemHeld.Value = null;
         }
 
-        private void HoldItem(Player player)
+        public void HoldItem(Player player)
         {
             itemHeld.Value = player.ItemInHand.Value;
 

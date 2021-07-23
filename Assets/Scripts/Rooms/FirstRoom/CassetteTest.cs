@@ -6,23 +6,11 @@ using DarkKey.Gameplay.Interfaces;
 
 namespace DarkKey
 {
-    public class Cassette : MonoBehaviour, IInteractable
+    public class CassetteTest : MonoBehaviour, IInteractable
     {
         private CD _cdObject;
         private ItemHolder _itemHolderObject;
         private bool hasCD;
-        void OnCollisionEnter(Collision collidedObject)
-        {
-            if (hasCD) return;
-            _cdObject = collidedObject.gameObject.GetComponent<CD>();
-
-            //Checks if the collided object is a CD
-            if (collidedObject.gameObject.layer == 10)
-            {
-                _cdObject.PlayAudio();
-                hasCD = true;
-            }
-        }
         public virtual void Interact(Player player)
         {
             switch (player.IsHoldingItem())

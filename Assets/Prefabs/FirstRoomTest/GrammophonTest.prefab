@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 7249180811741736009}
   - component: {fileID: 4863523400278169731}
   - component: {fileID: 9005226505244564345}
-  - component: {fileID: 246318272082343672}
+  - component: {fileID: -7389124829287912231}
   m_Layer: 0
-  m_Name: Grammophon
+  m_Name: GrammophonTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -100,7 +100,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &246318272082343672
+--- !u!114 &-7389124829287912231
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,6 +109,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6376614058200594774}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7763b33b8cf30e648a222699bd9eab91, type: 3}
+  m_Script: {fileID: 11500000, guid: 50255013562098c4b975dd1e547fe996, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

@@ -109,6 +109,7 @@ GameObject:
   - component: {fileID: 6123161195837537004}
   - component: {fileID: 6615842027952907823}
   - component: {fileID: 4607164954663290858}
+  - component: {fileID: 1996510225546097151}
   m_Layer: 10
   m_Name: CD
   m_TagString: Untagged
@@ -270,6 +271,20 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1996510225546097151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4141592530795606626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aea55e7448c54654af4b07a0e923c7c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inHandOffset: {x: 0, y: 0, z: 0}
+  inItemHolderOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &5665289306262773322
 GameObject:
   m_ObjectHideFlags: 0
