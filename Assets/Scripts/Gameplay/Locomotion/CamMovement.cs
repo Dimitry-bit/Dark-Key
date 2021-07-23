@@ -13,7 +13,7 @@ namespace DarkKey.Gameplay.Locomotion
         [SerializeField] private float camMaxRotationAngleY;
         [SerializeField] private Vector3 camOffSet = Vector3.up * 0.5f;
         
-        private Camera _cam;
+        public Camera _cam;
         private InputHandler _inputHandler;
 
         #region Unity Methods
@@ -22,17 +22,22 @@ namespace DarkKey.Gameplay.Locomotion
         {
             if (!IsLocalPlayer) return;
 
-            _cam = GetComponentInChildren<Camera>();
+            // _cam = GetComponentInChildren<Camera>();
             if (_cam == null)
             {
                 CustomDebugger.LogError("CamMovement", "No camera was found.", ScriptLogLevel);
                 return;
             }
+            else
+            {
+            }
 
             SetVerticalMouseClamp();
             DisableUnusedCameras();
-
+            
             _cam.gameObject.SetActive(true);
+
+
             CursorManager.HideCursor();
         }
 

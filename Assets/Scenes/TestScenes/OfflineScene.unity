@@ -199,6 +199,10 @@ MonoBehaviour:
       PlayerPrefab: 1
     - Prefab: {fileID: 2083589168399573892, guid: 4ecf147e027fe0d41b981a286801ca5b, type: 3}
       PlayerPrefab: 0
+    - Prefab: {fileID: 9071485534842603403, guid: 2863e2600e7dfbf4d8e9df107c6fb7a0, type: 3}
+      PlayerPrefab: 0
+    - Prefab: {fileID: 3848456086965682937, guid: 49dbef637c57bf9459bbc0970043586d, type: 3}
+      PlayerPrefab: 0
     PlayerPrefabHash:
       id: 0
     CreatePlayerPrefab: 1
@@ -542,7 +546,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c691fe569e07284ba669a83be86a6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedLogLevel: 0
+  logLevel: 2147483647
   offlineScene: OfflineScene
 --- !u!4 &1365354804
 Transform:

@@ -1,63 +1,90 @@
+using DarkKey.Core.Debugger;
 using DarkKey.Gameplay.Interfaces;
-using MLAPI;
 using MLAPI.NetworkVariable;
 using UnityEngine;
 
 namespace DarkKey.Gameplay
 {
-    public class ItemHolder : NetworkBehaviour, IInteractable
+    public class ItemHolder : Interactable
     {
-        [SerializeField] private NetworkVariable<Item> itemHeld;
-        private Transform _itemHolderTransform;
+        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core};
 
-        #region Unity Methods
+        [SerializeField] private Transform itemHolderTransform;
+        private readonly NetworkVariable<GenericItem> _itemHeld = new NetworkVariable<GenericItem>(new NetworkVariableSettings
+        {
+            ReadPermission = NetworkVariablePermission.Everyone,
+            WritePermission = NetworkVariablePermission.Everyone
+        });
 
-        private void Start() => _itemHolderTransform = transform;
+        #region Untiy Methods
+
+        private void Start()
+        {
+            var item = GetComponentInChildren<GenericItem>();
+            if (item != null)
+                HoldItem(item);
+        }
 
         #endregion
 
         #region Public Methods
 
-        public void Interact(Player player)
+        public override void OnSelected(PlayerInteraction playerInteraction)
         {
-            if (itemHeld.Value == null)
+            if (IsHoldingItem())
             {
-                if (!player.IsHoldingItem()) return;
-                HoldItem(player);
             }
             else
             {
-                if (player.IsHoldingItem()) return;
-                GiveItemToPlayer(player);
             }
         }
+
+        public override void Interact(PlayerInteraction playerInteraction)
+        {
+            if (IsHoldingItem())
+            {
+                AssignItemToPlayer(playerInteraction);
+            }
+            else
+            {
+                GetItemFormPlayer(playerInteraction);
+            }
+        }
+
+        public bool IsHoldingItem() => _itemHeld.Value;
 
         #endregion
 
         #region Private Methods
 
-        public void GiveItemToPlayer(Player player)
+        private void HoldItem(GenericItem item)
         {
-            player.AssignItemToHand(itemHeld.Value);
-            itemHeld.Value = null;
+            _itemHeld.Value = item;
+
+            var position = itemHolderTransform.position + item.inHandOffset;
+            var rotation = itemHolderTransform.rotation;
+            var itemTransform = _itemHeld.Value.transform;
+
+            itemTransform.SetParent(itemHolderTransform);
+            itemTransform.SetPositionAndRotation(position, rotation);
+
+            _itemHeld.Value.EnableItemForAllPlayersServerRpc();
         }
 
-        public void HoldItem(Player player)
-        {
-            itemHeld.Value = player.ItemInHand.Value;
 
-            player.RemoveItemFromHand();
-            itemHeld.Value.DisablePhysics();
-            TransferItemToItemHolderPosition();
+        private void AssignItemToPlayer(PlayerInteraction playerInteraction)
+        {
+            if (playerInteraction.IsHoldingItem()) return;
+
+            playerInteraction.HoldItem(_itemHeld.Value);
+            _itemHeld.Value = null;
         }
 
-        private void TransferItemToItemHolderPosition()
+        private void GetItemFormPlayer(PlayerInteraction playerInteraction)
         {
-            var position = _itemHolderTransform.position + itemHeld.Value.inItemHolderOffset;
-            var rotation = _itemHolderTransform.rotation;
-            
-            itemHeld.Value.transform.SetParent(_itemHolderTransform);
-            itemHeld.Value.transform.SetPositionAndRotation(position, rotation);
+            if (!playerInteraction.IsHoldingItem()) return;
+
+            HoldItem(playerInteraction.RemoveAndReturnItem());
         }
 
         #endregion

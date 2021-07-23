@@ -1,5 +1,7 @@
-﻿using DarkKey.Gameplay.Interfaces;
+﻿using System;
+using DarkKey.Gameplay.Interfaces;
 using MLAPI;
+using MLAPI.NetworkVariable;
 using UnityEngine;
 
 namespace DarkKey.Gameplay
@@ -10,8 +12,21 @@ namespace DarkKey.Gameplay
         [SerializeField] private LayerMask interactionMask;
         [SerializeField] private float interactionMaxDistance = 5;
         [SerializeField] private Camera playerCamera;
+        [SerializeField] private Transform rightHandSlot;
+        [SerializeField] private float throwForceMultiplier;
+
         private InputHandler _inputHandler;
-        private Player _playerScript;
+        private Interactable _selectedObject;
+
+        private readonly NetworkVariable<GenericItem> _itemHeld = new NetworkVariable<GenericItem>(new NetworkVariableSettings
+        {
+            ReadPermission = NetworkVariablePermission.Everyone, 
+            WritePermission = NetworkVariablePermission.OwnerOnly
+        });
+
+        public event Action OnInteractableSelected;
+        public event Action OnInteractableDeselected;
+
 
         #region Unity Methods
 
@@ -19,15 +34,22 @@ namespace DarkKey.Gameplay
         {
             if (!IsLocalPlayer) return;
             TryGetComponent(out _inputHandler);
-            TryGetComponent(out _playerScript);
 
-            _inputHandler.OnInteract += SearchForInteractableObjectAndInteract;
+            _inputHandler.OnInteract += InteractWithSelectedObject;
+            _inputHandler.OnDrop += DropItem;
         }
 
         private void OnDestroy()
         {
             if (_inputHandler == null) return;
-            _inputHandler.OnInteract -= SearchForInteractableObjectAndInteract;
+            _inputHandler.OnInteract -= InteractWithSelectedObject;
+            _inputHandler.OnDrop -= DropItem;
+        }
+
+        private void FixedUpdate()
+        {
+            if (!IsLocalPlayer) return;
+            SearchForInteractableObjects();
         }
 
 #if UNITY_EDITOR
@@ -42,17 +64,78 @@ namespace DarkKey.Gameplay
 
         #endregion
 
+        #region Public Methods
+
+        public void HoldItem(GenericItem item)
+        {
+            _itemHeld.Value = item;
+
+            var position = rightHandSlot.position + item.inHandOffset;
+            var rotation = rightHandSlot.rotation;
+            var itemTransform = _itemHeld.Value.transform;
+
+            itemTransform.SetParent(rightHandSlot);
+            itemTransform.SetPositionAndRotation(position, rotation);
+
+            _itemHeld.Value.DisableItemForOtherPlayersServerRpc(OwnerClientId);
+        }
+
+        public GenericItem RemoveAndReturnItem()
+        {
+            if (!IsHoldingItem()) return null;
+
+            var item = _itemHeld.Value;
+            _itemHeld.Value.transform.parent = null;
+            _itemHeld.Value = null;
+
+            return item;
+        }
+
+        public bool IsHoldingItem() => _itemHeld.Value;
+
+        #endregion
+
         #region Private Methods
 
-        private void SearchForInteractableObjectAndInteract()
+        private void SearchForInteractableObjects()
         {
             var camTransform = playerCamera.transform;
             var ray = new Ray(camTransform.position, camTransform.forward);
 
-            if (!Physics.Raycast(ray, out RaycastHit hitInfo, interactionMaxDistance, interactionMask)) return;
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, interactionMaxDistance, interactionMask))
+            {
+                hitInfo.transform.TryGetComponent(out Interactable interactable);
 
-            hitInfo.transform.TryGetComponent(out IInteractable interactable);
-            interactable.Interact(_playerScript);
+                if (_selectedObject != null && _selectedObject == interactable) return;
+
+                _selectedObject = interactable;
+                OnInteractableSelected?.Invoke();
+            }
+            else
+            {
+                if (_selectedObject == null) return;
+
+                _selectedObject = null;
+                OnInteractableDeselected?.Invoke();
+            }
+        }
+
+        private void InteractWithSelectedObject()
+        {
+            if (_selectedObject != null)
+                _selectedObject.Interact(this);
+        }
+
+        private void DropItem()
+        {
+            if (!IsHoldingItem()) return;
+
+            _itemHeld.Value.transform.parent = null;
+
+            var throwForce = transform.forward * throwForceMultiplier;
+            _itemHeld.Value.ThrowObject(throwForce);
+
+            _itemHeld.Value = null;
         }
 
         #endregion

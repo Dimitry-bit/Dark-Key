@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using DarkKey.Core;
 using DarkKey.Core.Debugger;
 using DarkKey.Core.Network;
 using MLAPI;
@@ -82,11 +83,13 @@ namespace DarkKey.Gameplay.Spawn
             NetworkObject playerInstance = Instantiate(playerPrefab, position, rotation);
             // TODO: Add Player.Name and Player.Role
             playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.ClientId);
+            playerInstance.GetComponent<ScenePlayer>().InitializePlayerData(playerData);
         }
 
         private void DestroyPlayerObject(ulong clientId)
         {
-            NetworkSpawnManager.GetPlayerNetworkObject(clientId).Despawn(true);
+            if (NetworkSpawnManager.GetPlayerNetworkObject(clientId) != null)
+                NetworkSpawnManager.GetPlayerNetworkObject(clientId).Despawn(true);
         }
 
         #endregion
