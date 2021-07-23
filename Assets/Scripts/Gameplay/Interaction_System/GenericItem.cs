@@ -30,10 +30,6 @@ namespace DarkKey.Gameplay
             EnableItemForAllPlayersServerRpc();
         }
 
-        public override void OnSelected(PlayerInteraction playerInteraction)
-        {
-        }
-
         public override void Interact(PlayerInteraction playerInteraction)
         {
             if (playerInteraction.IsHoldingItem()) return;

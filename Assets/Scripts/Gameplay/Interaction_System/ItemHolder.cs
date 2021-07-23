@@ -32,11 +32,9 @@ namespace DarkKey.Gameplay
         public override void OnSelected(PlayerInteraction playerInteraction)
         {
             if (IsHoldingItem())
-            {
-            }
+                InteractionDescription = playerInteraction.IsHoldingItem() ? "" : $"Pick Up {_itemHeld.Value.ObjectName}";
             else
-            {
-            }
+                InteractionDescription = playerInteraction.IsHoldingItem() ? "" : $"Put Down Object";
         }
 
         public override void Interact(PlayerInteraction playerInteraction)

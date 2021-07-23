@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using DarkKey.Gameplay;
+using DarkKey.Gameplay.Interfaces;
 using MLAPI;
 using TMPro;
 using UnityEngine;
@@ -41,10 +42,10 @@ namespace DarkKey.Ui
 
         private void SetInteractionText(string text) => interactionText.text = $"Press 'E' To {text}";
 
-        private void EnableUi()
+        private void EnableUi(Interactable interactable)
         {
             interactionPanel.SetActive(true);
-            SetInteractionText("Interact");
+            SetInteractionText(interactable.InteractionDescription);
         }
 
         private void DisableUi()

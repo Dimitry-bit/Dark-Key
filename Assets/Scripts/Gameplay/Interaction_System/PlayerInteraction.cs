@@ -24,7 +24,7 @@ namespace DarkKey.Gameplay
             WritePermission = NetworkVariablePermission.OwnerOnly
         });
 
-        public event Action OnInteractableSelected;
+        public event Action<Interactable> OnInteractableSelected;
         public event Action OnInteractableDeselected;
 
 
@@ -109,7 +109,8 @@ namespace DarkKey.Gameplay
                 if (_selectedObject != null && _selectedObject == interactable) return;
 
                 _selectedObject = interactable;
-                OnInteractableSelected?.Invoke();
+                _selectedObject.OnSelected(this);
+                OnInteractableSelected?.Invoke(_selectedObject);
             }
             else
             {
