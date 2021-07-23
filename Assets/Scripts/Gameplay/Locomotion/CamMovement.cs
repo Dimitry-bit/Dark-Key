@@ -1,41 +1,41 @@
+using DarkKey.Core;
+using DarkKey.Core.Debugger;
 using MLAPI;
 using UnityEngine;
 
-namespace DarkKey.Gameplay
+namespace DarkKey.Gameplay.Locomotion
 {
     [RequireComponent(typeof(InputHandler))]
     public class CamMovement : NetworkBehaviour
     {
-        private InputHandler _inputHandler;
+        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Player};
 
-        private Camera _cam;
         [SerializeField] private float camMaxRotationAngleY;
         [SerializeField] private Vector3 camOffSet = Vector3.up * 0.5f;
-
-        [Header("Debug")] [SerializeField] private bool lockCursor;
+        
+        private Camera _cam;
+        private InputHandler _inputHandler;
 
         #region Unity Methods
 
         private void Start()
         {
+            if (!IsLocalPlayer) return;
+
             _cam = GetComponentInChildren<Camera>();
             if (_cam == null)
             {
-                Debug.LogError("[CamMovement]: No camera was found.");
+                CustomDebugger.LogError("CamMovement", "No camera was found.", ScriptLogLevel);
                 return;
             }
 
-            if (IsLocalPlayer)
-            {
-                TryGetComponent(out _inputHandler);
-                _inputHandler.SetMouseClamp(camMaxRotationAngleY);
-            }
-            else
-            {
-                if (_cam.TryGetComponent(out AudioListener audioListener)) audioListener.enabled = false;
-                _cam.enabled = false;
-            }
+            SetVerticalMouseClamp();
+            DisableUnusedCameras();
+
+            _cam.gameObject.SetActive(true);
+            CursorManager.HideCursor();
         }
+
 
         private void FixedUpdate()
         {
@@ -47,6 +47,23 @@ namespace DarkKey.Gameplay
         #endregion
 
         #region Private Methods
+
+        private void SetVerticalMouseClamp()
+        {
+            TryGetComponent(out _inputHandler);
+            _inputHandler.SetMouseClamp(camMaxRotationAngleY);
+        }
+
+        private void DisableUnusedCameras()
+        {
+            var cameras = FindObjectsOfType<Camera>();
+            foreach (var cam in cameras)
+            {
+                if (cam == _cam) continue;
+
+                cam.gameObject.SetActive(false);
+            }
+        }
 
         private void PlayerRotation(float mouseX) => transform.localRotation = Quaternion.Euler(0, mouseX, 0);
 
