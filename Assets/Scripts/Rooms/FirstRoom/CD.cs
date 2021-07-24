@@ -1,20 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DarkKey.Gameplay;
 
 namespace DarkKey
 {
-    public class CD : MonoBehaviour
+    public class CD : GenericItem
     {
-        private AudioSource _audioClip;
-        void Start()
+        [SerializeField] private AudioClip _audioclip;
+        public AudioClip audioClip => _audioclip;
+        public AudioClip GetAudioClip()
         {
-            _audioClip = GetComponent<AudioSource>();
-        }
-        //Plays the audio contined in the CD
-        public void PlayAudio()
-        {
-            _audioClip.Play();
+            return audioClip;
         }
     }
 }

@@ -55,7 +55,7 @@ namespace DarkKey.Gameplay
 
         #region Private Methods
 
-        private void HoldItem(GenericItem item)
+        protected void HoldItem(GenericItem item)
         {
             _itemHeld.Value = item;
 
@@ -70,7 +70,7 @@ namespace DarkKey.Gameplay
         }
 
 
-        private void AssignItemToPlayer(PlayerInteraction playerInteraction)
+        protected void AssignItemToPlayer(PlayerInteraction playerInteraction)
         {
             if (playerInteraction.IsHoldingItem()) return;
 
@@ -78,7 +78,7 @@ namespace DarkKey.Gameplay
             _itemHeld.Value = null;
         }
 
-        private void GetItemFormPlayer(PlayerInteraction playerInteraction)
+        protected void GetItemFormPlayer(PlayerInteraction playerInteraction)
         {
             if (!playerInteraction.IsHoldingItem()) return;
 
