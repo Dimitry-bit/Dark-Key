@@ -80,6 +80,8 @@ namespace DarkKey.Gameplay
             _itemHeld.Value.DisableItemForOtherPlayersServerRpc(OwnerClientId);
         }
 
+        public GenericItem GetItemType() => IsHoldingItem() ? _itemHeld.Value : null;
+
         public GenericItem RemoveAndReturnItem()
         {
             if (!IsHoldingItem()) return null;
