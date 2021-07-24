@@ -9,42 +9,52 @@ namespace DarkKey.Rooms.FirstRoom
         private AudioSource _audioSource;
         private bool _hasCd;
 
+        #region Unity Methods
         private void Start()
         {
             _audioSource = GetComponent<AudioSource>();
             _audioSource.playOnAwake = false;
         }
+        #endregion
 
+        #region Public Methods
         public override void Interact(PlayerInteraction playerInteraction)
         {
-            GenericItem disk = playerInteraction.GetItemType();
+            GenericItem ItemInHand = playerInteraction.GetItemType();
 
             if (_hasCd)
             {
-                if (disk != null) return;
-
+                if (ItemInHand != null) return;
+                StopAudio();
                 AssignItemToPlayer(playerInteraction);
                 _hasCd = false;
-                
-                // StopAudio
             }
             else
             {
-                if (disk == null) return;
+                if (ItemInHand == null) return;
 
-                if (disk.TryGetComponent(out CD cdScript))
+                if (ItemInHand.TryGetComponent(out CD cdScript))
                 {
-                    HoldItem(disk);
+                    GetItemFormPlayer(playerInteraction);
                     PlayAudio(cdScript);
                     _hasCd = true;
+                    
                 }
             }
         }
+        #endregion
 
+        #region Private Methods
         private void PlayAudio(CD cdScript)
         {
             _audioSource.clip = cdScript.GetAudioClip();
             _audioSource.Play();
         }
+
+        private void StopAudio()
+        {
+            _audioSource.Stop();
+        }
+        #endregion
     }
 }
