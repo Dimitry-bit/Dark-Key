@@ -12,11 +12,19 @@ namespace DarkKey.Gameplay
     {
         [ReadOnly] public Vector3 inHandOffset;
         [ReadOnly] public Vector3 inFrameOffset;
+        [SerializeField] private bool isPhysicsControlled;
 
         private Rigidbody _rigidbody;
-        private bool _isPhysicsControlled;
 
         #region Untiy Methods
+
+        private void Start()
+        {
+            if (isPhysicsControlled)
+                EnablePhysics();
+            else
+                DisablePhysics();
+        }
 
         #endregion
 
@@ -26,7 +34,7 @@ namespace DarkKey.Gameplay
         {
             EnablePhysics();
             _rigidbody.AddForce(force);
-            
+
             EnableItemForAllPlayersServerRpc();
         }
 
@@ -46,7 +54,7 @@ namespace DarkKey.Gameplay
 
         private void EnablePhysics()
         {
-            if (_isPhysicsControlled) return;
+            if (isPhysicsControlled) return;
 
             FetchComponents(out var objectCollider);
 
@@ -54,12 +62,12 @@ namespace DarkKey.Gameplay
             _rigidbody.useGravity = true;
             _rigidbody.isKinematic = false;
 
-            _isPhysicsControlled = true;
+            isPhysicsControlled = true;
         }
 
         private void DisablePhysics()
         {
-            if (!_isPhysicsControlled) return;
+            if (!isPhysicsControlled) return;
 
             FetchComponents(out var objectCollider);
 
@@ -67,7 +75,7 @@ namespace DarkKey.Gameplay
             _rigidbody.useGravity = false;
             _rigidbody.isKinematic = true;
 
-            _isPhysicsControlled = false;
+            isPhysicsControlled = false;
         }
 
         private void FetchComponents(out Collider objectCollider)

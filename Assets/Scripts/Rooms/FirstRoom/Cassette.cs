@@ -1,42 +1,46 @@
-using UnityEngine;
 using DarkKey.Gameplay;
+using UnityEngine;
 
-namespace DarkKey
+namespace DarkKey.Rooms.FirstRoom
 {
     [RequireComponent(typeof(AudioSource))]
     public class Cassette : ItemHolder
     {
-        private ItemHolder _itemHolderObject;
         private AudioSource _audioSource;
-        private bool hasCD;
-        void Start()
+        private bool _hasCd;
+
+        private void Start()
         {
-            _itemHolderObject = GetComponent<ItemHolder>();
             _audioSource = GetComponent<AudioSource>();
             _audioSource.playOnAwake = false;
         }
+
         public override void Interact(PlayerInteraction playerInteraction)
         {
-            GenericItem itemCDInHand = playerInteraction.GetItemType();
+            GenericItem disk = playerInteraction.GetItemType();
 
-            if (hasCD)
+            if (_hasCd)
             {
-                if (itemCDInHand == null)
-                {
-                    AssignItemToPlayer(playerInteraction);
-                    hasCD = false;
-                }
+                if (disk != null) return;
+
+                AssignItemToPlayer(playerInteraction);
+                _hasCd = false;
+                
+                // StopAudio
             }
             else
             {
-                if (itemCDInHand.TryGetComponent(out CD cdScript))
+                if (disk == null) return;
+
+                if (disk.TryGetComponent(out CD cdScript))
                 {
-                    HoldItem(itemCDInHand);
+                    HoldItem(disk);
                     PlayAudio(cdScript);
-                    hasCD = true;
+                    _hasCd = true;
                 }
             }
         }
+
         private void PlayAudio(CD cdScript)
         {
             _audioSource.clip = cdScript.GetAudioClip();
