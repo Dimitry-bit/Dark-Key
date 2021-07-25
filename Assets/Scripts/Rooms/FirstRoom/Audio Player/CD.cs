@@ -1,7 +1,7 @@
 using UnityEngine;
 using DarkKey.Gameplay;
 
-namespace DarkKey
+namespace DarkKey.Rooms.FirstRoom
 {
     public class CD : GenericItem
     {

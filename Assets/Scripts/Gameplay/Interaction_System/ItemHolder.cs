@@ -49,7 +49,7 @@ namespace DarkKey.Gameplay
             }
             else
             {
-                GetItemFormPlayer(playerInteraction);
+                GetItemFromPlayer(playerInteraction);
             }
         }
 
@@ -88,7 +88,7 @@ namespace DarkKey.Gameplay
             _itemHeld.Value = null;
         }
 
-        protected void GetItemFormPlayer(PlayerInteraction playerInteraction)
+        protected void GetItemFromPlayer(PlayerInteraction playerInteraction)
         {
             if (!playerInteraction.IsHoldingItem()) return;
 

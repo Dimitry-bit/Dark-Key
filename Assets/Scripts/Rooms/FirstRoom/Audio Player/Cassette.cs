@@ -35,7 +35,7 @@ namespace DarkKey.Rooms.FirstRoom
 
                 if (ItemInHand.TryGetComponent(out CD cdScript))
                 {
-                    GetItemFormPlayer(playerInteraction);
+                    GetItemFromPlayer(playerInteraction);
                     PlayAudio(cdScript);
                     _hasCd = true;
                     
