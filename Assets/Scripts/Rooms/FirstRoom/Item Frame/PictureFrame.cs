@@ -1,47 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using DarkKey.Gameplay;
-
 
 namespace DarkKey.Rooms.FirstRoom
 {
     public class PictureFrame : ItemHolder
     {
-        private Material _currentPicture;
+        private Renderer _currentPicture;
         private PictureItem _pictureObject;
-        // Start is called before the first frame update
+        private bool _hasPicture;
+
+        #region Unity Methods
         void Start()
         {
-            // _pictureObject = GetComponent<PictureItem>();
-            //_currentPicture = GetComponent<Renderer>().material;
+            _currentPicture = GetComponent<Renderer>();
             _pictureObject = GetComponent<PictureItem>();
-
         }
+        #endregion
 
-        // Update is called once per frame
-
+        #region Public Methods
         public override void Interact(PlayerInteraction playerInteraction)
         {
             GenericItem ItemInHand = playerInteraction.GetItemType();
 
-            if (ItemInHand == null) return;
-
-            if (ItemInHand.TryGetComponent(out PictureItem pictureScript))
+            if (_hasPicture)
             {
-                GetItemFromPlayer(playerInteraction);
-                ChangePicture(pictureScript);
+                if (ItemInHand != null) return;
+
+                RemovePicture();
+                AssignItemToPlayer(playerInteraction);
+                _hasPicture = false;
             }
-
-
-
+            else
+            {
+                if (ItemInHand.TryGetComponent(out PictureItem pictureScript))
+                {
+                    GetItemFromPlayer(playerInteraction);
+                    ChangePicture(pictureScript);
+                    _hasPicture = true;
+                }
+            }
         }
+        #endregion
 
+        #region Private Methods
         private void ChangePicture(PictureItem pictureScript)
         {
-            GetComponent<Renderer>().material = pictureScript.GetPicture();
-
+            _currentPicture.material = pictureScript.GetPicture();
         }
-
+        private void RemovePicture()
+        {
+            _currentPicture.material = Resources.Load("ItemFrame", typeof(Material)) as Material;
+        }
+        #endregion
     }
 }
