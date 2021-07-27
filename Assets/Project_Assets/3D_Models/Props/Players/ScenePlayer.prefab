@@ -179,7 +179,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   camMaxRotationAngleY: 50
   camOffSet: {x: 0, y: 0.5, z: 0}
-  cam: {fileID: 7295853245839179529}
+  _cam: {fileID: 7295853245839179529}
 --- !u!114 &-7964260824467794295
 MonoBehaviour:
   m_ObjectHideFlags: 0
