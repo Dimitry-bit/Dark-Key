@@ -6,21 +6,25 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
     public class PictureOrderChecker : MonoBehaviour
     {
         private PictureFrame[] _frameObject;
-        private AudioSource _audioSource;
-        private bool[] _isOrderTrue;
+        private AudioSource _audioSourceObject;
+        private bool _playedSound;
+
+        #region Unity Methods
         void Start()
         {
             _frameObject = GetComponentsInChildren<PictureFrame>();
-            _audioSource = GetComponent<AudioSource>();
-            _audioSource.playOnAwake = false;
+            _audioSourceObject = GetComponent<AudioSource>();
+            _audioSourceObject.playOnAwake = false;
         }
-
         void Update()
         {
-                CheckOrder();
+            if (CheckOrder())
+                PlayWinSound();
         }
+        #endregion
 
-        private void CheckOrder()
+        #region Private Methods
+        private bool CheckOrder()
         {
             int _numberOfTruePictures = 0;
 
@@ -29,18 +33,23 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
                 if (pictureFrame.hasRequiredPicture == true)
                     _numberOfTruePictures++;
             }
-            Debug.Log(_numberOfTruePictures);
 
             if (_numberOfTruePictures == _frameObject.Length)
+                return true;
+            else
             {
-                PlayWinSound();
-                Debug.Log("Sound Has Played");
+                _playedSound = false;
+                return false;
             }
         }
         private void PlayWinSound()
         {
-            _audioSource.Play();
+            if (_playedSound) return;
+
+            _audioSourceObject.Play();
+            _playedSound = true;
         }
+        #endregion
 
     }
 }

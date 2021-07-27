@@ -20,7 +20,7 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
             _currentPicture = GetComponent<Renderer>();
             _pictureObject = GetComponent<PictureItem>();
 
-            if (_currentPicture != null) 
+            if (_currentPicture != null)
                 _itemFrameMaterial = _currentPicture.material;
         }
         #endregion
@@ -63,9 +63,10 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
         private void CheckPicture(PictureItem pictureScript)
         {
             if (pictureScript.GetPicture() == requiredPicture)
-            {
+
                 _hasRequiredPicture = true;
-            }
+            else
+                _hasRequiredPicture = false;
         }
         #endregion
     }
