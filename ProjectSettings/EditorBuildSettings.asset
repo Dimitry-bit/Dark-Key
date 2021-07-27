@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TestScenes/OfflineScene.unity
+    path: Assets/Scenes/TestScenes/Ui/OfflineScene.unity
     guid: 1b040fe5b2686bb4096794f8285f6a68
   - enabled: 1
-    path: Assets/Scenes/TestScenes/Multiplayer_Test.unity
+    path: Assets/Scenes/TestScenes/Gameplay/Multiplayer_Test.unity
     guid: 8ad760b29c713b545b54df4119312b12
   m_configObjects: {}
