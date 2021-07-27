@@ -63,8 +63,8 @@ namespace DarkKey.Gameplay.CorePlayer
 
         public void LeaveGame()
         {
-            CustomDebugger.LogInfo("LobbyPlayer", $"Client({OwnerClientId}) left lobby.", ScriptLogLevel);
             HandleLeaveLobbyServerRpc(OwnerClientId);
+            CustomDebugger.LogInfo("LobbyPlayer", $"Client({OwnerClientId}) left lobby.", ScriptLogLevel);
         }
 
         public void QuitGame()
@@ -121,6 +121,7 @@ namespace DarkKey.Gameplay.CorePlayer
             }
         }
 
+        // TODO: Fix UpdateLobbyUi is broken
         private LobbyPlayer GetOwnedLobbyPlayer(ulong clientId) =>
             NetPortal.Instance.LobbyPlayers.FirstOrDefault(lobbyPlayer => clientId == lobbyPlayer.OwnerClientId);
 

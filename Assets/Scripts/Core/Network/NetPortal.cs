@@ -113,6 +113,8 @@ namespace DarkKey.Core.Network
             NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
             NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(password);
             NetworkManager.Singleton.StartClient();
+
+            Invoke(nameof(CheckServerAvailability), 1f);
         }
 
         public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
@@ -184,6 +186,15 @@ namespace DarkKey.Core.Network
                 CustomDebugger.LogInfo("NetPortal", "Player1 Switched Scene", ScriptLogLevel);
                 OnSceneSwitch?.Invoke(roomPlayer.PlayerData);
             }
+        }
+
+        private void CheckServerAvailability()
+        {
+            if (NetworkManager.Singleton.IsConnectedClient) return;
+            if (!NetworkManager.Singleton.IsClient) return;
+            
+            NetworkManager.Singleton.StopClient();
+            OnLocalDisconnection?.Invoke();
         }
 
         #endregion
