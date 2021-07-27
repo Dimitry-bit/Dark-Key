@@ -1,10 +1,9 @@
-using DarkKey.Gameplay.Interfaces;
 using MLAPI.Messaging;
 using MLAPI.Spawning;
 using Unity.Collections;
 using UnityEngine;
 
-namespace DarkKey.Gameplay
+namespace DarkKey.Gameplay.Interaction
 {
     [RequireComponent(typeof(Collider))]
     [RequireComponent(typeof(Rigidbody))]

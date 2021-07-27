@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Linq;
 using DarkKey.Core.Network;
+using DarkKey.Gameplay.CorePlayer;
 using MLAPI;
 using MLAPI.Messaging;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DarkKey.Core
+namespace DarkKey.Ui.UiHandlers
 {
     public class LobbyPlayerUiHandler : NetworkBehaviour
     {

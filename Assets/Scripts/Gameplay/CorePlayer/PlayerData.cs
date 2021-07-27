@@ -1,6 +1,6 @@
 ﻿using MLAPI.Serialization;
 
-namespace DarkKey.Gameplay
+namespace DarkKey.Gameplay.CorePlayer
 {
     public struct PlayerData : INetworkSerializable
     {

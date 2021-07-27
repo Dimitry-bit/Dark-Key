@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using DarkKey.Core.Debugger;
+﻿using DarkKey.Core.Debugger;
+using UnityEngine;
 
-namespace DarkKey.Ui
+namespace DarkKey.Ui.Utilities
 {
     public class Billboard : MonoBehaviour
     {

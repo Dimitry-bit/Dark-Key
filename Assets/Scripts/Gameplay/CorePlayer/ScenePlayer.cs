@@ -1,8 +1,7 @@
-﻿using MLAPI;
-using DarkKey.Gameplay;
-using DarkKey.Core.Debugger;
+﻿using DarkKey.Core.Debugger;
+using MLAPI;
 
-namespace DarkKey.Core
+namespace DarkKey.Gameplay.CorePlayer
 {
     public class ScenePlayer : NetworkBehaviour
     {

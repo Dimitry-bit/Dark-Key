@@ -1,7 +1,7 @@
+using DarkKey.Gameplay.Interaction;
 using UnityEngine;
-using DarkKey.Gameplay;
 
-namespace DarkKey.Rooms.FirstRoom
+namespace DarkKey.Rooms.FirstRoom.Item_Frame
 {
     public class PictureFrame : ItemHolder
     {

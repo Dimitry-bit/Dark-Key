@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace DarkKey.Core
+namespace DarkKey.Core.Managers
 {
     public static class CursorManager 
     {

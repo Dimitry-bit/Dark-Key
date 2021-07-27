@@ -1,9 +1,8 @@
 using DarkKey.Core.Debugger;
-using DarkKey.Gameplay.Interfaces;
 using MLAPI.NetworkVariable;
 using UnityEngine;
 
-namespace DarkKey.Gameplay
+namespace DarkKey.Gameplay.Interaction
 {
     public class ItemHolder : Interactable
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DarkKey.Core.Debugger;
-using DarkKey.Gameplay;
+using DarkKey.Gameplay.CorePlayer;
 using MLAPI;
 using MLAPI.SceneManagement;
 using MLAPI.Transports.UNET;

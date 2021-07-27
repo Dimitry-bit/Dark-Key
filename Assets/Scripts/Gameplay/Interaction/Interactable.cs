@@ -1,7 +1,7 @@
 ﻿using MLAPI;
 using UnityEngine;
 
-namespace DarkKey.Gameplay.Interfaces
+namespace DarkKey.Gameplay.Interaction
 {
     public abstract class Interactable : NetworkBehaviour
     {

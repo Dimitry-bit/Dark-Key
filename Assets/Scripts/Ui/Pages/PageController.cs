@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using DarkKey.Core.Debugger;
-using DarkKey.Ui.Pages;
 using UnityEngine;
 
-namespace DarkKey.Ui
+namespace DarkKey.Ui.Pages
 {
     public class PageController : MonoBehaviour
     {

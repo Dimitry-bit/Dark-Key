@@ -2,7 +2,7 @@
 using MLAPI.SceneManagement;
 using UnityEngine;
 
-namespace DarkKey.Core
+namespace DarkKey.Core.Managers
 {
     public class GameManager : MonoBehaviour
     {

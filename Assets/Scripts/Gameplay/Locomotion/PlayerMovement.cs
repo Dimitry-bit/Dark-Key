@@ -1,7 +1,7 @@
 using MLAPI;
 using UnityEngine;
 
-namespace DarkKey.Gameplay
+namespace DarkKey.Gameplay.Locomotion
 {
     [RequireComponent(typeof(Rigidbody), typeof(InputHandler))]
     public class PlayerMovement : NetworkBehaviour

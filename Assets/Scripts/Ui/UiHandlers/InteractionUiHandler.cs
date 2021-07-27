@@ -1,11 +1,10 @@
 ﻿using System.Collections;
-using DarkKey.Gameplay;
-using DarkKey.Gameplay.Interfaces;
+using DarkKey.Gameplay.Interaction;
 using MLAPI;
 using TMPro;
 using UnityEngine;
 
-namespace DarkKey.Ui
+namespace DarkKey.Ui.UiHandlers
 {
     public class InteractionUiHandler : NetworkBehaviour
     {

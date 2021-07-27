@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DarkKey.Core;
 using DarkKey.Core.Debugger;
 using DarkKey.Core.Network;
+using DarkKey.Gameplay.CorePlayer;
 using MLAPI;
 using MLAPI.Messaging;
 using MLAPI.Spawning;

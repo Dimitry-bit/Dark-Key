@@ -1,4 +1,4 @@
-﻿namespace DarkKey.Ui
+﻿namespace DarkKey.Ui.Pages
 {
     public enum PageType
     {

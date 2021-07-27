@@ -1,4 +1,4 @@
-using DarkKey.Core;
+using DarkKey.Core.Managers;
 using DarkKey.Core.Network;
 using DarkKey.Gameplay;
 using MLAPI;

@@ -1,7 +1,7 @@
-using DarkKey.Gameplay;
+using DarkKey.Gameplay.Interaction;
 using UnityEngine;
 
-namespace DarkKey.Rooms.FirstRoom
+namespace DarkKey.Rooms.FirstRoom.Audio_Player
 {
     [RequireComponent(typeof(AudioSource))]
     public class Cassette : ItemHolder

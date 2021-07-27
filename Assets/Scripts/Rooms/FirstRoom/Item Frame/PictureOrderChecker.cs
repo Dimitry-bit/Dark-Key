@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace DarkKey.Rooms.FirstRoom
+namespace DarkKey.Rooms.FirstRoom.Item_Frame
 {
     [RequireComponent(typeof(AudioSource))]
     public class PictureOrderChecker : MonoBehaviour

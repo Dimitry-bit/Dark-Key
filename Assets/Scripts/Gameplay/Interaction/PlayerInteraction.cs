@@ -1,10 +1,9 @@
 ﻿using System;
-using DarkKey.Gameplay.Interfaces;
 using MLAPI;
 using MLAPI.NetworkVariable;
 using UnityEngine;
 
-namespace DarkKey.Gameplay
+namespace DarkKey.Gameplay.Interaction
 {
     [RequireComponent(typeof(InputHandler))]
     public class PlayerInteraction : NetworkBehaviour
