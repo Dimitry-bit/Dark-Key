@@ -11,7 +11,7 @@ namespace DarkKey.Gameplay.Interaction
     {
         [ReadOnly] public Vector3 inHandOffset;
         [ReadOnly] public Vector3 inFrameOffset;
-        [SerializeField] private bool isPhysicsControlled;
+        [SerializeField] private bool isPhysicsControlled = false;
 
         private Rigidbody _rigidbody;
 
@@ -20,9 +20,15 @@ namespace DarkKey.Gameplay.Interaction
         private void Start()
         {
             if (isPhysicsControlled)
+            {
+                isPhysicsControlled = false;
                 EnablePhysics();
+            }
             else
+            {
+                isPhysicsControlled = true;
                 DisablePhysics();
+            }
         }
 
         #endregion
