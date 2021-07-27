@@ -7,6 +7,7 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
     {
         [SerializeField] private Material requiredPicture;
         private Material _currentMaterial;
+        private Material _itemFrameMaterial;
         private Renderer _currentPicture;
         private PictureItem _pictureObject;
         private bool _hasPicture;
@@ -18,6 +19,9 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
         {
             _currentPicture = GetComponent<Renderer>();
             _pictureObject = GetComponent<PictureItem>();
+
+            if (_currentPicture != null) 
+                _itemFrameMaterial = _currentPicture.material;
         }
         #endregion
 
@@ -54,7 +58,7 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
         }
         private void RemovePicture()
         {
-            _currentPicture.material = Resources.Load("ItemFrame", typeof(Material)) as Material;
+            _currentPicture.material = _itemFrameMaterial;
         }
         private void CheckPicture(PictureItem pictureScript)
         {
