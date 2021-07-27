@@ -832,7 +832,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh67294
+  m_Name: pb_Mesh37944
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1197,6 +1197,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 499793708}
     m_Modifications:
+    - target: {fileID: 2736546383175045018, guid: 71a7b084f406e01469e3eca7bfee86ea, type: 3}
+      propertyPath: objectName
+      value: Cassette
+      objectReference: {fileID: 0}
+    - target: {fileID: 2736546383175045018, guid: 71a7b084f406e01469e3eca7bfee86ea, type: 3}
+      propertyPath: itemHolderTransform
+      value: 
+      objectReference: {fileID: 544454226}
     - target: {fileID: 5995865738269598700, guid: 71a7b084f406e01469e3eca7bfee86ea, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1602,6 +1610,10 @@ PrefabInstance:
       propertyPath: _requiredPicture
       value: 
       objectReference: {fileID: 2100000, guid: f4fc194c44c895f4caddbab497b5228c, type: 2}
+    - target: {fileID: 6919637197477378348, guid: f746486d069852644a79010df4b29a90, type: 3}
+      propertyPath: itemHolderTransform
+      value: 
+      objectReference: {fileID: 614263355}
     - target: {fileID: 6919637197477378350, guid: f746486d069852644a79010df4b29a90, type: 3}
       propertyPath: m_Name
       value: ItemFrame(3)
@@ -1655,6 +1667,11 @@ PrefabInstance:
 --- !u!4 &614263354 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6919637197477378351, guid: f746486d069852644a79010df4b29a90, type: 3}
+  m_PrefabInstance: {fileID: 614263353}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &614263355 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6919637198970754457, guid: f746486d069852644a79010df4b29a90, type: 3}
   m_PrefabInstance: {fileID: 614263353}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &639453442
@@ -2639,6 +2656,10 @@ PrefabInstance:
       propertyPath: _requiredPicture
       value: 
       objectReference: {fileID: 2100000, guid: 1ba7384ae495c244fb886be48b813821, type: 2}
+    - target: {fileID: 6919637197477378348, guid: f746486d069852644a79010df4b29a90, type: 3}
+      propertyPath: itemHolderTransform
+      value: 
+      objectReference: {fileID: 1484698594}
     - target: {fileID: 6919637197477378350, guid: f746486d069852644a79010df4b29a90, type: 3}
       propertyPath: m_Name
       value: ItemFrame(2)
@@ -2692,6 +2713,11 @@ PrefabInstance:
 --- !u!4 &1484698593 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6919637197477378351, guid: f746486d069852644a79010df4b29a90, type: 3}
+  m_PrefabInstance: {fileID: 1484698592}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1484698594 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6919637198970754457, guid: f746486d069852644a79010df4b29a90, type: 3}
   m_PrefabInstance: {fileID: 1484698592}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1487160571
@@ -3559,6 +3585,10 @@ PrefabInstance:
       propertyPath: _requiredPicture
       value: 
       objectReference: {fileID: 2100000, guid: dfc967f347bc7b14eb939b726395b6ef, type: 2}
+    - target: {fileID: 6919637197477378348, guid: f746486d069852644a79010df4b29a90, type: 3}
+      propertyPath: itemHolderTransform
+      value: 
+      objectReference: {fileID: 6919637197971955379}
     - target: {fileID: 6919637197477378350, guid: f746486d069852644a79010df4b29a90, type: 3}
       propertyPath: m_Name
       value: ItemFrame(1)

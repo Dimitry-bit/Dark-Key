@@ -26,15 +26,7 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
         #region Private Methods
         private bool CheckOrder()
         {
-            int _numberOfTruePictures = 0;
-
-            foreach (PictureFrame pictureFrame in _frameObject)
-            {
-                if (pictureFrame.hasRequiredPicture == true)
-                    _numberOfTruePictures++;
-            }
-
-            if (_numberOfTruePictures == _frameObject.Length)
+            if (TruePictures() == _frameObject.Length)
                 return true;
             else
             {
@@ -49,7 +41,17 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
             _audioSourceObject.Play();
             _playedSound = true;
         }
-        #endregion
+        private int TruePictures()
+        {
+            int _numberOfTruePictures = 0;
 
+            foreach (PictureFrame pictureFrame in _frameObject)
+            {
+                if (pictureFrame.hasRequiredPicture == true)
+                    _numberOfTruePictures++;
+            }
+            return _numberOfTruePictures;
+        }
+        #endregion
     }
 }
