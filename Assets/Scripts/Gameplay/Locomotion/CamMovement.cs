@@ -12,7 +12,7 @@ namespace DarkKey.Gameplay.Locomotion
 
         [SerializeField] private float camMaxRotationAngleY;
         [SerializeField] private Vector3 camOffSet = Vector3.up * 0.5f;
-        
+
         public Camera cam;
         private InputHandler _inputHandler;
 
@@ -22,7 +22,6 @@ namespace DarkKey.Gameplay.Locomotion
         {
             if (!IsLocalPlayer) return;
 
-            // _cam = GetComponentInChildren<Camera>();
             if (cam == null)
             {
                 CustomDebugger.LogError("CamMovement", "No camera was found.", ScriptLogLevel);
@@ -30,11 +29,8 @@ namespace DarkKey.Gameplay.Locomotion
             }
 
             SetVerticalMouseClamp();
-            DisableUnusedCameras();
-            
+
             cam.gameObject.SetActive(true);
-
-
             CursorManager.HideCursor();
         }
 
@@ -54,17 +50,6 @@ namespace DarkKey.Gameplay.Locomotion
         {
             TryGetComponent(out _inputHandler);
             _inputHandler.SetMouseClamp(camMaxRotationAngleY);
-        }
-
-        private void DisableUnusedCameras()
-        {
-            var cameras = FindObjectsOfType<Camera>();
-            foreach (var cam in cameras)
-            {
-                if (cam == this.cam) continue;
-
-                cam.gameObject.SetActive(false);
-            }
         }
 
         private void PlayerRotation(float mouseX) => transform.localRotation = Quaternion.Euler(0, mouseX, 0);
