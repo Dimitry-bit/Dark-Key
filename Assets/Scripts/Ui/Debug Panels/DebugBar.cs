@@ -1,7 +1,6 @@
 using DarkKey.Core.Managers;
 using DarkKey.Gameplay;
 using MLAPI;
-using MLAPI.Connection;
 using UnityEngine;
 
 namespace DarkKey.Ui.Debug_Panels
@@ -33,7 +32,8 @@ namespace DarkKey.Ui.Debug_Panels
         {
             if (_inputHandler == null)
                 GetInputHandlerAndAssignEvent();
-            else
+
+            if (_inputHandler != null)
                 _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
 
             CursorManager.ShowCursor();
@@ -45,9 +45,9 @@ namespace DarkKey.Ui.Debug_Panels
         {
             if (_inputHandler == null)
                 GetInputHandlerAndAssignEvent();
-            else
-                _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
 
+            if (_inputHandler != null)
+                _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
 
             CursorManager.HideCursor();
             debugBar.SetActive(false);
@@ -57,20 +57,19 @@ namespace DarkKey.Ui.Debug_Panels
         private void GetInputHandlerAndAssignEvent()
         {
             if (NetworkManager.Singleton == null) return;
-
             foreach (var networkClient in NetworkManager.Singleton.ConnectedClientsList)
             {
-                if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(networkClient.ClientId,
-                    out NetworkClient client)) continue;
-
-                if (client.PlayerObject == null) continue;
-                if (!client.PlayerObject.IsLocalPlayer) continue;
-                if (!client.PlayerObject.IsSpawned) continue;
-                if (client.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
-                    _inputHandler = inputHandler;
+                if (networkClient.PlayerObject == null) continue;
+                if (networkClient.PlayerObject.IsLocalPlayer)
+                {
+                    var inputHandler = networkClient.PlayerObject.GetComponent<InputHandler>();
+                    if (inputHandler != null)
+                    {
+                        _inputHandler = inputHandler;
+                        _inputHandler.OnConsole += ShowMenu;
+                    }
+                }
             }
-
-            _inputHandler.OnConsole += ShowMenu;
         }
     }
 }

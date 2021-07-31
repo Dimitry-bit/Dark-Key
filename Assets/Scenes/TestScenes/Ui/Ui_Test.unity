@@ -216,11 +216,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1 &643198951 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1763202769149240011, guid: af78e9ffe5b365c45ae625ae8f630a66, type: 3}
-  m_PrefabInstance: {fileID: 8145981071582783590}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1222313949
 GameObject:
   m_ObjectHideFlags: 0
@@ -665,6 +660,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 20758675833a5d8429d3d4da9d3f2c68, type: 3}
+--- !u!1 &7598822938168478381 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1763202769149240011, guid: af78e9ffe5b365c45ae625ae8f630a66, type: 3}
+  m_PrefabInstance: {fileID: 8145981071582783590}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8145981071582783590
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -675,7 +675,7 @@ PrefabInstance:
     - target: {fileID: -9072769565902209011, guid: af78e9ffe5b365c45ae625ae8f630a66, type: 3}
       propertyPath: debugPanelGameObject
       value: 
-      objectReference: {fileID: 643198951}
+      objectReference: {fileID: 7598822938168478381}
     - target: {fileID: 8145981071797809381, guid: af78e9ffe5b365c45ae625ae8f630a66, type: 3}
       propertyPath: m_fontAsset
       value: 
