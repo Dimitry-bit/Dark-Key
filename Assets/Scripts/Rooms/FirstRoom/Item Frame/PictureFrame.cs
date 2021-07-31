@@ -5,11 +5,9 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
 {
     public class PictureFrame : ItemHolder
     {
-        [SerializeField] private Material requiredPicture;
-        private Material _currentMaterial;
+        public Material requiredPicture;
         private Material _itemFrameMaterial;
         private Renderer _currentPicture;
-        private PictureItem _pictureObject;
         private bool _hasPicture;
         private bool _hasRequiredPicture;
         public bool hasRequiredPicture => _hasRequiredPicture;
@@ -18,7 +16,6 @@ namespace DarkKey.Rooms.FirstRoom.Item_Frame
         void Start()
         {
             _currentPicture = GetComponent<Renderer>();
-            _pictureObject = GetComponent<PictureItem>();
 
             if (_currentPicture != null)
                 _itemFrameMaterial = _currentPicture.material;
