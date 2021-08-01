@@ -31,7 +31,7 @@ namespace DarkKey.Core.Network
             get
             {
                 if (_instance == null)
-                    CustomDebugger.LogCriticalError("NetPortal", "Instance is null");
+                    CustomDebugger.LogCriticalError("Instance is null");
 
                 return _instance;
             }
@@ -136,7 +136,7 @@ namespace DarkKey.Core.Network
             string password = Encoding.ASCII.GetString(connectionData);
             bool isApproved = password == _passwordText;
 
-            CustomDebugger.LogInfo("NetPortal", $"{isApproved}", ScriptLogLevel);
+            CustomDebugger.LogInfo($"{isApproved}", ScriptLogLevel);
 
             callback(true, null, isApproved, null, null);
         }
@@ -149,7 +149,7 @@ namespace DarkKey.Core.Network
 
             Disconnect();
 
-            CustomDebugger.LogInfo("NetPortal", $"[Client] : ({clientId}) disconnected successfully", ScriptLogLevel);
+            CustomDebugger.LogInfo($"[Client] : ({clientId}) disconnected successfully", ScriptLogLevel);
             OnLocalDisconnection?.Invoke();
         }
 
@@ -159,7 +159,7 @@ namespace DarkKey.Core.Network
 
             if (clientId != NetworkManager.Singleton.LocalClientId) return;
 
-            CustomDebugger.LogInfo("NetPortal", $"[Client] : ({clientId}) connected successfully", ScriptLogLevel);
+            CustomDebugger.LogInfo($"[Client] : ({clientId}) connected successfully", ScriptLogLevel);
             OnLocalConnection?.Invoke();
         }
 
@@ -169,7 +169,7 @@ namespace DarkKey.Core.Network
 
             if (!NetworkManager.Singleton.IsHost) return;
 
-            CustomDebugger.LogInfo("NetPortal", $"hosting started successfully", ScriptLogLevel);
+            CustomDebugger.LogInfo("hosting started successfully", ScriptLogLevel);
             OnLocalConnection?.Invoke();
         }
 
@@ -177,13 +177,13 @@ namespace DarkKey.Core.Network
         {
             if (!NetworkManager.Singleton.IsHost) return;
 
-            CustomDebugger.LogInfo("NetPortal", "Switched Scene", ScriptLogLevel);
+            CustomDebugger.LogInfo("Switched Scene", ScriptLogLevel);
 
             if (SceneManager.GetActiveScene().name != "Multiplayer_Test") return;
 
             foreach (var roomPlayer in LobbyPlayers)
             {
-                CustomDebugger.LogInfo("NetPortal", "Player1 Switched Scene", ScriptLogLevel);
+                CustomDebugger.LogInfo("Player1 Switched Scene", ScriptLogLevel);
                 OnSceneSwitch?.Invoke(roomPlayer.PlayerData);
             }
         }
@@ -192,7 +192,7 @@ namespace DarkKey.Core.Network
         {
             if (NetworkManager.Singleton.IsConnectedClient) return;
             if (!NetworkManager.Singleton.IsClient) return;
-            
+
             NetworkManager.Singleton.StopClient();
             OnLocalDisconnection?.Invoke();
         }

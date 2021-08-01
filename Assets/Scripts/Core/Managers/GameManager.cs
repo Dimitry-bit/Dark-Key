@@ -16,7 +16,7 @@ namespace DarkKey.Core.Managers
         {
             get
             {
-                if (_instance == null) CustomDebugger.LogError("NetPortal", "Instance is null", ScriptLogLevel);
+                if (_instance == null) CustomDebugger.LogError("Instance is null", ScriptLogLevel);
                 return _instance;
             }
         }
@@ -28,19 +28,19 @@ namespace DarkKey.Core.Managers
             if (_instance == null)
                 _instance = this;
             else if (_instance != this)
-               Destroy(gameObject); 
+                Destroy(gameObject);
 
             DontDestroyOnLoad(gameObject);
         }
 
         #endregion
-        
+
         public void StartGame() => NetworkSceneManager.SwitchScene(onlineScene);
 
         public static void QuitGame() => Application.Quit();
 
-        public static  void PauseGame() => CustomDebugger.LogInfo("GameManager", "Game paused.", ScriptLogLevel);
-        
-        public static void SaveGame() => CustomDebugger.LogInfo("GameManager", "Game saved.", ScriptLogLevel);
+        public static void PauseGame() => CustomDebugger.LogInfo("Game paused.", ScriptLogLevel);
+
+        public static void SaveGame() => CustomDebugger.LogInfo("Game saved.", ScriptLogLevel);
     }
 }

@@ -23,7 +23,7 @@ namespace DarkKey.Gameplay.Spawn
 
         public override void NetworkStart()
         {
-            CustomDebugger.LogInfo("PlayerSpawner", "Network Start", ScriptLogLevel);
+            CustomDebugger.LogInfo("Network Start", ScriptLogLevel);
             NetPortal.Instance.OnSceneSwitch += SpawnPlayerServerRpc;
         }
 
@@ -60,7 +60,7 @@ namespace DarkKey.Gameplay.Spawn
 
             _spawnPointIndex++;
 
-            CustomDebugger.LogInfo("PlayerSpawner", "Player spawned successfully.", ScriptLogLevel);
+            CustomDebugger.LogInfo("Player spawned successfully.", ScriptLogLevel);
         }
 
         private Transform GetSpawnPoint()
@@ -69,7 +69,7 @@ namespace DarkKey.Gameplay.Spawn
 
             if (spawnPoint != null) return spawnPoint;
 
-            CustomDebugger.LogError("PlayerSpawner", $"Missing spawn point for player {_spawnPointIndex}",
+            CustomDebugger.LogError($"Missing spawn point for player {_spawnPointIndex}",
                 ScriptLogLevel);
 
             return null;

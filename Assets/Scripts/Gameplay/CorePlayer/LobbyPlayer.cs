@@ -64,7 +64,7 @@ namespace DarkKey.Gameplay.CorePlayer
         public void LeaveGame()
         {
             HandleLeaveLobbyServerRpc(OwnerClientId);
-            CustomDebugger.LogInfo("LobbyPlayer", $"Client({OwnerClientId}) left lobby.", ScriptLogLevel);
+            CustomDebugger.LogInfo($"Client({OwnerClientId}) left lobby.", ScriptLogLevel);
         }
 
         public void QuitGame()
@@ -86,7 +86,7 @@ namespace DarkKey.Gameplay.CorePlayer
 
             LobbyPlayerUiHandler.InitializeLobbyUi();
 
-            CustomDebugger.LogInfo("LobbyPlayer", "Lobby player initialized.", ScriptLogLevel);
+            CustomDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
         }
 
         private void HandleReadyStatusChanged(bool previousValue, bool newValue)

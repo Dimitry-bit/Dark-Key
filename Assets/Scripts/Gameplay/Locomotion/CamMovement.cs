@@ -24,7 +24,7 @@ namespace DarkKey.Gameplay.Locomotion
 
             if (cam == null)
             {
-                CustomDebugger.LogError("CamMovement", "No camera was found.", ScriptLogLevel);
+                CustomDebugger.LogError("No camera was found.", ScriptLogLevel);
                 return;
             }
 

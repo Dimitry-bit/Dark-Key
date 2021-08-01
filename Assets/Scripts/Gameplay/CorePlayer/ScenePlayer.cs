@@ -17,7 +17,7 @@ namespace DarkKey.Gameplay.CorePlayer
             PlayerData = new PlayerData(playerData.ClientId, playerData.Name, playerData.Role);
             DisableUnownedAudioListeners();
 
-            CustomDebugger.LogInfo("ScenePlayer", $"ScenePlayer Initialized", ScriptLogLevel);
+            CustomDebugger.LogInfo("ScenePlayer Initialized", ScriptLogLevel);
         }
 
         #endregion

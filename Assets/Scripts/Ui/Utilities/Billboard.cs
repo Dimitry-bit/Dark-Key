@@ -14,11 +14,8 @@ namespace DarkKey.Ui.Utilities
             if (mainCamera != null) return;
 
             mainCamera = Camera.main;
-            CustomDebugger.LogWarning("Billboard", $"mainCamera variable is not assigned | Defaulted to Camera.Main",
-                new[]
-                {
-                    DebugLogLevel.UI
-                });
+            CustomDebugger.LogWarning($"mainCamera variable is not assigned | Defaulted to Camera.Main",
+                new[] {DebugLogLevel.UI});
         }
 
         private void LateUpdate() => transform.LookAt(transform.position + mainCamera.transform.forward);

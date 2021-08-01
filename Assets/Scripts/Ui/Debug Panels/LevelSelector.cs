@@ -45,7 +45,7 @@ namespace DarkKey.Ui.Debug_Panels
 
             foreach (var levelName in registeredLevelsNames)
             {
-                CustomDebugger.LogInfo($"LevelSelector", $"Initializing => ({levelName})", ScriptLogLevel);
+                CustomDebugger.LogInfo($"Initializing => ({levelName})", ScriptLogLevel);
                 CreateButton(levelName);
             }
 

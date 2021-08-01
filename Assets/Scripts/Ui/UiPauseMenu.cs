@@ -88,7 +88,7 @@ namespace DarkKey.Ui
             _isHidden = false;
             CursorManager.ShowCursor();
             _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
-            CustomDebugger.LogInfo("UiPauseMenu", "EnableMenu Executed", ScriptLogLevel);
+            CustomDebugger.LogInfo("EnableMenu Executed", ScriptLogLevel);
         }
 
         private void DisableMenu()
@@ -97,7 +97,7 @@ namespace DarkKey.Ui
             _isHidden = true;
             CursorManager.HideCursor();
             _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
-            CustomDebugger.LogInfo("UiPauseMenu", "Disable Executed", ScriptLogLevel);
+            CustomDebugger.LogInfo("Disable Executed", ScriptLogLevel);
         }
 
         #endregion
