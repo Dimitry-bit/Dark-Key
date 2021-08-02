@@ -3,9 +3,7 @@ using System.Linq;
 using DarkKey.Core.Debugger;
 using DarkKey.Core.Network;
 using DarkKey.Gameplay.CorePlayer;
-using MLAPI;
-using MLAPI.Messaging;
-using MLAPI.Spawning;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Gameplay.Spawn
@@ -14,23 +12,23 @@ namespace DarkKey.Gameplay.Spawn
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core};
 
-        [SerializeField] private NetworkObject playerPrefab;
+        [SerializeField] private NetworkIdentity playerPrefab;
 
         private static List<Transform> _spawnPoints = new List<Transform>();
         private int _spawnPointIndex;
 
         #region Unity Methods
 
-        public override void NetworkStart()
+        public void NetworkStart()
         {
             CustomDebugger.LogInfo("Network Start", ScriptLogLevel);
-            NetPortal.Instance.OnSceneSwitch += SpawnPlayerServerRpc;
+            NetPortal.Instance.OnSceneSwitch += CmdSpawnPlayer;
         }
 
         private void OnDestroy()
         {
             if (NetPortal.Instance != null)
-                NetPortal.Instance.OnSceneSwitch -= SpawnPlayerServerRpc;
+                NetPortal.Instance.OnSceneSwitch -= CmdSpawnPlayer;
         }
 
         #endregion
@@ -49,8 +47,8 @@ namespace DarkKey.Gameplay.Spawn
 
         #region Private Methods
 
-        [ServerRpc]
-        private void SpawnPlayerServerRpc(PlayerData playerData)
+        [Command]
+        private void CmdSpawnPlayer(PlayerData playerData)
         {
             DestroyPlayerObject(playerData.ClientId);
 
@@ -80,9 +78,9 @@ namespace DarkKey.Gameplay.Spawn
             var position = spawnPointTransform.position;
             var rotation = spawnPointTransform.rotation;
 
-            NetworkObject playerInstance = Instantiate(playerPrefab, position, rotation);
+            NetworkIdentity playerInstance = Instantiate(playerPrefab, position, rotation);
             // TODO: Add Player.Name and Player.Role
-            playerInstance.GetComponent<NetworkObject>().SpawnAsPlayerObject(playerData.ClientId);
+            playerInstance.GetComponent<NetworkIdentity>().SpawnAsPlayerObject(playerData.ClientId);
             playerInstance.GetComponent<ScenePlayer>().InitializePlayerData(playerData);
         }
 

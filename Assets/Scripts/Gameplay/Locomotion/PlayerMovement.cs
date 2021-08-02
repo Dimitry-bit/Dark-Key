@@ -1,4 +1,4 @@
-using MLAPI;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Gameplay.Locomotion
@@ -14,14 +14,14 @@ namespace DarkKey.Gameplay.Locomotion
 
         private void Start()
         {
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
             TryGetComponent(out _rigidbody);
             TryGetComponent(out _inputHandler);
         }
 
         private void FixedUpdate()
         {
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
             Move(_inputHandler.MovementInput);
         }
 

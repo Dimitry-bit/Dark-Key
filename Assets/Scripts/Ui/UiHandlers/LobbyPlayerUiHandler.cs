@@ -2,8 +2,7 @@
 using System.Linq;
 using DarkKey.Core.Network;
 using DarkKey.Gameplay.CorePlayer;
-using MLAPI;
-using MLAPI.Messaging;
+using Mirror;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,22 +20,22 @@ namespace DarkKey.Ui.UiHandlers
 
         public void InitializeLobbyUi()
         {
-            lobbyPanel.gameObject.SetActive(IsOwner);
+            lobbyPanel.gameObject.SetActive(hasAuthority);
             startButton.gameObject.SetActive(false);
 
-            UpdateLobbyUIServerRpc();
-            InitStartButtonServerRpc();
+            CmdUpdateLobbyUI();
+            CmdInitStartButton();
         }
 
-        [ServerRpc]
-        public void UpdateLobbyUIServerRpc() => UpdateLobbyUIClientRpc();
+        [Command]
+        public void CmdUpdateLobbyUI() => UpdateLobbyUIClientRpc();
 
         #endregion
 
         #region Private Methods
 
-        [ServerRpc]
-        private void InitStartButtonServerRpc()
+        [Command]
+        private void CmdInitStartButton()
         {
             if (OwnerClientId == NetworkManager.ServerClientId)
                 startButton.gameObject.SetActive(true);
@@ -46,10 +45,10 @@ namespace DarkKey.Ui.UiHandlers
         [ClientRpc]
         private void UpdateLobbyUIClientRpc()
         {
-            if (!IsOwner)
+            if (!hasAuthority)
             {
                 LobbyPlayer ownedLobbyPlayer = GetOwnedLobbyPlayer();
-                ownedLobbyPlayer.LobbyPlayerUiHandler.UpdateLobbyUIServerRpc();
+                ownedLobbyPlayer.LobbyPlayerUiHandler.CmdUpdateLobbyUI();
             }
             else
             {
@@ -60,7 +59,7 @@ namespace DarkKey.Ui.UiHandlers
         }
 
         private LobbyPlayer GetOwnedLobbyPlayer() =>
-            NetPortal.Instance.LobbyPlayers.FirstOrDefault(lobbyPlayer => lobbyPlayer.IsOwner);
+            NetPortal.Instance.LobbyPlayers.FirstOrDefault(lobbyPlayer => lobbyPlayer.hasAuthoirty);
 
         private void AssignPlayersToUI()
         {
@@ -89,7 +88,7 @@ namespace DarkKey.Ui.UiHandlers
 
         private void UpdateStartButtonStatus()
         {
-            if (!IsHost) return;
+            if (!isServer) return;
 
             var isAllReady = true;
 

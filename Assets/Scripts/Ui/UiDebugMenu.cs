@@ -1,9 +1,7 @@
 using DarkKey.Core.Managers;
 using DarkKey.Core.Network;
 using DarkKey.Gameplay;
-using MLAPI;
-using MLAPI.Connection;
-using MLAPI.SceneManagement;
+using Mirror;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -66,7 +64,7 @@ namespace DarkKey.Ui
             if (!_hasNewSelectedScene) return;
 
             DisableMenu();
-            NetworkSceneManager.SwitchScene(_newSceneName);
+            // NetworkSceneManager.SwitchScene(_newSceneName);
         }
 
         #endregion
@@ -81,7 +79,7 @@ namespace DarkKey.Ui
 
         private void ToggleConsole()
         {
-            if (!IsServer) return;
+            if (!isServer) return;
 
             if (debugPanel.activeSelf)
             {
@@ -107,23 +105,23 @@ namespace DarkKey.Ui
 
         private void SetSceneSettingsData()
         {
-            sceneDropdown.ClearOptions();
-            sceneDropdown.AddOptions(NetworkManager.Singleton.NetworkConfig.RegisteredScenes);
-            sceneDropdown.value = SceneManager.GetActiveScene().buildIndex;
+            // sceneDropdown.ClearOptions();
+            // sceneDropdown.AddOptions(NetworkManager.Singleton.NetworkConfig.RegisteredScenes);
+            // sceneDropdown.value = SceneManager.GetActiveScene().buildIndex;
         }
 
         private void GetInputHandlerAndAssignEvent()
         {
-            if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.LocalClientId,
-                out NetworkClient client)) return;
-
-            if (client.PlayerObject == null) return;
-            if (!client.PlayerObject.IsSpawned) return;
-
-            if (client.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
-                _inputHandler = inputHandler;
-
-            _inputHandler.OnConsole += ToggleConsole;
+            // if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.LocalClientId,
+            //     out NetworkClient client)) return;
+            //
+            // if (client.PlayerObject == null) return;
+            // if (!client.PlayerObject.IsSpawned) return;
+            //
+            // if (client.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
+            //     _inputHandler = inputHandler;
+            //
+            // _inputHandler.OnConsole += ToggleConsole;
         }
 
         #endregion

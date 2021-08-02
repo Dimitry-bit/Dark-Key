@@ -1,6 +1,6 @@
 using DarkKey.Core.Managers;
 using DarkKey.Gameplay;
-using MLAPI;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Ui.Debug_Panels

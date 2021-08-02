@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using DarkKey.Gameplay.Interaction;
-using MLAPI;
+using Mirror;
 using TMPro;
 using UnityEngine;
 
@@ -20,7 +20,7 @@ namespace DarkKey.Ui.UiHandlers
         {
             interactionPanel.SetActive(false);
 
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
 
             playerInteraction.OnInteractableSelected += EnableUi;
             playerInteraction.OnInteractableDeselected += DisableUi;
@@ -28,7 +28,7 @@ namespace DarkKey.Ui.UiHandlers
 
         private void OnDestroy()
         {
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
             if (playerInteraction == null) return;
 
             playerInteraction.OnInteractableSelected += EnableUi;

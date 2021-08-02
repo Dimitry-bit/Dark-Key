@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
 using DarkKey.Core.Network;
-using MLAPI;
-using MLAPI.Logging;
 using UnityEngine;
 
 namespace DarkKey.Core.Debugger
@@ -22,9 +20,9 @@ namespace DarkKey.Core.Debugger
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
 
-            if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
-                NetworkLog.LogInfoServer($"[{callerFileName}.{memberName}()]: {msg}");
-            else
+            // if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
+            //     NetworkLog.LogInfoServer($"[{callerFileName}.{memberName}()]: {msg}");
+            // else
                 Debug.Log($"[{callerFileName}.{memberName}()]: {msg}");
         }
 
@@ -36,9 +34,9 @@ namespace DarkKey.Core.Debugger
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
 
-            if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
-                NetworkLog.LogWarningServer($"[{callerFileName}.{memberName}()]: {msg}");
-            else
+            // if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
+            //     NetworkLog.LogWarningServer($"[{callerFileName}.{memberName}()]: {msg}");
+            // else
                 Debug.LogWarning($"[{callerFileName}.{memberName}()]: {msg}");
         }
 
@@ -50,9 +48,9 @@ namespace DarkKey.Core.Debugger
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
 
-            if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
-                NetworkLog.LogErrorServer($"[{callerFileName}.{memberName}()]: {msg}");
-            else
+            // if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
+            //     NetworkLog.LogErrorServer($"[{callerFileName}.{memberName}()]: {msg}");
+            // else
                 Debug.LogError($"[{callerFileName}.{memberName}()]: {msg}");
         }
 

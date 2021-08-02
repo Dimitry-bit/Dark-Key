@@ -1,5 +1,4 @@
 ﻿using DarkKey.Core.Debugger;
-using MLAPI.SceneManagement;
 using UnityEngine;
 
 namespace DarkKey.Core.Managers
@@ -35,7 +34,7 @@ namespace DarkKey.Core.Managers
 
         #endregion
 
-        public void StartGame() => NetworkSceneManager.SwitchScene(onlineScene);
+        // public void StartGame() => NetworkSceneManager.SwitchScene(onlineScene);
 
         public static void QuitGame() => Application.Quit();
 

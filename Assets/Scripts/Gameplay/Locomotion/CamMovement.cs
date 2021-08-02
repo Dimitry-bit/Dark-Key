@@ -1,6 +1,6 @@
 using DarkKey.Core.Debugger;
 using DarkKey.Core.Managers;
-using MLAPI;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Gameplay.Locomotion
@@ -20,7 +20,7 @@ namespace DarkKey.Gameplay.Locomotion
 
         private void Start()
         {
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
 
             if (cam == null)
             {
@@ -37,7 +37,7 @@ namespace DarkKey.Gameplay.Locomotion
 
         private void FixedUpdate()
         {
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
             CamRotation(_inputHandler.MouseInput.y);
             PlayerRotation(_inputHandler.MouseInput.x);
         }

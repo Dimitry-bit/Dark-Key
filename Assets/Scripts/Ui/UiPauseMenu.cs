@@ -2,8 +2,7 @@ using DarkKey.Core.Debugger;
 using DarkKey.Core.Managers;
 using DarkKey.Core.Network;
 using DarkKey.Gameplay;
-using MLAPI;
-using MLAPI.Connection;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Ui
@@ -27,16 +26,16 @@ namespace DarkKey.Ui
 
         private void GetInputHandlerAndAssignEvent()
         {
-            if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.LocalClientId,
-                out NetworkClient client)) return;
-
-            if (client.PlayerObject == null) return;
-            if (!client.PlayerObject.IsSpawned) return;
-
-            if (client.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
-                _inputHandler = inputHandler;
-
-            _inputHandler.OnEscape += Menu;
+            // if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.LocalClientId,
+            //     out NetworkClient client)) return;
+            //
+            // if (client.PlayerObject == null) return;
+            // if (!client.PlayerObject.IsSpawned) return;
+            //
+            // if (client.PlayerObject.gameObject.TryGetComponent(out InputHandler inputHandler))
+            //     _inputHandler = inputHandler;
+            //
+            // _inputHandler.OnEscape += Menu;
         }
 
         private void OnDestroy()
@@ -60,13 +59,13 @@ namespace DarkKey.Ui
         public void Disconnect()
         {
             DisableMenu();
-            NetPortal.Instance.Disconnect();
+            // NetPortal.Instance.Disconnect();
         }
 
         public void Quit()
         {
             DisableMenu();
-            NetPortal.Instance.Disconnect();
+            // NetPortal.Instance.Disconnect();
             GameManager.QuitGame();
         }
 

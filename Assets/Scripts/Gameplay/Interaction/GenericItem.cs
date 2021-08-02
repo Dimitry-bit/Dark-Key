@@ -1,5 +1,4 @@
-using MLAPI.Messaging;
-using MLAPI.Spawning;
+using Mirror;
 using Unity.Collections;
 using UnityEngine;
 
@@ -50,7 +49,7 @@ namespace DarkKey.Gameplay.Interaction
             DisablePhysics();
             playerInteraction.HoldItem(this);
 
-            DisableItemForOtherPlayersServerRpc(playerInteraction.OwnerClientId);
+            CmdDisableItemForOtherPlayers(playerInteraction.OwnerClientId);
         }
 
         #endregion
@@ -91,8 +90,8 @@ namespace DarkKey.Gameplay.Interaction
                 _rigidbody = GetComponent<Rigidbody>();
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void DisableItemForOtherPlayersServerRpc(ulong interactedClientId) =>
+        [Command(requiresAuthority= false)]
+        public void CmdDisableItemForOtherPlayers(ulong interactedClientId) =>
             DisableItemForOtherPlayersItemClientRpc(interactedClientId);
 
         [ClientRpc]

@@ -1,6 +1,5 @@
 ﻿using System;
-using MLAPI;
-using MLAPI.NetworkVariable;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Gameplay.Interaction
@@ -31,7 +30,7 @@ namespace DarkKey.Gameplay.Interaction
 
         private void Start()
         {
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
             TryGetComponent(out _inputHandler);
 
             _inputHandler.OnInteract += InteractWithSelectedObject;
@@ -47,7 +46,7 @@ namespace DarkKey.Gameplay.Interaction
 
         private void FixedUpdate()
         {
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
             SearchForInteractableObjects();
         }
 

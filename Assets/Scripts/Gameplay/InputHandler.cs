@@ -1,5 +1,5 @@
 ﻿using System;
-using MLAPI;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Gameplay
@@ -30,7 +30,7 @@ namespace DarkKey.Gameplay
 
         private void Update()
         {
-            if (!IsLocalPlayer) return;
+            if (!isLocalPlayer) return;
 
             CheckInputMap();
         }

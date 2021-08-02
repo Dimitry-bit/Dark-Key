@@ -1,5 +1,5 @@
 using DarkKey.Core.Debugger;
-using MLAPI.NetworkVariable;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Gameplay.Interaction
@@ -9,12 +9,15 @@ namespace DarkKey.Gameplay.Interaction
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core};
 
         [SerializeField] private Transform itemHolderTransform;
-        private readonly NetworkVariable<GenericItem> _itemHeld = new NetworkVariable<GenericItem>(
-            new NetworkVariableSettings
-            {
-                ReadPermission = NetworkVariablePermission.Everyone,
-                WritePermission = NetworkVariablePermission.Everyone
-            });
+        // private readonly NetworkVariable<GenericItem> _itemHeld = new NetworkVariable<GenericItem>(
+        //     new NetworkVariableSettings
+        //     {
+        //         ReadPermission = NetworkVariablePermission.Everyone,
+        //         WritePermission = NetworkVariablePermission.Everyone
+        //     });
+
+        [SyncVar]
+        private GenericItem _itemHeld;
 
         #region Untiy Methods
 
@@ -35,7 +38,7 @@ namespace DarkKey.Gameplay.Interaction
         {
             if (IsHoldingItem())
                 InteractionDescription =
-                    playerInteraction.IsHoldingItem() ? "" : $"Pick Up {_itemHeld.Value.ObjectName}";
+                    playerInteraction.IsHoldingItem() ? "" : $"Pick Up {_itemHeld.ObjectName}";
             else
                 InteractionDescription = playerInteraction.IsHoldingItem() ? "" : $"Put Down Object";
         }
@@ -52,7 +55,7 @@ namespace DarkKey.Gameplay.Interaction
             }
         }
 
-        public bool IsHoldingItem() => _itemHeld.Value;
+        public bool IsHoldingItem() => _itemHeld;
 
         #endregion
 
@@ -66,16 +69,16 @@ namespace DarkKey.Gameplay.Interaction
                 return;
             }
 
-            _itemHeld.Value = item;
+            _itemHeld = item;
 
             var position = holdPositionTransform.position + item.inHandOffset;
             var rotation = holdPositionTransform.rotation;
-            var itemTransform = _itemHeld.Value.transform;
+            var itemTransform = _itemHeld.transform;
 
             itemTransform.SetParent(holdPositionTransform);
             itemTransform.SetPositionAndRotation(position, rotation);
 
-            _itemHeld.Value.EnableItemForAllPlayersServerRpc();
+            _itemHeld.EnableItemForAllPlayersServerRpc();
         }
 
 
@@ -83,8 +86,8 @@ namespace DarkKey.Gameplay.Interaction
         {
             if (playerInteraction.IsHoldingItem()) return;
 
-            playerInteraction.HoldItem(_itemHeld.Value);
-            _itemHeld.Value = null;
+            playerInteraction.HoldItem(_itemHeld);
+            _itemHeld = null;
         }
 
         protected void GetItemFromPlayer(PlayerInteraction playerInteraction)
