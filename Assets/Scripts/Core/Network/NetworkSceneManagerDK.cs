@@ -21,6 +21,11 @@ namespace DarkKey.Core.Network
             
         }
 
+        public void SwitchToOnlineScene()
+        {
+                 
+        }
+
         #endregion
     }
 }

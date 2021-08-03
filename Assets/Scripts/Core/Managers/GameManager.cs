@@ -7,7 +7,7 @@ namespace DarkKey.Core.Managers
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core};
 
-        // public void StartGame() => NetworkSceneManager.SwitchScene(onlineScene);
+        public void StartGame() => ServiceLocator.Instance.networkSceneManager.SwitchToOnlineScene();
 
         public static void QuitGame() => Application.Quit();
 
