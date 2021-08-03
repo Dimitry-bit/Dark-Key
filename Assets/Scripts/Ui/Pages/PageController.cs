@@ -29,7 +29,7 @@ namespace DarkKey.Ui.Pages
             if (onPage == PageType.None) return;
             if (!PageExists(onPage))
             {
-                ServiceLocator.Instance.cutomeDebugger.LogWarning(
+                ServiceLocator.Instance.customDebugger.LogWarning(
                     $"You are trying to turn a page on [{onPage}] that hasn't been registered",
                     ScriptLogLevel);
                 return;
@@ -44,7 +44,7 @@ namespace DarkKey.Ui.Pages
             if (offPage == PageType.None) return;
             if (!PageExists(offPage))
             {
-                ServiceLocator.Instance.cutomeDebugger.LogWarning(
+                ServiceLocator.Instance.customDebugger.LogWarning(
                     $"You are trying to turn a page off [{offPage}] that hasn't been registered",
                     ScriptLogLevel);
                 return;
@@ -65,7 +65,7 @@ namespace DarkKey.Ui.Pages
             foreach (var page in menuPages)
             {
                 RegisterPage(page.PageType, page);
-                ServiceLocator.Instance.cutomeDebugger.LogInfo($"{page.PageType} has been successfully been registered",
+                ServiceLocator.Instance.customDebugger.LogInfo($"{page.PageType} has been successfully been registered",
                     ScriptLogLevel);
             }
         }
@@ -74,7 +74,7 @@ namespace DarkKey.Ui.Pages
         {
             if (PageExists(pageType))
             {
-                ServiceLocator.Instance.cutomeDebugger.LogWarning(
+                ServiceLocator.Instance.customDebugger.LogWarning(
                     $"You are trying to register a page {pageType} that has already been registered {page}",
                     ScriptLogLevel);
                 return;
@@ -87,7 +87,7 @@ namespace DarkKey.Ui.Pages
         {
             if (PageExists(type)) return _pages[type];
 
-            ServiceLocator.Instance.cutomeDebugger.LogWarning(
+            ServiceLocator.Instance.customDebugger.LogWarning(
                 $"You are trying to get a page [{type}] that hasn't been registered",
                 ScriptLogLevel);
             return null;

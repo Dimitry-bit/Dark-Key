@@ -66,37 +66,37 @@ namespace DarkKey.Core.Network
 
         public override void OnServerConnect(NetworkConnection conn)
         {
-            ServiceLocator.Instance.cutomeDebugger.LogInfo($"[Client {conn.connectionId}]: connected successfully.",
+            ServiceLocator.Instance.customDebugger.LogInfo($"[Client {conn.connectionId}]: connected successfully.",
                 ScriptLogLevel);
         }
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             base.OnServerDisconnect(conn);
-            ServiceLocator.Instance.cutomeDebugger.LogInfo($"[Client {conn.connectionId}]: disconnected successfully.",
+            ServiceLocator.Instance.customDebugger.LogInfo($"[Client {conn.connectionId}]: disconnected successfully.",
                 ScriptLogLevel);
         }
 
         public override void OnClientConnect(NetworkConnection conn)
         {
             base.OnClientConnect(conn);
-            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Joined successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.customDebugger.LogInfo($"Joined successfully.", ScriptLogLevel);
         }
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             base.OnClientDisconnect(conn);
-            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Disconnected successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.customDebugger.LogInfo($"Disconnected successfully.", ScriptLogLevel);
         }
 
         public override void OnStartServer()
         {
-            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Server started successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.customDebugger.LogInfo($"Server started successfully.", ScriptLogLevel);
         }
 
         public override void OnStopServer()
         {
-            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Server stopped successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.customDebugger.LogInfo($"Server stopped successfully.", ScriptLogLevel);
         }
 
         // private void HandleSceneSwitched()

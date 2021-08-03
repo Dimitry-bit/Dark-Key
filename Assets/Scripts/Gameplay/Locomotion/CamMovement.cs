@@ -24,7 +24,7 @@ namespace DarkKey.Gameplay.Locomotion
 
             if (cam == null)
             {
-                ServiceLocator.Instance.cutomeDebugger.LogError("No camera was found.", ScriptLogLevel);
+                ServiceLocator.Instance.customDebugger.LogError("No camera was found.", ScriptLogLevel);
                 return;
             }
 

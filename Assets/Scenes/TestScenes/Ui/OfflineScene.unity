@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.19040665, g: 0.14298895, b: 0.15245566, a: 1}
+  m_IndirectSpecularColor: {r: 0.19094342, g: 0.1429922, b: 0.15306157, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -306,7 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  currentLogLevel: 0
+  currentLogLevel: -1
 --- !u!114 &821717707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,18 +480,17 @@ MonoBehaviour:
   autoStartServerBuild: 1
   serverTickRate: 30
   offlineScene: Assets/Scenes/TestScenes/Ui/OfflineScene.unity
-  onlineScene: Assets/Scenes/TestScenes/Gameplay/Multiplayer_Test.unity
+  onlineScene: 
   transport: {fileID: 1365354806}
   networkAddress: localhost
   maxConnections: 100
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 1365354805}
-  playerPrefab: {fileID: 0}
+  playerPrefab: {fileID: 8513362420426912113, guid: 48b16b030f74dda458e3f9dcbdcd19d5, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs: []
-  logLevel: 2147483647
 --- !u!4 &1365354804
 Transform:
   m_ObjectHideFlags: 0
@@ -664,6 +663,7 @@ MonoBehaviour:
   networkSceneManager: {fileID: 0}
   cutomeDebugger: {fileID: 821717706}
   pageController: {fileID: 425194279}
+  gameManager: {fileID: 0}
 --- !u!4 &1682930941
 Transform:
   m_ObjectHideFlags: 0

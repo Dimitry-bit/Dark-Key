@@ -54,7 +54,7 @@ namespace DarkKey.Gameplay.CorePlayer
         public void LeaveGame()
         {
             CmdHandleLeaveLobby(connectionToClient.connectionId);
-            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Client left lobby.", ScriptLogLevel);
+            ServiceLocator.Instance.customDebugger.LogInfo($"Client left lobby.", ScriptLogLevel);
         }
 
         public void QuitGame()
@@ -76,7 +76,7 @@ namespace DarkKey.Gameplay.CorePlayer
 
             LobbyPlayerUiHandler.InitializeLobbyUi();
 
-            ServiceLocator.Instance.cutomeDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
+            ServiceLocator.Instance.customDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
         }
 
         private void HandleReadyStatusChanged(bool previousValue, bool newValue)

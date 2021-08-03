@@ -10,8 +10,9 @@ namespace DarkKey.Core.Managers
         public static ServiceLocator Instance { get; private set; }
 
         public NetworkSceneManagerDk networkSceneManager;
-        public CustomDebugger cutomeDebugger;
+        public CustomDebugger customDebugger;
         public PageController pageController;
+        public GameManager gameManager;
 
         private void Awake()
         {

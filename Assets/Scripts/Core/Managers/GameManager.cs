@@ -12,8 +12,8 @@ namespace DarkKey.Core.Managers
         public static void QuitGame() => Application.Quit();
 
         public static void PauseGame() =>
-            ServiceLocator.Instance.cutomeDebugger.LogInfo("Game paused.", ScriptLogLevel);
+            ServiceLocator.Instance.customDebugger.LogInfo("Game paused.", ScriptLogLevel);
 
-        public static void SaveGame() => ServiceLocator.Instance.cutomeDebugger.LogInfo("Game saved.", ScriptLogLevel);
+        public static void SaveGame() => ServiceLocator.Instance.customDebugger.LogInfo("Game saved.", ScriptLogLevel);
     }
 }

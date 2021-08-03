@@ -66,7 +66,7 @@ namespace DarkKey.Gameplay.Interaction
         {
             if (holdPositionTransform == null)
             {
-                ServiceLocator.Instance.cutomeDebugger.LogWarning("holdPositionTransform is null", ScriptLogLevel);
+                ServiceLocator.Instance.customDebugger.LogWarning("holdPositionTransform is null", ScriptLogLevel);
                 return;
             }
 
