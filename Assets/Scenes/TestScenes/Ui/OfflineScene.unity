@@ -661,9 +661,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   networkSceneManager: {fileID: 0}
-  cutomeDebugger: {fileID: 821717706}
+  customDebugger: {fileID: 821717706}
   pageController: {fileID: 425194279}
-  gameManager: {fileID: 0}
+  gameManager: {fileID: 838830769}
 --- !u!4 &1682930941
 Transform:
   m_ObjectHideFlags: 0
