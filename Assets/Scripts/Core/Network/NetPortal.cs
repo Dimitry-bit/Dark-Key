@@ -1,9 +1,10 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using DarkKey.Core.Debugger;
+using DarkKey.Core.Managers;
 using DarkKey.Gameplay.CorePlayer;
 using Mirror;
 using Mirror.Authenticators;
-using UnityEngine;
 
 namespace DarkKey.Core.Network
 {
@@ -12,20 +13,7 @@ namespace DarkKey.Core.Network
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
 
         public static NetPortal Instance { get; private set; }
-
-        [Header("Debug")]
-        public DebugLogLevel logLevel;
-
-        [Header("Connection Data")]
-        private string _passwordText;
-
-        // public List<LobbyPlayer> LobbyPlayers { get; private set; }
-
-        public event Action OnAnyConnection;
-        public event Action OnLocalConnection;
-        public event Action OnAnyDisconnection;
-        public event Action OnLocalDisconnection;
-        public event Action<PlayerData> OnSceneSwitch;
+        public List<LobbyPlayer> LobbyPlayers { get; private set; }
 
         public override void Awake()
         {
@@ -40,90 +28,77 @@ namespace DarkKey.Core.Network
 
         public void Disconnect()
         {
-            // if (NetworkManager.Singleton.IsHost)
-            // {
-            //     NetworkSceneManager.SwitchScene(offlineScene);
-            //
-            //     NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
-            //     NetworkManager.Singleton.StopHost();
-            // }
-            // else if (NetworkManager.Singleton.IsClient)
-            // {
-            //     NetworkManager.Singleton.StopClient();
-            //     SceneManager.LoadScene(offlineScene);
-            // }
-            // else if (NetworkManager.Singleton.IsServer)
-            // {
-            //     NetworkSceneManager.SwitchScene(offlineScene);
-            //     NetworkManager.Singleton.StopServer();
-            // }
-
-            OnLocalDisconnection?.Invoke();
+            // if (isHost)
+            //     StopHost();
+            // else if (isClient)
+            //     StopClient();
+            // else if (isServerOnly)
+            //     StopServer();
         }
 
         public void Host(string password)
         {
-            _passwordText = password;
+            GetComponent<BasicAuthenticator>().password = password;
             StartHost();
         }
 
         public void Join(string ipAddress, string password)
         {
+            networkAddress = ipAddress;
+
             if (TryGetComponent(out BasicAuthenticator basicAuthenticator))
                 basicAuthenticator.password = password;
 
-            networkAddress = ipAddress;
-
             StartClient();
-
-            // Invoke(nameof(CheckServerAvailability), 1f);
         }
 
-        // public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
-        // {
-        //     if (LobbyPlayers == null)
-        //         LobbyPlayers = new List<LobbyPlayer>();
-        //
-        //     LobbyPlayers.Add(lobbyPlayer);
-        //     LobbyPlayers = LobbyPlayers.Distinct().ToList();
-        // }
+        public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
+        {
+            LobbyPlayers ??= new List<LobbyPlayer>();
+
+            LobbyPlayers.Add(lobbyPlayer);
+            LobbyPlayers = LobbyPlayers.Distinct().ToList();
+        }
 
         #endregion
 
         #region Private Methods
 
-        // private void HandleClientDisconnect(ulong clientId)
-        // {
-        //     OnAnyDisconnection?.Invoke();
-        //
-        //     if (clientId != NetworkManager.Singleton.LocalClientId) return;
-        //
-        //     Disconnect();
-        //
-        //     CustomDebugger.LogInfo($"[Client] : ({clientId}) disconnected successfully", ScriptLogLevel);
-        //     OnLocalDisconnection?.Invoke();
-        // }
-        //
-        // private void HandleClientConnected(ulong clientId)
-        // {
-        //     OnAnyConnection?.Invoke();
-        //
-        //     if (clientId != NetworkManager.Singleton.LocalClientId) return;
-        //
-        //     CustomDebugger.LogInfo($"[Client] : ({clientId}) connected successfully", ScriptLogLevel);
-        //     OnLocalConnection?.Invoke();
-        // }
-        //
-        // private void HandleServerStarted()
-        // {
-        //     OnAnyConnection?.Invoke();
-        //
-        //     if (!NetworkManager.Singleton.IsHost) return;
-        //
-        //     CustomDebugger.LogInfo("hosting started successfully", ScriptLogLevel);
-        //     OnLocalConnection?.Invoke();
-        // }
-        //
+        public override void OnServerConnect(NetworkConnection conn)
+        {
+            ServiceLocator.Instance.cutomeDebugger.LogInfo($"[Client {conn.connectionId}]: connected successfully.",
+                ScriptLogLevel);
+        }
+
+        public override void OnServerDisconnect(NetworkConnection conn)
+        {
+            base.OnServerDisconnect(conn);
+            ServiceLocator.Instance.cutomeDebugger.LogInfo($"[Client {conn.connectionId}]: disconnected successfully.",
+                ScriptLogLevel);
+        }
+
+        public override void OnClientConnect(NetworkConnection conn)
+        {
+            base.OnClientConnect(conn);
+            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Joined successfully.", ScriptLogLevel);
+        }
+
+        public override void OnClientDisconnect(NetworkConnection conn)
+        {
+            base.OnClientDisconnect(conn);
+            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Disconnected successfully.", ScriptLogLevel);
+        }
+
+        public override void OnStartServer()
+        {
+            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Server started successfully.", ScriptLogLevel);
+        }
+
+        public override void OnStopServer()
+        {
+            ServiceLocator.Instance.cutomeDebugger.LogInfo($"Server stopped successfully.", ScriptLogLevel);
+        }
+
         // private void HandleSceneSwitched()
         // {
         //     if (!NetworkManager.Singleton.IsHost) return;
@@ -137,15 +112,6 @@ namespace DarkKey.Core.Network
         //         CustomDebugger.LogInfo("Player1 Switched Scene", ScriptLogLevel);
         //         OnSceneSwitch?.Invoke(roomPlayer.PlayerData);
         //     }
-        // }
-        //
-        // private void CheckServerAvailability()
-        // {
-        //     if (NetworkManager.Singleton.IsConnectedClient) return;
-        //     if (!NetworkManager.Singleton.IsClient) return;
-        //
-        //     NetworkManager.Singleton.StopClient();
-        //     OnLocalDisconnection?.Invoke();
         // }
 
         #endregion
