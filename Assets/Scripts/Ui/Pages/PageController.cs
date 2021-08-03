@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DarkKey.Core.Debugger;
+using DarkKey.Core.Managers;
 using UnityEngine;
 
 namespace DarkKey.Ui.Pages
@@ -8,33 +9,16 @@ namespace DarkKey.Ui.Pages
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.UI};
 
-        private static PageController _instance;
-        public static PageController Instance
-        {
-            get
-            {
-                if (_instance == null) CustomDebugger.LogError("Instance is null", ScriptLogLevel);
-                return _instance;
-            }
-        }
-
         private Dictionary<PageType, Page> _pages;
         [SerializeField] private Page[] menuPages;
 
         #region Unity Functions
 
-        private void Awake()
+        private void Start()
         {
-            if (_instance == null)
-            {
-                _instance = this;
-                _pages = new Dictionary<PageType, Page>();
-            }
-            else
-                Destroy(gameObject);
+            _pages = new Dictionary<PageType, Page>();
+            RegisterAllPages();
         }
-
-        private void Start() => RegisterAllPages();
 
         #endregion
 
@@ -45,7 +29,8 @@ namespace DarkKey.Ui.Pages
             if (onPage == PageType.None) return;
             if (!PageExists(onPage))
             {
-                CustomDebugger.LogWarning($"You are trying to turn a page on [{onPage}] that hasn't been registered",
+                ServiceLocator.Instance.cutomeDebugger.LogWarning(
+                    $"You are trying to turn a page on [{onPage}] that hasn't been registered",
                     ScriptLogLevel);
                 return;
             }
@@ -59,7 +44,8 @@ namespace DarkKey.Ui.Pages
             if (offPage == PageType.None) return;
             if (!PageExists(offPage))
             {
-                CustomDebugger.LogWarning($"You are trying to turn a page off [{offPage}] that hasn't been registered",
+                ServiceLocator.Instance.cutomeDebugger.LogWarning(
+                    $"You are trying to turn a page off [{offPage}] that hasn't been registered",
                     ScriptLogLevel);
                 return;
             }
@@ -79,7 +65,8 @@ namespace DarkKey.Ui.Pages
             foreach (var page in menuPages)
             {
                 RegisterPage(page.PageType, page);
-                CustomDebugger.LogInfo($"{page} has been successfully been registered", ScriptLogLevel);
+                ServiceLocator.Instance.cutomeDebugger.LogInfo($"{page} has been successfully been registered",
+                    ScriptLogLevel);
             }
         }
 
@@ -87,7 +74,7 @@ namespace DarkKey.Ui.Pages
         {
             if (PageExists(pageType))
             {
-                CustomDebugger.LogWarning(
+                ServiceLocator.Instance.cutomeDebugger.LogWarning(
                     $"You are trying to register a page {pageType} that has already been registered {page}",
                     ScriptLogLevel);
                 return;
@@ -100,7 +87,8 @@ namespace DarkKey.Ui.Pages
         {
             if (PageExists(type)) return _pages[type];
 
-            CustomDebugger.LogWarning($"You are trying to get a page [{type}] that hasn't been registered",
+            ServiceLocator.Instance.cutomeDebugger.LogWarning(
+                $"You are trying to get a page [{type}] that hasn't been registered",
                 ScriptLogLevel);
             return null;
         }

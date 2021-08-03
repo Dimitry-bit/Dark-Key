@@ -16,11 +16,13 @@ namespace DarkKey.Gameplay.Interaction
         private InputHandler _inputHandler;
         private Interactable _selectedObject;
 
-        private readonly NetworkVariable<GenericItem> _itemHeld = new NetworkVariable<GenericItem>(new NetworkVariableSettings
-        {
-            ReadPermission = NetworkVariablePermission.Everyone, 
-            WritePermission = NetworkVariablePermission.OwnerOnly
-        });
+        // private readonly NetworkVariable<GenericItem> _itemHeld = new NetworkVariable<GenericItem>(new NetworkVariableSettings
+        // {
+        //     ReadPermission = NetworkVariablePermission.Everyone, 
+        //     WritePermission = NetworkVariablePermission.OwnerOnly
+        // });
+
+        [SyncVar] private GenericItem _itemHeld;
 
         public event Action<Interactable> OnInteractableSelected;
         public event Action OnInteractableDeselected;
@@ -66,32 +68,32 @@ namespace DarkKey.Gameplay.Interaction
 
         public void HoldItem(GenericItem item)
         {
-            _itemHeld.Value = item;
+            _itemHeld = item;
 
             var position = rightHandSlot.position + item.inHandOffset;
             var rotation = rightHandSlot.rotation;
-            var itemTransform = _itemHeld.Value.transform;
+            var itemTransform = _itemHeld.transform;
 
             itemTransform.SetParent(rightHandSlot);
             itemTransform.SetPositionAndRotation(position, rotation);
 
-            _itemHeld.Value.DisableItemForOtherPlayersServerRpc(OwnerClientId);
+            // _itemHeld.DisableItemForOtherPlayersServerRpc(OwnerClientId);
         }
 
-        public GenericItem GetItemType() => IsHoldingItem() ? _itemHeld.Value : null;
+        public GenericItem GetItemType() => IsHoldingItem() ? _itemHeld : null;
 
         public GenericItem RemoveAndReturnItem()
         {
             if (!IsHoldingItem()) return null;
 
-            var item = _itemHeld.Value;
-            _itemHeld.Value.transform.parent = null;
-            _itemHeld.Value = null;
+            var item = _itemHeld;
+            _itemHeld.transform.parent = null;
+            // _itemHeld = null;
 
             return item;
         }
 
-        public bool IsHoldingItem() => _itemHeld.Value;
+        public bool IsHoldingItem() => _itemHeld;
 
         #endregion
 
@@ -131,12 +133,12 @@ namespace DarkKey.Gameplay.Interaction
         {
             if (!IsHoldingItem()) return;
 
-            _itemHeld.Value.transform.parent = null;
+            _itemHeld.transform.parent = null;
 
             var throwForce = transform.forward * throwForceMultiplier;
-            _itemHeld.Value.ThrowObject(throwForce);
+            _itemHeld.ThrowObject(throwForce);
 
-            _itemHeld.Value = null;
+            _itemHeld = null;
         }
 
         #endregion

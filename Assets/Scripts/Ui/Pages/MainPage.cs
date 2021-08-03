@@ -16,13 +16,13 @@ namespace DarkKey.Ui.Pages
         private void SubscribeButtons()
         {
             hostButton.onClick.AddListener(() =>
-                PageController.Instance.TurnOffPage(PageType.MainPage, PageType.HostPage));
+                ServiceLocator.Instance.pageController.TurnOffPage(PageType.MainPage, PageType.HostPage));
 
             joinButton.onClick.AddListener(() =>
-                PageController.Instance.TurnOffPage(PageType.MainPage, PageType.JoinPage));
+                ServiceLocator.Instance.pageController.TurnOffPage(PageType.MainPage, PageType.JoinPage));
 
             settingsButton.onClick.AddListener(() =>
-                PageController.Instance.TurnOffPage(PageType.MainPage, PageType.SettingsPage));
+                ServiceLocator.Instance.pageController.TurnOffPage(PageType.MainPage, PageType.SettingsPage));
 
             quitButton.onClick.AddListener(GameManager.QuitGame);
         }

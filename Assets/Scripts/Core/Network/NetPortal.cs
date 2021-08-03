@@ -1,39 +1,23 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DarkKey.Core.Debugger;
 using DarkKey.Gameplay.CorePlayer;
 using Mirror;
+using Mirror.Authenticators;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace DarkKey.Core.Network
 {
-    public class NetPortal : NetworkBehaviour
+    public class NetPortal : NetworkManager
     {
-        [Header("Debug")]
-        public DebugLogLevel logLevel;
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
 
-        [Header("Scene")]
-        [SerializeField] private string offlineScene = "OfflineScene";
+        [Header("Debug")]
+        public DebugLogLevel logLevel;
 
         [Header("Connection Data")]
         private string _passwordText;
-        public List<LobbyPlayer> LobbyPlayers { get; private set; }
 
-        private static NetPortal _instance;
-        public static NetPortal Instance
-        {
-            get
-            {
-                if (_instance == null)
-                    CustomDebugger.LogCriticalError("Instance is null");
-
-                return _instance;
-            }
-        }
+        // public List<LobbyPlayer> LobbyPlayers { get; private set; }
 
         public event Action OnAnyConnection;
         public event Action OnLocalConnection;
@@ -41,104 +25,62 @@ namespace DarkKey.Core.Network
         public event Action OnLocalDisconnection;
         public event Action<PlayerData> OnSceneSwitch;
 
-        #region Unity Methods
-
-        private void Awake()
-        {
-            if (_instance == null)
-                _instance = this;
-            else if (_instance != this)
-                Destroy(gameObject);
-
-            DontDestroyOnLoad(this);
-        }
-
-        private void Start()
-        {
-            // NetworkManager.Singleton.OnServerStarted += HandleServerStarted;
-            // NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
-            // NetworkManager.Singleton.OnClientDisconnectCallback += HandleClientDisconnect;
-            // NetworkSceneManager.OnSceneSwitched += HandleSceneSwitched;
-        }
-
-        private void OnDestroy()
-        {
-            // if (NetworkManager.Singleton == null) return;
-            //
-            // NetworkManager.Singleton.OnServerStarted -= HandleServerStarted;
-            // NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnected;
-            // NetworkManager.Singleton.OnClientDisconnectCallback -= HandleClientDisconnect;
-            // NetworkSceneManager.OnSceneSwitched -= HandleSceneSwitched;
-        }
-
-        #endregion
-
         #region Public Methods
 
-        // public void Disconnect()
-        // {
-        //     if (NetworkManager.Singleton.IsHost)
-        //     {
-        //         NetworkSceneManager.SwitchScene(offlineScene);
-        //
-        //         NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
-        //         NetworkManager.Singleton.StopHost();
-        //     }
-        //     else if (NetworkManager.Singleton.IsClient)
-        //     {
-        //         NetworkManager.Singleton.StopClient();
-        //         SceneManager.LoadScene(offlineScene);
-        //     }
-        //     else if (NetworkManager.Singleton.IsServer)
-        //     {
-        //         NetworkSceneManager.SwitchScene(offlineScene);
-        //         NetworkManager.Singleton.StopServer();
-        //     }
-        //
-        //     OnLocalDisconnection?.Invoke();
-        // }
-        //
-        // public void Host(string password)
-        // {
-        //     _passwordText = password;
-        //
-        //     NetworkManager.Singleton.ConnectionApprovalCallback += ApprovalCheck;
-        //     NetworkManager.Singleton.StartHost();
-        // }
-        //
-        // public void Join(string ipAddress, string password)
-        // {
-        //     NetworkManager.Singleton.GetComponent<UNetTransport>().ConnectAddress = ipAddress;
-        //     NetworkManager.Singleton.NetworkConfig.ConnectionData = Encoding.ASCII.GetBytes(password);
-        //     NetworkManager.Singleton.StartClient();
-        //
-        //     Invoke(nameof(CheckServerAvailability), 1f);
-        // }
-
-        public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
+        public void Disconnect()
         {
-            if (LobbyPlayers == null)
-                LobbyPlayers = new List<LobbyPlayer>();
+            // if (NetworkManager.Singleton.IsHost)
+            // {
+            //     NetworkSceneManager.SwitchScene(offlineScene);
+            //
+            //     NetworkManager.Singleton.ConnectionApprovalCallback -= ApprovalCheck;
+            //     NetworkManager.Singleton.StopHost();
+            // }
+            // else if (NetworkManager.Singleton.IsClient)
+            // {
+            //     NetworkManager.Singleton.StopClient();
+            //     SceneManager.LoadScene(offlineScene);
+            // }
+            // else if (NetworkManager.Singleton.IsServer)
+            // {
+            //     NetworkSceneManager.SwitchScene(offlineScene);
+            //     NetworkManager.Singleton.StopServer();
+            // }
 
-            LobbyPlayers.Add(lobbyPlayer);
-            LobbyPlayers = LobbyPlayers.Distinct().ToList();
+            OnLocalDisconnection?.Invoke();
         }
+
+        public void Host(string password)
+        {
+            _passwordText = password;
+            StartHost();
+        }
+
+        public void Join(string ipAddress, string password)
+        {
+            if (TryGetComponent(out BasicAuthenticator basicAuthenticator))
+                basicAuthenticator.password = password;
+
+            networkAddress = ipAddress;
+
+            StartClient();
+
+            // Invoke(nameof(CheckServerAvailability), 1f);
+        }
+
+        // public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
+        // {
+        //     if (LobbyPlayers == null)
+        //         LobbyPlayers = new List<LobbyPlayer>();
+        //
+        //     LobbyPlayers.Add(lobbyPlayer);
+        //     LobbyPlayers = LobbyPlayers.Distinct().ToList();
+        // }
 
         #endregion
 
         #region Private Methods
 
-        // private void ApprovalCheck(byte[] connectionData, ulong clientId,
-        //     NetworkManager.ConnectionApprovedDelegate callback)
-        // {
-        //     string password = Encoding.ASCII.GetString(connectionData);
-        //     bool isApproved = password == _passwordText;
-        //
-        //     CustomDebugger.LogInfo($"{isApproved}", ScriptLogLevel);
-        //
-        //     callback(true, null, isApproved, null, null);
-        // }
-        //
         // private void HandleClientDisconnect(ulong clientId)
         // {
         //     OnAnyDisconnection?.Invoke();

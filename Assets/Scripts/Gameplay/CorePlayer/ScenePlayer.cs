@@ -1,4 +1,5 @@
 ﻿using DarkKey.Core.Debugger;
+using DarkKey.Core.Managers;
 using Mirror;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace DarkKey.Gameplay.CorePlayer
             PlayerData = new PlayerData(playerData.ClientId, playerData.Name, playerData.Role);
             DisableUnownedAudioListeners();
 
-            CustomDebugger.LogInfo("ScenePlayer Initialized", ScriptLogLevel);
+            ServiceLocator.Instance.cutomeDebugger.LogInfo("ScenePlayer Initialized", ScriptLogLevel);
         }
 
         #endregion

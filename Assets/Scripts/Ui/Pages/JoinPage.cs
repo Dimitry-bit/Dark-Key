@@ -21,10 +21,13 @@ namespace DarkKey.Ui.Pages
             if (string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = "127.0.0.1";
             else if (!IsValidIp()) return;
 
-            NetPortal.Instance.Join(ipInputField.text, passwordInputField.text);
+            // NetPortal.Instance.Join(ipInputField.text, passwordInputField.text);
         }
 
-        public void Back() => PageController.Instance.TurnOffPage(PageType, PageType.MainPage);
+        public void Back()
+        {
+            // PageController.Instance.TurnOffPage(PageType, PageType.MainPage);
+        }
 
         #endregion
 

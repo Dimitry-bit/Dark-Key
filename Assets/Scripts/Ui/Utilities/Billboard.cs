@@ -1,4 +1,5 @@
 ﻿using DarkKey.Core.Debugger;
+using DarkKey.Core.Managers;
 using UnityEngine;
 
 namespace DarkKey.Ui.Utilities
@@ -14,7 +15,7 @@ namespace DarkKey.Ui.Utilities
             if (mainCamera != null) return;
 
             mainCamera = Camera.main;
-            CustomDebugger.LogWarning($"mainCamera variable is not assigned | Defaulted to Camera.Main",
+            ServiceLocator.Instance.cutomeDebugger.LogWarning($"mainCamera variable is not assigned | Defaulted to Camera.Main",
                 new[] {DebugLogLevel.UI});
         }
 

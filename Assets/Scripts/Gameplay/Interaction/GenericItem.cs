@@ -10,7 +10,7 @@ namespace DarkKey.Gameplay.Interaction
     {
         [ReadOnly] public Vector3 inHandOffset;
         [ReadOnly] public Vector3 inFrameOffset;
-        [SerializeField] private bool isPhysicsControlled = false;
+        [SerializeField] private bool isPhysicsControlled;
 
         private Rigidbody _rigidbody;
 
@@ -39,7 +39,7 @@ namespace DarkKey.Gameplay.Interaction
             EnablePhysics();
             _rigidbody.AddForce(force);
 
-            EnableItemForAllPlayersServerRpc();
+            CmdEnableItemForAllPlayers();
         }
 
         public override void Interact(PlayerInteraction playerInteraction)
@@ -49,7 +49,7 @@ namespace DarkKey.Gameplay.Interaction
             DisablePhysics();
             playerInteraction.HoldItem(this);
 
-            CmdDisableItemForOtherPlayers(playerInteraction.OwnerClientId);
+            // CmdDisableItemForOtherPlayers(playerInteraction.OwnerClientId);
         }
 
         #endregion
@@ -97,12 +97,12 @@ namespace DarkKey.Gameplay.Interaction
         [ClientRpc]
         private void DisableItemForOtherPlayersItemClientRpc(ulong interactedClientId)
         {
-            if (NetworkSpawnManager.GetLocalPlayerObject().OwnerClientId == interactedClientId) return;
+            // if (NetworkSpawnManager.GetLocalPlayerObject().OwnerClientId == interactedClientId) return;
             gameObject.SetActive(false);
         }
 
-        [ServerRpc(RequireOwnership = false)]
-        public void EnableItemForAllPlayersServerRpc() => EnableItemForAllPlayersClientRpc();
+        [Command(requiresAuthority = false)]
+        public void CmdEnableItemForAllPlayers() => EnableItemForAllPlayersClientRpc();
 
         [ClientRpc]
         private void EnableItemForAllPlayersClientRpc() => gameObject.SetActive(true);

@@ -1,71 +1,106 @@
 ﻿using System.IO;
 using System.Linq;
-using DarkKey.Core.Network;
+using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Core.Debugger
 {
-    public static class CustomDebugger
+    public class CustomDebugger : NetworkBehaviour, IDebugger
     {
-        private static DebugLogLevel LogLevels =>
-            NetPortal.Instance == null
-                ? DebugLogLevel.Core | DebugLogLevel.Network | DebugLogLevel.Player
-                : NetPortal.Instance.logLevel;
+        [SerializeField] private DebugLogLevel currentLogLevel;
 
-        public static void LogInfo(string msg, DebugLogLevel[] logLevels,
-            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
-            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
+        private enum LogTypes : byte
+        {
+            Info,
+            Warning,
+            Error,
+        }
+
+        public void LogInfo(object msg, DebugLogLevel[] logLevels,
+            [System.Runtime.CompilerServices.CallerMemberName]
+            string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath]
+            string sourceFilePath = "")
         {
             if (!IsAllowedToDebug(logLevels)) return;
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
+            string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            // if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
-            //     NetworkLog.LogInfoServer($"[{callerFileName}.{memberName}()]: {msg}");
-            // else
-                Debug.Log($"[{callerFileName}.{memberName}()]: {msg}");
+            Debug.Log(logText);
+            if (NetworkManager.singleton.isNetworkActive)
+                CmdLogToServer(logText, LogTypes.Info);
         }
 
-        public static void LogWarning(string msg, DebugLogLevel[] logLevels,
-            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
-            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
+        public void LogWarning(object msg, DebugLogLevel[] logLevels,
+            [System.Runtime.CompilerServices.CallerMemberName]
+            string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath]
+            string sourceFilePath = "")
         {
             if (!IsAllowedToDebug(logLevels)) return;
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
+            string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            // if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
-            //     NetworkLog.LogWarningServer($"[{callerFileName}.{memberName}()]: {msg}");
-            // else
-                Debug.LogWarning($"[{callerFileName}.{memberName}()]: {msg}");
+            Debug.LogWarning(logText);
+            if (NetworkManager.singleton.isNetworkActive)
+                CmdLogToServer(logText, LogTypes.Warning);
         }
 
-        public static void LogError(string msg, DebugLogLevel[] logLevels,
-            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
-            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
+        public void LogError(object msg, DebugLogLevel[] logLevels,
+            [System.Runtime.CompilerServices.CallerMemberName]
+            string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath]
+            string sourceFilePath = "")
         {
             if (!IsAllowedToDebug(logLevels)) return;
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
+            string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            // if (NetworkManager.Singleton.IsConnectedClient || NetworkManager.Singleton.IsServer)
-            //     NetworkLog.LogErrorServer($"[{callerFileName}.{memberName}()]: {msg}");
-            // else
-                Debug.LogError($"[{callerFileName}.{memberName}()]: {msg}");
+            Debug.LogError(logText);
+            if (NetworkManager.singleton.isNetworkActive)
+                CmdLogToServer(logText, LogTypes.Error);
         }
 
-        public static void LogCriticalError(string msg,
-            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
-            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
+        public void LogCriticalError(object msg,
+            [System.Runtime.CompilerServices.CallerMemberName]
+            string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath]
+            string sourceFilePath = "")
         {
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             Debug.LogError($"[{callerFileName}.{memberName}()]: {msg}");
         }
 
-        private static bool IsAllowedToDebug(DebugLogLevel[] logLevels)
+        private bool IsAllowedToDebug(DebugLogLevel[] logLevels)
         {
-            var isAllowedToDebug = logLevels.Any(logLevel => LogLevels.HasFlag(logLevel));
+            var isAllowedToDebug = logLevels.Any(logLevel => currentLogLevel.HasFlag(logLevel));
             return isAllowedToDebug;
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdLogToServer(string msg, LogTypes logType)
+        {
+            switch (logType)
+            {
+                case LogTypes.Info:
+                {
+                    Debug.Log(msg);
+                    break;
+                }
+                case LogTypes.Warning:
+                {
+                    Debug.LogWarning(msg);
+                    break;
+                }
+                case LogTypes.Error:
+                {
+                    Debug.LogError(msg);
+                    break;
+                }
+            }
         }
     }
 }

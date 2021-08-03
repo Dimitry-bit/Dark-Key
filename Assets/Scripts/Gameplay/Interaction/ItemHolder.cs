@@ -1,4 +1,5 @@
 using DarkKey.Core.Debugger;
+using DarkKey.Core.Managers;
 using Mirror;
 using UnityEngine;
 
@@ -65,7 +66,7 @@ namespace DarkKey.Gameplay.Interaction
         {
             if (holdPositionTransform == null)
             {
-                CustomDebugger.LogWarning("holdPositionTransform is null", ScriptLogLevel);
+                ServiceLocator.Instance.cutomeDebugger.LogWarning("holdPositionTransform is null", ScriptLogLevel);
                 return;
             }
 
@@ -78,7 +79,7 @@ namespace DarkKey.Gameplay.Interaction
             itemTransform.SetParent(holdPositionTransform);
             itemTransform.SetPositionAndRotation(position, rotation);
 
-            _itemHeld.EnableItemForAllPlayersServerRpc();
+            _itemHeld.CmdEnableItemForAllPlayers();
         }
 
 
