@@ -65,7 +65,7 @@ namespace DarkKey.Ui.Pages
             foreach (var page in menuPages)
             {
                 RegisterPage(page.PageType, page);
-                ServiceLocator.Instance.cutomeDebugger.LogInfo($"{page} has been successfully been registered",
+                ServiceLocator.Instance.cutomeDebugger.LogInfo($"{page.PageType} has been successfully been registered",
                     ScriptLogLevel);
             }
         }
