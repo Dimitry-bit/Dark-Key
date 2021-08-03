@@ -306,7 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  currentLogLevel: -1
+  currentLogLevel: 0
 --- !u!114 &821717707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,7 +480,7 @@ MonoBehaviour:
   autoStartServerBuild: 1
   serverTickRate: 30
   offlineScene: Assets/Scenes/TestScenes/Ui/OfflineScene.unity
-  onlineScene: 
+  onlineScene: Assets/Scenes/TestScenes/Gameplay/Multiplayer_Test.unity
   transport: {fileID: 1365354806}
   networkAddress: localhost
   maxConnections: 100

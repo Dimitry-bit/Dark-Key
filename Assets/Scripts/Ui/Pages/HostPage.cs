@@ -10,10 +10,7 @@ namespace DarkKey.Ui.Pages
     {
         [SerializeField] private TMP_InputField passwordInputField;
 
-        public void HostGame()
-        {
-            // NetworkManager.singleton.Host(passwordInputField.text);
-        }
+        public void HostGame() => NetPortal.Instance.Host(passwordInputField.text);
 
         public void Back() => ServiceLocator.Instance.pageController.TurnOffPage(PageType, PageType.MainPage);
     }

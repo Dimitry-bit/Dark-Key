@@ -11,6 +11,8 @@ namespace DarkKey.Core.Network
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
 
+        public static NetPortal Instance { get; private set; }
+
         [Header("Debug")]
         public DebugLogLevel logLevel;
 
@@ -24,6 +26,15 @@ namespace DarkKey.Core.Network
         public event Action OnAnyDisconnection;
         public event Action OnLocalDisconnection;
         public event Action<PlayerData> OnSceneSwitch;
+
+        public override void Awake()
+        {
+            base.Awake();
+            if (Instance == null)
+                Instance = this;
+            else if (Instance != this)
+                Destroy(this);
+        }
 
         #region Public Methods
 

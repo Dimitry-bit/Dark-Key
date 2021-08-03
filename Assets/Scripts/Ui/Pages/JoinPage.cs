@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Text.RegularExpressions;
+using DarkKey.Core.Managers;
 using DarkKey.Core.Network;
 using TMPro;
 using UnityEngine;
@@ -21,13 +22,10 @@ namespace DarkKey.Ui.Pages
             if (string.IsNullOrEmpty(ipInputField.text)) ipInputField.text = "127.0.0.1";
             else if (!IsValidIp()) return;
 
-            // NetPortal.Instance.Join(ipInputField.text, passwordInputField.text);
+            NetPortal.Instance.Join(ipInputField.text, passwordInputField.text);
         }
 
-        public void Back()
-        {
-            // PageController.Instance.TurnOffPage(PageType, PageType.MainPage);
-        }
+        public void Back() => ServiceLocator.Instance.pageController.TurnOffPage(PageType, PageType.MainPage);
 
         #endregion
 
