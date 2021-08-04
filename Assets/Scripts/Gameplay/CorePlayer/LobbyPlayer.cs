@@ -32,22 +32,13 @@ namespace DarkKey.Gameplay.CorePlayer
             ServiceLocator.Instance.customDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
         }
 
+        // public override void OnStopClient() => CmdRemoveLobbyPlayerFromList();
+
         private void OnDestroy()
         {
-            if (NetPortal.Instance != null) return;
-
-            if (NetPortal.Instance.LobbyPlayers.Contains(this))
-                NetPortal.Instance.LobbyPlayers.Remove(this);
-        }
-
-        private void AddLobbyPlayers()
-        {
-            LobbyPlayer[] lobbyPlayers = FindObjectsOfType<LobbyPlayer>();
-
-            for (int index = 0; index < lobbyPlayers.Length; index++)
-            {
-                NetPortal.Instance.AddLobbyPlayer(lobbyPlayers[index]);
-            }
+            // if (NetPortal.Instance != null) return;
+            // CmdRemoveLobbyPlayerFromList();
+            // LeaveGame();
         }
 
         #endregion
@@ -62,6 +53,8 @@ namespace DarkKey.Gameplay.CorePlayer
         public void LeaveGame()
         {
             CmdHandleLeaveLobby();
+            LobbyPlayerUiHandler.CmdUpdateLobbyUI();
+
             ServiceLocator.Instance.customDebugger.LogInfo($"Client left lobby.", ScriptLogLevel);
         }
 
@@ -74,6 +67,16 @@ namespace DarkKey.Gameplay.CorePlayer
         #endregion
 
         #region Private Methods
+
+        private void AddLobbyPlayers()
+        {
+            LobbyPlayer[] lobbyPlayers = FindObjectsOfType<LobbyPlayer>();
+
+            for (int index = 0; index < lobbyPlayers.Length; index++)
+            {
+                NetPortal.Instance.AddLobbyPlayer(lobbyPlayers[index]);
+            }
+        }
 
         [Command]
         private void CmdNotifyInitialization() => InitializeInstance();
@@ -98,7 +101,7 @@ namespace DarkKey.Gameplay.CorePlayer
             HandleLeaveLobbyClientRpc();
 
             // TODO: Need to be moved in HandleLeaveLobbyClientRpc (Maybe IDK)
-            LobbyPlayerUiHandler.CmdUpdateLobbyUI();
+            // LobbyPlayerUiHandler.CmdUpdateLobbyUI();
         }
 
         [ClientRpc]
@@ -110,11 +113,15 @@ namespace DarkKey.Gameplay.CorePlayer
             }
             else
             {
-                NetPortal.Instance.LobbyPlayers.Remove(this);
-
-                if (!isLocalPlayer) return;
+                RemoveLobbyPlayerFromList();
                 NetPortal.Instance.Disconnect();
             }
+        }
+
+        private void RemoveLobbyPlayerFromList()
+        {
+            if (NetPortal.Instance.LobbyPlayers.Contains(this))
+                NetPortal.Instance.LobbyPlayers.Remove(this);
         }
 
         #endregion
