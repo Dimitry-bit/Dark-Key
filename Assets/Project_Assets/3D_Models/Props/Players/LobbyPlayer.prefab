@@ -749,7 +749,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8513362420426912111}
         m_TargetAssemblyTypeName: DarkKey.LobbyPlayer, Assembly-CSharp
-        m_MethodName: Ready
+        m_MethodName: CmdReady
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

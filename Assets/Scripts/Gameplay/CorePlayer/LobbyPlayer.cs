@@ -1,4 +1,3 @@
-using System.Linq;
 using DarkKey.Core.Debugger;
 using DarkKey.Core.Managers;
 using DarkKey.Core.Network;
@@ -25,58 +24,66 @@ namespace DarkKey.Gameplay.CorePlayer
         {
             LobbyPlayerUiHandler = GetComponent<LobbyPlayerUiHandler>();
 
-            // TODO: Doing Initialization this way will only sync between the server and the recent client only. (Needs Rework)
-            // NetPortal.Instance.OnAnyConnection += InitInstance;
+            AddLobbyPlayers();
+            CmdNotifyInitialization();
+
+            if (!isLocalPlayer || !hasAuthority) return;
+            LobbyPlayerUiHandler.InitializeLobbyUi();
+            ServiceLocator.Instance.customDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
+        }
+
+        private void AddLobbyPlayers()
+        {
+            LobbyPlayer[] lobbyPlayers = FindObjectsOfType<LobbyPlayer>();
+
+            for (int index = 0; index < lobbyPlayers.Length; index++)
+            {
+                NetPortal.Instance.AddLobbyPlayer(lobbyPlayers[index]);
+            }
         }
 
         private void OnDestroy()
         {
             if (NetPortal.Instance != null)
             {
-                // NetPortal.Instance.OnAnyConnection -= InitInstance;
                 NetPortal.Instance.LobbyPlayers.Remove(this);
             }
         }
 
         #endregion
 
-        #region Public Methods
+        #region Public Method
 
         public void StartGame() => ServiceLocator.Instance.gameManager.StartGame();
 
-        // Todo : Change to command.
-        public void Ready()
-        {
-            if (!isLocalPlayer) return;
-            isReady = !isReady;
-        }
+        [Command]
+        public void CmdReady() => isReady = !isReady;
 
         public void LeaveGame()
         {
-            CmdHandleLeaveLobby(connectionToClient.connectionId);
+            CmdHandleLeaveLobby();
             ServiceLocator.Instance.customDebugger.LogInfo($"Client left lobby.", ScriptLogLevel);
         }
 
         public void QuitGame()
         {
             LeaveGame();
-            GameManager.QuitGame();
+            ServiceLocator.Instance.gameManager.QuitGame();
         }
 
         #endregion
 
         #region Private Methods
 
-        private void InitInstance()
+        [Command]
+        private void CmdNotifyInitialization() => InitializeInstance();
+
+        [ClientRpc]
+        private void InitializeInstance()
         {
             NetPortal.Instance.AddLobbyPlayer(this);
-            // PlayerData = new PlayerData(OwnerClientId, string.Empty, string.Empty);
-
-            if (!isLocalPlayer || !hasAuthority) return;
-
-            LobbyPlayerUiHandler.InitializeLobbyUi();
-
-            ServiceLocator.Instance.customDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
+            NetworkClient.localPlayer.GetComponent<LobbyPlayer>().LobbyPlayerUiHandler.CmdUpdateLobbyUI();
+            PlayerData = new PlayerData(netIdentity.connectionToClient.connectionId, string.Empty, string.Empty);
         }
 
         private void HandleReadyStatusChanged(bool previousValue, bool newValue)
@@ -86,21 +93,20 @@ namespace DarkKey.Gameplay.CorePlayer
         }
 
         [Command]
-        private void CmdHandleLeaveLobby(int clientId)
+        private void CmdHandleLeaveLobby()
         {
-            HandleLeaveLobbyClientRpc(clientId);
+            HandleLeaveLobbyClientRpc();
 
             // TODO: Need to be moved in HandleLeaveLobbyClientRpc (Maybe IDK)
             LobbyPlayerUiHandler.CmdUpdateLobbyUI();
         }
 
         [ClientRpc]
-        private void HandleLeaveLobbyClientRpc(int clientId)
+        private void HandleLeaveLobbyClientRpc()
         {
-            if (hasAuthority)
+            if (!hasAuthority)
             {
-                LobbyPlayer ownedLobbyPlayer = GetOwnedLobbyPlayer(clientId);
-                ownedLobbyPlayer.CmdHandleLeaveLobby(clientId);
+                NetworkClient.localPlayer.GetComponent<LobbyPlayer>().LobbyPlayerUiHandler.CmdUpdateLobbyUI();
             }
             else
             {
@@ -109,12 +115,6 @@ namespace DarkKey.Gameplay.CorePlayer
                 if (!isLocalPlayer) return;
                 NetPortal.Instance.Disconnect();
             }
-        }
-
-        // TODO: Fix UpdateLobbyUi is broken
-        private LobbyPlayer GetOwnedLobbyPlayer(int clientId)
-        {
-            return NetPortal.Instance.LobbyPlayers.FirstOrDefault(lobbyPlayer => lobbyPlayer.hasAuthority);
         }
 
         #endregion

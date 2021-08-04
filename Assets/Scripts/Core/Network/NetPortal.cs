@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DarkKey.Core.Debugger;
@@ -24,21 +25,21 @@ namespace DarkKey.Core.Network
                 Destroy(this);
         }
 
+        public event Action onAnyConnection;
+
         #region Public Methods
 
         public void Disconnect()
         {
-            // if (isHost)
-            //     StopHost();
-            // else if (isClient)
-            //     StopClient();
-            // else if (isServerOnly)
-            //     StopServer();
+            if (NetworkClient.isHostClient)
+                StopHost();
+            else if (NetworkClient.isConnected)
+                StopClient();
         }
 
         public void Host(string password)
         {
-            GetComponent<BasicAuthenticator>().password = password;
+            // GetComponent<BasicAuthenticator>().password = password;
             StartHost();
         }
 
@@ -46,8 +47,8 @@ namespace DarkKey.Core.Network
         {
             networkAddress = ipAddress;
 
-            if (TryGetComponent(out BasicAuthenticator basicAuthenticator))
-                basicAuthenticator.password = password;
+            // if (TryGetComponent(out BasicAuthenticator basicAuthenticator))
+            //     basicAuthenticator.password = password;
 
             StartClient();
         }
@@ -72,7 +73,6 @@ namespace DarkKey.Core.Network
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
-            base.OnServerDisconnect(conn);
             ServiceLocator.Instance.customDebugger.LogInfo($"[Client {conn.connectionId}]: disconnected successfully.",
                 ScriptLogLevel);
         }
@@ -99,20 +99,11 @@ namespace DarkKey.Core.Network
             ServiceLocator.Instance.customDebugger.LogInfo($"Server stopped successfully.", ScriptLogLevel);
         }
 
-        // private void HandleSceneSwitched()
-        // {
-        //     if (!NetworkManager.Singleton.IsHost) return;
-        //
-        //     CustomDebugger.LogInfo("Switched Scene", ScriptLogLevel);
-        //
-        //     if (SceneManager.GetActiveScene().name != "Multiplayer_Test") return;
-        //
-        //     foreach (var roomPlayer in LobbyPlayers)
-        //     {
-        //         CustomDebugger.LogInfo("Player1 Switched Scene", ScriptLogLevel);
-        //         OnSceneSwitch?.Invoke(roomPlayer.PlayerData);
-        //     }
-        // }
+        public override void OnServerSceneChanged(string sceneName)
+        {
+            onlineScene = sceneName;
+            networkSceneName = sceneName;
+        }
 
         #endregion
     }
