@@ -11,7 +11,7 @@ namespace DarkKey.Ui.Pages
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button quitButton;
 
-        private void Start () => SubscribeButtons();
+        private void Start() => SubscribeButtons();
 
         private void SubscribeButtons()
         {
@@ -24,7 +24,7 @@ namespace DarkKey.Ui.Pages
             settingsButton.onClick.AddListener(() =>
                 ServiceLocator.Instance.pageController.TurnOffPage(PageType.MainPage, PageType.SettingsPage));
 
-            quitButton.onClick.AddListener(GameManager.QuitGame);
+            quitButton.onClick.AddListener(ServiceLocator.Instance.gameManager.QuitGame);
         }
     }
 }

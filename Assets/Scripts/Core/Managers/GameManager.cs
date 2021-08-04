@@ -9,7 +9,7 @@ namespace DarkKey.Core.Managers
 
         public void StartGame() => ServiceLocator.Instance.networkSceneManager.SwitchToOnlineScene();
 
-        public static void QuitGame() => Application.Quit();
+        public void QuitGame() => Application.Quit();
 
         public static void PauseGame() =>
             ServiceLocator.Instance.customDebugger.LogInfo("Game paused.", ScriptLogLevel);
