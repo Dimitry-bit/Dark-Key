@@ -32,6 +32,14 @@ namespace DarkKey.Gameplay.CorePlayer
             ServiceLocator.Instance.customDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
         }
 
+        private void OnDestroy()
+        {
+            if (NetPortal.Instance != null) return;
+
+            if (NetPortal.Instance.LobbyPlayers.Contains(this))
+                NetPortal.Instance.LobbyPlayers.Remove(this);
+        }
+
         private void AddLobbyPlayers()
         {
             LobbyPlayer[] lobbyPlayers = FindObjectsOfType<LobbyPlayer>();
@@ -39,14 +47,6 @@ namespace DarkKey.Gameplay.CorePlayer
             for (int index = 0; index < lobbyPlayers.Length; index++)
             {
                 NetPortal.Instance.AddLobbyPlayer(lobbyPlayers[index]);
-            }
-        }
-
-        private void OnDestroy()
-        {
-            if (NetPortal.Instance != null)
-            {
-                NetPortal.Instance.LobbyPlayers.Remove(this);
             }
         }
 
@@ -83,7 +83,7 @@ namespace DarkKey.Gameplay.CorePlayer
         {
             NetPortal.Instance.AddLobbyPlayer(this);
             NetworkClient.localPlayer.GetComponent<LobbyPlayer>().LobbyPlayerUiHandler.CmdUpdateLobbyUI();
-            PlayerData = new PlayerData(netIdentity.connectionToClient.connectionId, string.Empty, string.Empty);
+            // PlayerData = new PlayerData(netIdentity.connectionToClient.connectionId, string.Empty, string.Empty);
         }
 
         private void HandleReadyStatusChanged(bool previousValue, bool newValue)

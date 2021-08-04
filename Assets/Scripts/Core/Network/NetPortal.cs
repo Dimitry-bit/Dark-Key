@@ -39,7 +39,7 @@ namespace DarkKey.Core.Network
 
         public void Host(string password)
         {
-            // GetComponent<BasicAuthenticator>().password = password;
+            GetComponent<BasicAuthenticator>().password = password;
             StartHost();
         }
 
@@ -47,8 +47,8 @@ namespace DarkKey.Core.Network
         {
             networkAddress = ipAddress;
 
-            // if (TryGetComponent(out BasicAuthenticator basicAuthenticator))
-            //     basicAuthenticator.password = password;
+            if (TryGetComponent(out BasicAuthenticator basicAuthenticator))
+                basicAuthenticator.password = password;
 
             StartClient();
         }
