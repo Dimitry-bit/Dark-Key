@@ -1,3 +1,4 @@
+using System;
 using DarkKey.Core.Debugger;
 using DarkKey.Core.Managers;
 using DarkKey.Core.Network;
@@ -12,34 +13,27 @@ namespace DarkKey.Gameplay.CorePlayer
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Network, DebugLogLevel.Player};
 
-        public LobbyPlayerUiHandler LobbyPlayerUiHandler { get; private set; }
         public PlayerData PlayerData { get; private set; }
 
         [SyncVar(hook = nameof(HandleReadyStatusChanged))]
         public bool isReady;
 
+        public event Action OnLobbyUpdate;
+
         #region Unity Methods
 
         public override void OnStartClient()
         {
-            LobbyPlayerUiHandler = GetComponent<LobbyPlayerUiHandler>();
+            if (!hasAuthority || !isLocalPlayer) return;
 
             AddLobbyPlayers();
-            CmdNotifyInitialization();
+            CmdInitializationNotify();
+            OnLobbyUpdate?.Invoke();
 
-            if (!isLocalPlayer || !hasAuthority) return;
-            LobbyPlayerUiHandler.InitializeLobbyUi();
             ServiceLocator.Instance.customDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
         }
 
-        // public override void OnStopClient() => CmdRemoveLobbyPlayerFromList();
-
-        private void OnDestroy()
-        {
-            // if (NetPortal.Instance != null) return;
-            // CmdRemoveLobbyPlayerFromList();
-            // LeaveGame();
-        }
+        private void OnDestroy() => RemoveInstanceFromListAndUpdate();
 
         #endregion
 
@@ -53,7 +47,6 @@ namespace DarkKey.Gameplay.CorePlayer
         public void LeaveGame()
         {
             CmdHandleLeaveLobby();
-            LobbyPlayerUiHandler.CmdUpdateLobbyUI();
 
             ServiceLocator.Instance.customDebugger.LogInfo($"Client left lobby.", ScriptLogLevel);
         }
@@ -68,61 +61,49 @@ namespace DarkKey.Gameplay.CorePlayer
 
         #region Private Methods
 
-        private void AddLobbyPlayers()
-        {
-            LobbyPlayer[] lobbyPlayers = FindObjectsOfType<LobbyPlayer>();
-
-            for (int index = 0; index < lobbyPlayers.Length; index++)
-            {
-                NetPortal.Instance.AddLobbyPlayer(lobbyPlayers[index]);
-            }
-        }
-
         [Command]
-        private void CmdNotifyInitialization() => InitializeInstance();
+        private void CmdInitializationNotify() => InitializeInstance();
 
         [ClientRpc]
         private void InitializeInstance()
         {
             NetPortal.Instance.AddLobbyPlayer(this);
-            NetworkClient.localPlayer.GetComponent<LobbyPlayer>().LobbyPlayerUiHandler.CmdUpdateLobbyUI();
+            NetworkClient.localPlayer.GetComponent<LobbyPlayer>().OnLobbyUpdate?.Invoke();
+            
             // PlayerData = new PlayerData(netIdentity.connectionToClient.connectionId, string.Empty, string.Empty);
         }
 
-        private void HandleReadyStatusChanged(bool previousValue, bool newValue)
-        {
-            if (!hasAuthority) return;
-            LobbyPlayerUiHandler.CmdUpdateLobbyUI();
-        }
-
         [Command]
-        private void CmdHandleLeaveLobby()
-        {
-            HandleLeaveLobbyClientRpc();
-
-            // TODO: Need to be moved in HandleLeaveLobbyClientRpc (Maybe IDK)
-            // LobbyPlayerUiHandler.CmdUpdateLobbyUI();
-        }
+        private void CmdHandleLeaveLobby() => HandleLeaveLobbyClientRpc();
 
         [ClientRpc]
         private void HandleLeaveLobbyClientRpc()
         {
-            if (!hasAuthority)
-            {
-                NetworkClient.localPlayer.GetComponent<LobbyPlayer>().LobbyPlayerUiHandler.CmdUpdateLobbyUI();
-            }
-            else
-            {
-                RemoveLobbyPlayerFromList();
+            RemoveInstanceFromListAndUpdate();
+
+            if (isLocalPlayer)
                 NetPortal.Instance.Disconnect();
-            }
         }
 
-        private void RemoveLobbyPlayerFromList()
+
+        private void AddLobbyPlayers()
+        {
+            LobbyPlayer[] lobbyPlayers = FindObjectsOfType<LobbyPlayer>();
+
+            foreach (var lobbyPlayer in lobbyPlayers)
+                NetPortal.Instance.AddLobbyPlayer(lobbyPlayer);
+        }
+
+        private void RemoveInstanceFromListAndUpdate()
         {
             if (NetPortal.Instance.LobbyPlayers.Contains(this))
                 NetPortal.Instance.LobbyPlayers.Remove(this);
+
+            NetworkClient.localPlayer.GetComponent<LobbyPlayer>().OnLobbyUpdate?.Invoke();
         }
+
+        private void HandleReadyStatusChanged(bool previousValue, bool newValue) =>
+            NetworkClient.localPlayer.GetComponent<LobbyPlayer>().OnLobbyUpdate?.Invoke();
 
         #endregion
     }

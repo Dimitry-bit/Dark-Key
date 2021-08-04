@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DarkKey.Core.Debugger;
@@ -6,6 +5,7 @@ using DarkKey.Core.Managers;
 using DarkKey.Gameplay.CorePlayer;
 using Mirror;
 using Mirror.Authenticators;
+using UnityEngine.SceneManagement;
 
 namespace DarkKey.Core.Network
 {
@@ -19,22 +19,27 @@ namespace DarkKey.Core.Network
         public override void Awake()
         {
             base.Awake();
+
             if (Instance == null)
                 Instance = this;
             else if (Instance != this)
                 Destroy(this);
         }
 
-        public event Action onAnyConnection;
-
         #region Public Methods
 
         public void Disconnect()
         {
             if (NetworkClient.isHostClient)
+            {
                 StopHost();
+                SceneManager.LoadScene("OfflineScene");
+            }
             else if (NetworkClient.isConnected)
+            {
                 StopClient();
+                SceneManager.LoadScene("OfflineScene");
+            }
         }
 
         public void Host(string password)
@@ -73,6 +78,7 @@ namespace DarkKey.Core.Network
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
+            base.OnServerDisconnect(conn);
             ServiceLocator.Instance.customDebugger.LogInfo($"[Client {conn.connectionId}]: disconnected successfully.",
                 ScriptLogLevel);
         }

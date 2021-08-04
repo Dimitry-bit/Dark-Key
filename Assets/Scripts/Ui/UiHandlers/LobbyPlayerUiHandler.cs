@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using DarkKey.Core.Network;
 using DarkKey.Gameplay.CorePlayer;
 using Mirror;
@@ -15,20 +14,52 @@ namespace DarkKey.Ui.UiHandlers
         [SerializeField] private TMP_Text[] playerNames = new TMP_Text[2];
         [SerializeField] private TMP_Text[] readyStatus = new TMP_Text[2];
         [SerializeField] private Button startButton;
+        private LobbyPlayer _lobbyPlayer;
+
+        #region Unity Methods
+
+        public override void OnStartClient()
+        {
+            if (!hasAuthority || !isLocalPlayer) return;
+            
+            _lobbyPlayer = GetComponentInParent<LobbyPlayer>();
+
+            if (_lobbyPlayer != null)
+                _lobbyPlayer.OnLobbyUpdate += UpdateLobbyUI;
+
+            InitializeLobbyUi();
+        }
+
+        public override void OnStopClient()
+        {
+            if (_lobbyPlayer != null)
+                _lobbyPlayer.OnLobbyUpdate -= UpdateLobbyUI;
+        }
+
+        private void OnDestroy()
+        {
+            if (_lobbyPlayer != null)
+                _lobbyPlayer.OnLobbyUpdate -= UpdateLobbyUI;
+        }
+
+        #endregion
 
         #region Public Methods
 
-        public void InitializeLobbyUi()
+        private void InitializeLobbyUi()
         {
             lobbyPanel.gameObject.SetActive(hasAuthority);
             startButton.gameObject.SetActive(false);
 
-            CmdUpdateLobbyUI();
             CmdInitStartButton();
         }
 
-        [Command]
-        public void CmdUpdateLobbyUI() => UpdateLobbyUIClientRpc();
+        private void UpdateLobbyUI()
+        {
+            ResetLobbyUI();
+            AssignPlayersToUI();
+            UpdateStartButtonStatus();
+        }
 
         #endregion
 
@@ -37,35 +68,15 @@ namespace DarkKey.Ui.UiHandlers
         [Command]
         private void CmdInitStartButton()
         {
-            // if (OwnerClientId == NetworkManager.ServerClientId)
-            startButton.gameObject.SetActive(true);
+            if (NetworkClient.isHostClient)
+                startButton.gameObject.SetActive(true);
         }
-
-
-        [ClientRpc]
-        private void UpdateLobbyUIClientRpc()
-        {
-            if (!hasAuthority)
-            {
-                LobbyPlayer ownedLobbyPlayer = GetOwnedLobbyPlayer();
-                ownedLobbyPlayer.LobbyPlayerUiHandler.CmdUpdateLobbyUI();
-            }
-            else
-            {
-                ResetLobbyUI();
-                AssignPlayersToUI();
-                UpdateStartButtonStatus();
-            }
-        }
-
-        private LobbyPlayer GetOwnedLobbyPlayer() =>
-            NetPortal.Instance.LobbyPlayers.FirstOrDefault(lobbyPlayer => lobbyPlayer.hasAuthority);
 
         private void AssignPlayersToUI()
         {
             for (int i = 0; i < NetPortal.Instance.LobbyPlayers.Count; i++)
             {
-                playerNames[i].text = NetPortal.Instance.LobbyPlayers[i].isServer ? "P_1" : "P_2";
+                playerNames[i].text = "P_" + i;
                 playerNames[i].color = Color.black;
 
                 readyStatus[i].text = NetPortal.Instance.LobbyPlayers[i].isReady ? "Ready" : "Not Ready";
