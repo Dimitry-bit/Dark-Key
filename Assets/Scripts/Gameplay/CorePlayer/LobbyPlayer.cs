@@ -69,7 +69,7 @@ namespace DarkKey.Gameplay.CorePlayer
         {
             NetPortal.Instance.AddLobbyPlayer(this);
             NetworkClient.localPlayer.GetComponent<LobbyPlayer>().OnLobbyUpdate?.Invoke();
-            
+
             // PlayerData = new PlayerData(netIdentity.connectionToClient.connectionId, string.Empty, string.Empty);
         }
 
@@ -99,7 +99,11 @@ namespace DarkKey.Gameplay.CorePlayer
             if (NetPortal.Instance.LobbyPlayers.Contains(this))
                 NetPortal.Instance.LobbyPlayers.Remove(this);
 
-            NetworkClient.localPlayer.GetComponent<LobbyPlayer>().OnLobbyUpdate?.Invoke();
+            NetworkIdentity localPlayer = NetworkClient.localPlayer;
+            if (localPlayer == null) return;
+            
+            if (localPlayer.TryGetComponent(out LobbyPlayer lobbyPlayer))
+                lobbyPlayer.OnLobbyUpdate?.Invoke();
         }
 
         private void HandleReadyStatusChanged(bool previousValue, bool newValue) =>
