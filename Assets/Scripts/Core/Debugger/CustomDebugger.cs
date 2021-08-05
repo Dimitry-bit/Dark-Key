@@ -17,58 +17,89 @@ namespace DarkKey.Core.Debugger
         }
 
         public void LogInfo(object msg, DebugLogLevel[] logLevels,
-            [System.Runtime.CompilerServices.CallerMemberName]
-            string memberName = "",
-            [System.Runtime.CompilerServices.CallerFilePath]
-            string sourceFilePath = "")
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
             if (!IsAllowedToDebug(logLevels)) return;
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            Debug.Log(logText);
             if (NetworkManager.singleton.isNetworkActive)
-                CmdLogToServer(logText, LogTypes.Info);
+            {
+                if (NetworkClient.isHostClient)
+                {
+                    Debug.Log(logText);
+                }
+                else
+                {
+                    Debug.Log(logText);
+                    CmdLogToServer(logText, LogTypes.Info);
+                }
+            }
+            else
+            {
+                Debug.Log(logText);
+            }
         }
 
         public void LogWarning(object msg, DebugLogLevel[] logLevels,
-            [System.Runtime.CompilerServices.CallerMemberName]
-            string memberName = "",
-            [System.Runtime.CompilerServices.CallerFilePath]
-            string sourceFilePath = "")
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
             if (!IsAllowedToDebug(logLevels)) return;
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            Debug.LogWarning(logText);
             if (NetworkManager.singleton.isNetworkActive)
-                CmdLogToServer(logText, LogTypes.Warning);
+            {
+                if (NetworkClient.isHostClient)
+                {
+                    Debug.LogWarning(logText);
+                }
+                else
+                {
+                    Debug.LogWarning(logText);
+                    CmdLogToServer(logText, LogTypes.Warning);
+                }
+            }
+            else
+            {
+                Debug.LogWarning(logText);
+            }
         }
 
         public void LogError(object msg, DebugLogLevel[] logLevels,
-            [System.Runtime.CompilerServices.CallerMemberName]
-            string memberName = "",
-            [System.Runtime.CompilerServices.CallerFilePath]
-            string sourceFilePath = "")
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
             if (!IsAllowedToDebug(logLevels)) return;
 
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            Debug.LogError(logText);
             if (NetworkManager.singleton.isNetworkActive)
-                CmdLogToServer(logText, LogTypes.Error);
+            {
+                if (NetworkClient.isHostClient)
+                {
+                    Debug.LogError(logText);
+                }
+                else
+                {
+                    Debug.LogError(logText);
+                    CmdLogToServer(logText, LogTypes.Error);
+                }
+            }
+            else
+            {
+                Debug.LogError(logText);
+            }
         }
 
         public void LogCriticalError(object msg,
-            [System.Runtime.CompilerServices.CallerMemberName]
-            string memberName = "",
-            [System.Runtime.CompilerServices.CallerFilePath]
-            string sourceFilePath = "")
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             Debug.LogError($"[{callerFileName}.{memberName}()]: {msg}");
