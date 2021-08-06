@@ -25,7 +25,7 @@ namespace DarkKey.Core.Debugger
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            if (NetworkManager.singleton.isNetworkActive)
+            if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive)
             {
                 if (NetworkClient.isHostClient)
                 {
@@ -52,7 +52,7 @@ namespace DarkKey.Core.Debugger
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            if (NetworkManager.singleton.isNetworkActive)
+            if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive)
             {
                 if (NetworkClient.isHostClient)
                 {
@@ -79,7 +79,7 @@ namespace DarkKey.Core.Debugger
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            if (NetworkManager.singleton.isNetworkActive)
+            if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive)
             {
                 if (NetworkClient.isHostClient)
                 {
