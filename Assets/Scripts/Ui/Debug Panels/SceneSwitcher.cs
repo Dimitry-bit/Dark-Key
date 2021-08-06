@@ -16,9 +16,17 @@ namespace DarkKey.Ui.Debug_Panels
         [Header("Options")]
         [SerializeField] private GameObject buttonPrefab;
         [SerializeField] [Scene] private string[] switchableScenes;
+
+        private NetworkIdentity _networkIdentity;
         private readonly List<Button> _buttons = new List<Button>();
 
         #region Unity Methods
+
+        protected override void Start()
+        {
+            _networkIdentity = GetComponentInParent<NetworkIdentity>();
+            base.Start();
+        }
 
         private void OnDestroy() => UnSubscribeAllButtons();
 
@@ -28,9 +36,17 @@ namespace DarkKey.Ui.Debug_Panels
 
         protected override void EnablePanel()
         {
-            base.EnablePanel();
+            if (NetworkManager.singleton == null || !NetworkManager.singleton.isNetworkActive) return;
 
-            if (!isServer) return;
+            if (_networkIdentity.isServer)
+            {
+                base.EnablePanel();
+            }
+            else
+            {
+                Destroy(gameObject);
+                return;
+            }
 
             if (_buttons.Count != 0) return;
 
@@ -88,11 +104,10 @@ namespace DarkKey.Ui.Debug_Panels
 
         private void ChangeLevel(string levelName)
         {
-            CmdChangeLevel(connectionToServer.connectionId, levelName);
+            ChangeLevel(_networkIdentity.connectionToServer.connectionId, levelName);
         }
 
-        [Command]
-        private void CmdChangeLevel(int clientConnectionId, string levelName)
+        private void ChangeLevel(int clientConnectionId, string levelName)
         {
             if (NetworkServer.connections.ContainsKey(clientConnectionId))
             {

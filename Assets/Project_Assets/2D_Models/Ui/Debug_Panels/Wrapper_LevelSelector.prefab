@@ -264,7 +264,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2452827145113901238}
-  - component: {fileID: 204398227984121512}
   - component: {fileID: 2452827145113901236}
   - component: {fileID: 3473444652446466045}
   m_Layer: 5
@@ -295,23 +294,6 @@ RectTransform:
   m_AnchoredPosition: {x: 200, y: -25}
   m_SizeDelta: {x: 130, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &204398227984121512
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2452827145113901239}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  serverOnly: 1
-  visible: 0
-  m_AssetId: 20758675833a5d8429d3d4da9d3f2c68
-  hasSpawned: 0
 --- !u!114 &2452827145113901236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,13 +306,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bbd21a1f72b96249b8d8a98769f9e3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
   openPanelButton: {fileID: 2452827144162759736}
   debugPanelGameObject: {fileID: 8376566861108107072}
   gridTransform: {fileID: 8376566860335397187}
   buttonPrefab: {fileID: 1635196332440584232, guid: 8cb37b47e70f33c4e88cf4bfcd270ade, type: 3}
-  switchableScenes: []
+  switchableScenes:
+  - Assets/Scenes/TestScenes/Ui/OfflineScene.unity
+  - Assets/Scenes/TestScenes/Gameplay/Spawn_Test.unity
+  - Assets/Scenes/TestScenes/Gameplay/Multiplayer_Test.unity
 --- !u!114 &3473444652446466045
 MonoBehaviour:
   m_ObjectHideFlags: 0

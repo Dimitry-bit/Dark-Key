@@ -1,12 +1,11 @@
 ﻿using DarkKey.Ui.Utilities;
-using Mirror;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace DarkKey.Ui.Debug_Panels
 {
     [RequireComponent(typeof(DraggableUi))]
-    public abstract class BaseDebugPanel : NetworkBehaviour
+    public abstract class BaseDebugPanel : MonoBehaviour
     {
         [Header("Base Options (Required)")]
         [SerializeField] private Button openPanelButton;
@@ -18,7 +17,7 @@ namespace DarkKey.Ui.Debug_Panels
 
         #region Unity Methods
 
-        private void Start()
+        protected virtual void Start()
         {
             if (debugPanelGameObject == null) debugPanelGameObject = gameObject;
 
