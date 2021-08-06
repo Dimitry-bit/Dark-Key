@@ -306,7 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  currentLogLevel: 11
+  currentLogLevel: -1
 --- !u!114 &821717707
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -490,7 +490,8 @@ MonoBehaviour:
   playerPrefab: {fileID: 8513362420426912113, guid: 48b16b030f74dda458e3f9dcbdcd19d5, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
-  spawnPrefabs: []
+  spawnPrefabs:
+  - {fileID: 2083589168399573892, guid: 4ecf147e027fe0d41b981a286801ca5b, type: 3}
 --- !u!4 &1365354804
 Transform:
   m_ObjectHideFlags: 0
@@ -850,7 +851,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offlineScene: Assets/Scenes/TestScenes/Ui/OfflineScene.unity
-  onlineScene: Assets/Scenes/TestScenes/Gameplay/Multiplayer_Test.unity
+  onlineScene: Assets/Scenes/TestScenes/Gameplay/Spawn_Test.unity
 --- !u!1001 &2313005023647290231
 PrefabInstance:
   m_ObjectHideFlags: 0
