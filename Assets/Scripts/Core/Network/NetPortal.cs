@@ -31,16 +31,11 @@ namespace DarkKey.Core.Network
         public void Disconnect()
         {
             if (NetworkClient.isHostClient)
-            {
                 StopHost();
-                SceneManager.LoadScene("OfflineScene");
-            }
             else if (NetworkClient.isConnected)
-            {
                 StopClient();
-                SceneManager.LoadScene("OfflineScene");
-            }
 
+            SceneManager.LoadScene("OfflineScene");
             CursorManager.ShowCursor();
         }
 

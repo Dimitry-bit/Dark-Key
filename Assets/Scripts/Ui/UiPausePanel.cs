@@ -97,6 +97,7 @@ namespace DarkKey.Ui
                 {
                     _inputHandler = inputHandler;
                     _inputHandler.OnEscape += Menu;
+                    yield break;
                 }
 
                 timePassed += Time.deltaTime;
