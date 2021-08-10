@@ -40,6 +40,8 @@ namespace DarkKey.Core.Network
                 StopClient();
                 SceneManager.LoadScene("OfflineScene");
             }
+
+            CursorManager.ShowCursor();
         }
 
         public void Host(string password)
