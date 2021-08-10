@@ -13,24 +13,21 @@ namespace DarkKey.Gameplay.Locomotion
         [SerializeField] private float camMaxRotationAngleY;
         [SerializeField] private Vector3 camOffSet = Vector3.up * 0.5f;
 
-        public Camera cam;
+        private Camera _cam;
         private InputHandler _inputHandler;
 
         #region Unity Methods
 
-        private void Start()
+        public override void OnStartClient()
         {
             if (!isLocalPlayer) return;
 
-            if (cam == null)
-            {
+            _cam = GetComponentInChildren<Camera>();
+            if (_cam == null)
                 ServiceLocator.Instance.customDebugger.LogError("No camera was found.", ScriptLogLevel);
-                return;
-            }
 
             SetVerticalMouseClamp();
 
-            cam.gameObject.SetActive(true);
             CursorManager.HideCursor();
         }
 
@@ -38,6 +35,8 @@ namespace DarkKey.Gameplay.Locomotion
         private void FixedUpdate()
         {
             if (!isLocalPlayer) return;
+            if (_cam == null) return;
+
             CamRotation(_inputHandler.MouseInput.y);
             PlayerRotation(_inputHandler.MouseInput.x);
         }
@@ -56,7 +55,7 @@ namespace DarkKey.Gameplay.Locomotion
 
         private void CamRotation(float mouseY)
         {
-            var camTransform = cam.transform;
+            var camTransform = _cam.transform;
             camTransform.localRotation = Quaternion.Euler(-mouseY, 0, 0);
             camTransform.position = transform.position + camOffSet;
         }

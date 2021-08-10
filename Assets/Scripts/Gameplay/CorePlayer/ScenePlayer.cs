@@ -11,12 +11,23 @@ namespace DarkKey.Gameplay.CorePlayer
 
         public PlayerData PlayerData { get; private set; }
 
+        #region Unity Methods
+
+        public override void OnStartClient()
+        {
+            if (!isLocalPlayer) return;
+
+            DisableUnownedCameras();
+        }
+
+        #endregion
+
         #region Public Methods
 
         public void InitializePlayerData(PlayerData playerData)
         {
             PlayerData = new PlayerData(playerData.ClientId, playerData.Name, playerData.Role);
-            DisableUnownedAudioListeners();
+            // DisableUnownedCameras();
 
             ServiceLocator.Instance.customDebugger.LogInfo("ScenePlayer Initialized", ScriptLogLevel);
         }
@@ -25,18 +36,21 @@ namespace DarkKey.Gameplay.CorePlayer
 
         #region Private Methods
 
-        private void DisableUnownedAudioListeners()
+        private void DisableUnownedCameras()
         {
-            var ownedAudioListener = GetComponentInChildren<AudioListener>();
-            if (ownedAudioListener != null)
-                ownedAudioListener.enabled = true;
-
-            var sceneAudioListeners = FindObjectsOfType<AudioListener>();
-
-            foreach (var audioListener in sceneAudioListeners)
+            var ownedCamera = GetComponentInChildren<Camera>();
+            if (ownedCamera != null)
             {
-                if (audioListener == ownedAudioListener) continue;
-                audioListener.enabled = false;
+                ownedCamera.enabled = true;
+                if (ownedCamera.TryGetComponent(out AudioListener ownedAudioListener))
+                    ownedAudioListener.enabled = true;
+            }
+
+            var sceneCameras = FindObjectsOfType<Camera>();
+            foreach (var sceneCamera in sceneCameras)
+            {
+                if (sceneCamera != ownedCamera)
+                    sceneCamera.gameObject.SetActive(false);
             }
         }
 
