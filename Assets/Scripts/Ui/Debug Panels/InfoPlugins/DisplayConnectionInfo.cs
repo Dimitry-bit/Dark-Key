@@ -21,7 +21,7 @@ namespace DarkKey.Ui.Debug_Panels.InfoPlugins
         {
             if (_clientIdTMP == null) return;
 
-            if (_hasInitialized)
+            if (!_hasInitialized)
             {
                 if (_clientIdTMP.gameObject.activeSelf)
                     _clientIdTMP.gameObject.SetActive(false);
