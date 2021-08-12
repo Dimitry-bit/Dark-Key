@@ -2,13 +2,10 @@ using System;
 using DarkKey.Core.Debugger;
 using DarkKey.Core.Managers;
 using DarkKey.Core.Network;
-using DarkKey.Ui.UiHandlers;
 using Mirror;
-using UnityEngine;
 
 namespace DarkKey.Gameplay.CorePlayer
 {
-    [RequireComponent(typeof(LobbyPlayerUiHandler))]
     public class LobbyPlayer : NetworkBehaviour
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Network, DebugLogLevel.Player};
@@ -101,7 +98,7 @@ namespace DarkKey.Gameplay.CorePlayer
 
             NetworkIdentity localPlayer = NetworkClient.localPlayer;
             if (localPlayer == null) return;
-            
+
             if (localPlayer.TryGetComponent(out LobbyPlayer lobbyPlayer))
                 lobbyPlayer.OnLobbyUpdate?.Invoke();
         }

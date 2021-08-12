@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 namespace DarkKey.Ui.UiHandlers
 {
+    [RequireComponent(typeof(LobbyPlayer))]
     public class LobbyPlayerUiHandler : NetworkBehaviour
     {
         [SerializeField] private GameObject lobbyPanel;
@@ -21,7 +22,7 @@ namespace DarkKey.Ui.UiHandlers
         public override void OnStartClient()
         {
             if (!hasAuthority || !isLocalPlayer) return;
-            
+
             _lobbyPlayer = GetComponentInParent<LobbyPlayer>();
 
             if (_lobbyPlayer != null)
