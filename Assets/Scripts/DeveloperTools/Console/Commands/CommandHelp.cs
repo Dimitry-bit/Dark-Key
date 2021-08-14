@@ -30,7 +30,7 @@ namespace DarkKey.DeveloperTools.Console.Commands
                 helpMessage += $"\"{consoleCommand.Command}\" {consoleCommand.Description}\n";
 
             if (string.IsNullOrWhiteSpace(helpMessage)) return;
-            DeveloperConsole.Instance.AddFormattedOutputToConsole(helpMessage, '#', "black");
+            DeveloperConsole.Instance.AddFormattedOutputToConsole("<style=H3>Available Commands:</style>\n"+ helpMessage, '#', "black");
         }
     }
 }

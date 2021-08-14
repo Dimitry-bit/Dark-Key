@@ -137,8 +137,10 @@ namespace DarkKey.DeveloperTools.Console
             var delimiter = new string('-', 30);
 
             var helpMessage =
+                "<style=H3>Description:</style>\n" +
                 $"{command.Description}\n" +
                 $"{delimiter}\n" +
+                "<style=H3>Format:</style>\n" +
                 $"{command.Format}\n";
 
             AddFormattedOutputToConsole(helpMessage, '=', "black");
