@@ -29,15 +29,15 @@ namespace DarkKey.Core.Managers
         {
             _services = new Dictionary<Type, MonoBehaviour>();
 
-            var customDebuggers = GetDebugger();
-            var networkSceneManagerDk = GetNetworkSceneManager();
-            var gameManagers = GetGameManager();
-            var pageControllers = GetPageController();
+            var customDebuggerService = GetDebugger();
+            var networkSceneManagerService = GetNetworkSceneManager();
+            var gameManagerService = GetGameManager();
+            var pageControllerService = GetPageController();
 
-            _services.Add(typeof(CustomDebugger), customDebuggers);
-            _services.Add(typeof(NetworkSceneManagerDk), networkSceneManagerDk);
-            _services.Add(typeof(GameManager), gameManagers);
-            _services.Add(typeof(PageController), pageControllers);
+            _services.Add(typeof(CustomDebugger), customDebuggerService);
+            _services.Add(typeof(NetworkSceneManagerDk), networkSceneManagerService);
+            _services.Add(typeof(GameManager), gameManagerService);
+            _services.Add(typeof(PageController), pageControllerService);
 
             foreach (var service in _services.Values)
             {
