@@ -27,7 +27,7 @@ namespace DarkKey.Gameplay.CorePlayer
             CmdInitializationNotify();
             OnLobbyUpdate?.Invoke();
 
-            ServiceLocator.Instance.customDebugger.LogInfo("Lobby player initialized.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo("Lobby player initialized.", ScriptLogLevel);
         }
 
         private void OnDestroy() => RemoveInstanceFromListAndUpdate();
@@ -36,7 +36,7 @@ namespace DarkKey.Gameplay.CorePlayer
 
         #region Public Method
 
-        public void StartGame() => ServiceLocator.Instance.gameManager.StartGame();
+        public void StartGame() => ServiceLocator.Instance.GetGameManager().StartGame();
 
         [Command]
         public void CmdReady() => isReady = !isReady;
@@ -45,13 +45,13 @@ namespace DarkKey.Gameplay.CorePlayer
         {
             CmdHandleLeaveLobby();
 
-            ServiceLocator.Instance.customDebugger.LogInfo($"Client left lobby.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo($"Client left lobby.", ScriptLogLevel);
         }
 
         public void QuitGame()
         {
             LeaveGame();
-            ServiceLocator.Instance.gameManager.QuitGame();
+            ServiceLocator.Instance.GetGameManager().QuitGame();
         }
 
         #endregion

@@ -50,7 +50,7 @@ namespace DarkKey.Ui.Debug_Panels
 
             if (_buttons.Count != 0) return;
 
-            ServiceLocator.Instance.customDebugger.LogInfo("Try to fetch level data", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo("Try to fetch level data", ScriptLogLevel);
             InitializePanel();
         }
 
@@ -60,7 +60,7 @@ namespace DarkKey.Ui.Debug_Panels
 
             foreach (var scenePath in switchableScenes)
             {
-                ServiceLocator.Instance.customDebugger.LogInfo($"Initializing => ({scenePath})", ScriptLogLevel);
+                ServiceLocator.Instance.GetDebugger().LogInfo($"Initializing => ({scenePath})", ScriptLogLevel);
                 string sceneName = Path.GetFileNameWithoutExtension(scenePath);
                 CreateButton(sceneName);
             }
@@ -115,7 +115,7 @@ namespace DarkKey.Ui.Debug_Panels
                 if (client == null || !client.isLocalPlayer) return;
             }
 
-            ServiceLocator.Instance.networkSceneManager.SwitchScene(levelName);
+            ServiceLocator.Instance.GetNetworkSceneManager().SwitchScene(levelName);
         }
 
         #endregion

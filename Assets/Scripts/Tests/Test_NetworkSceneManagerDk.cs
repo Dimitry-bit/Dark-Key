@@ -10,9 +10,7 @@ namespace DarkKey.Tests
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.X))
-            {
-                ServiceLocator.Instance.networkSceneManager.SwitchToOfflineScene();
-            }
+                ServiceLocator.Instance.GetNetworkSceneManager().SwitchToOfflineScene();
         }
 
 #endif

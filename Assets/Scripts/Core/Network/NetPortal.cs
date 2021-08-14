@@ -69,37 +69,37 @@ namespace DarkKey.Core.Network
 
         public override void OnServerConnect(NetworkConnection conn)
         {
-            ServiceLocator.Instance.customDebugger.LogInfo($"[Client {conn.connectionId}]: connected successfully.",
+            ServiceLocator.Instance.GetDebugger().LogInfo($"[Client {conn.connectionId}]: connected successfully.",
                 ScriptLogLevel);
         }
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             base.OnServerDisconnect(conn);
-            ServiceLocator.Instance.customDebugger.LogInfo($"[Client {conn.connectionId}]: disconnected successfully.",
+            ServiceLocator.Instance.GetDebugger().LogInfo($"[Client {conn.connectionId}]: disconnected successfully.",
                 ScriptLogLevel);
         }
 
         public override void OnClientConnect(NetworkConnection conn)
         {
             base.OnClientConnect(conn);
-            ServiceLocator.Instance.customDebugger.LogInfo($"Joined successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo($"Joined successfully.", ScriptLogLevel);
         }
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             base.OnClientDisconnect(conn);
-            ServiceLocator.Instance.customDebugger.LogInfo($"Disconnected successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo($"Disconnected successfully.", ScriptLogLevel);
         }
 
         public override void OnStartServer()
         {
-            ServiceLocator.Instance.customDebugger.LogInfo($"Server started successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo($"Server started successfully.", ScriptLogLevel);
         }
 
         public override void OnStopServer()
         {
-            ServiceLocator.Instance.customDebugger.LogInfo($"Server stopped successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo($"Server stopped successfully.", ScriptLogLevel);
         }
 
         public override void OnServerSceneChanged(string sceneName)

@@ -7,13 +7,13 @@ namespace DarkKey.Core.Managers
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core};
 
-        public void StartGame() => ServiceLocator.Instance.networkSceneManager.SwitchToOnlineScene();
+        public void StartGame() => ServiceLocator.Instance.GetNetworkSceneManager().SwitchToOnlineScene();
 
         public void QuitGame() => Application.Quit();
 
         public static void PauseGame() =>
-            ServiceLocator.Instance.customDebugger.LogInfo("Game paused.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo("Game paused.", ScriptLogLevel);
 
-        public static void SaveGame() => ServiceLocator.Instance.customDebugger.LogInfo("Game saved.", ScriptLogLevel);
+        public static void SaveGame() => ServiceLocator.Instance.GetDebugger().LogInfo("Game saved.", ScriptLogLevel);
     }
 }

@@ -15,8 +15,8 @@ namespace DarkKey.Ui.Utilities
             if (mainCamera != null) return;
 
             mainCamera = Camera.main;
-            ServiceLocator.Instance.customDebugger.LogWarning($"mainCamera variable is not assigned | Defaulted to Camera.Main",
-                new[] {DebugLogLevel.UI});
+            ServiceLocator.Instance.GetDebugger().LogWarning(
+                $"mainCamera variable is not assigned | Defaulted to Camera.Main", new[] {DebugLogLevel.UI});
         }
 
         private void LateUpdate() => transform.LookAt(transform.position + mainCamera.transform.forward);

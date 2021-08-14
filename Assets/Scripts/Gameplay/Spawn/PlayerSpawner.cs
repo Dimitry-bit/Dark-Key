@@ -48,7 +48,7 @@ namespace DarkKey.Gameplay.Spawn
 
             if (spawnPoint != null) return spawnPoint;
 
-            ServiceLocator.Instance.customDebugger.LogError($"Missing spawn point for player {_spawnPointIndex}",
+            ServiceLocator.Instance.GetDebugger().LogError($"Missing spawn point for player {_spawnPointIndex}",
                 ScriptLogLevel);
 
             return null;
@@ -64,7 +64,7 @@ namespace DarkKey.Gameplay.Spawn
             {
                 var messageDiff = oldPlayer == null ? "oldPlayer" : "newPlayer";
 
-                ServiceLocator.Instance.customDebugger.LogError(
+                ServiceLocator.Instance.GetDebugger().LogError(
                     $"Failed to spawn player ({messageDiff} can't be null).", ScriptLogLevel);
                 return;
             }
@@ -74,11 +74,11 @@ namespace DarkKey.Gameplay.Spawn
 
             if (!isSpawned)
             {
-                ServiceLocator.Instance.customDebugger.LogError("Failed to spawn player.", ScriptLogLevel);
+                ServiceLocator.Instance.GetDebugger().LogError("Failed to spawn player.", ScriptLogLevel);
                 return;
             }
 
-            ServiceLocator.Instance.customDebugger.LogInfo("Player spawned successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo("Player spawned successfully.", ScriptLogLevel);
 
             // TODO: Add Player.Name && Player.Role.
             // TODO: Initialize PlayerData in newly created playerGameObject. 
@@ -91,13 +91,13 @@ namespace DarkKey.Gameplay.Spawn
             string playerGameObjectName = playerGameObject.name;
             NetworkServer.Destroy(playerGameObject);
 
-            ServiceLocator.Instance.customDebugger.LogInfo($"{playerGameObjectName} Destroyed successfully.",
+            ServiceLocator.Instance.GetDebugger().LogInfo($"{playerGameObjectName} Destroyed successfully.",
                 ScriptLogLevel);
         }
 
         private void ReplaceAllPlayersGameObjects()
         {
-            ServiceLocator.Instance.customDebugger.LogInfo("Started replacing all players GameObjects.",
+            ServiceLocator.Instance.GetDebugger().LogInfo("Started replacing all players GameObjects.",
                 ScriptLogLevel);
 
             foreach (var lobbyPlayer in NetPortal.Instance.LobbyPlayers)
@@ -106,7 +106,7 @@ namespace DarkKey.Gameplay.Spawn
                 DestroyPlayer(lobbyPlayer.gameObject);
             }
 
-            ServiceLocator.Instance.customDebugger.LogInfo("Finished replacing all players GameObjects.",
+            ServiceLocator.Instance.GetDebugger().LogInfo("Finished replacing all players GameObjects.",
                 ScriptLogLevel);
         }
 

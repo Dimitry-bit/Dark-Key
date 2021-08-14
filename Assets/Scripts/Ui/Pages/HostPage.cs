@@ -12,6 +12,6 @@ namespace DarkKey.Ui.Pages
 
         public void HostGame() => NetPortal.Instance.Host(passwordInputField.text);
 
-        public void Back() => ServiceLocator.Instance.pageController.TurnOffPage(PageType, PageType.MainPage);
+        public void Back() => ServiceLocator.Instance.GetPageController().TurnOffPage(PageType, PageType.MainPage);
     }
 }

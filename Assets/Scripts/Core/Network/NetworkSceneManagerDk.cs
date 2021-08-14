@@ -21,11 +21,11 @@ namespace DarkKey.Core.Network
         {
             if (string.IsNullOrEmpty(sceneName))
             {
-                ServiceLocator.Instance.customDebugger.LogWarning($"Scene -> {sceneName} is invalid.", ScriptLogLevel);
+                ServiceLocator.Instance.GetDebugger().LogWarning($"Scene -> {sceneName} is invalid.", ScriptLogLevel);
                 return;
             }
 
-            ServiceLocator.Instance.customDebugger.LogInfo($"Starting Scene Switch ({sceneName}).", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfo($"Starting Scene Switch ({sceneName}).", ScriptLogLevel);
             NetPortal.Instance.ServerChangeScene(sceneName);
         }
 

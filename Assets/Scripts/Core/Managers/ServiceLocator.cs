@@ -12,11 +12,6 @@ namespace DarkKey.Core.Managers
         public static ServiceLocator Instance { get; private set; }
         private Dictionary<Type, MonoBehaviour> _services;
 
-        public NetworkSceneManagerDk networkSceneManager;
-        public CustomDebugger customDebugger;
-        public PageController pageController;
-        public GameManager gameManager;
-
         #region Unity Methods
 
         private void Awake()
