@@ -5,11 +5,12 @@ using UnityEngine;
 
 namespace DarkKey.Ui.DeveloperPanels
 {
-    public class DebugBar : MonoBehaviour
+    public class DeveloperToolBar : MonoBehaviour
     {
-        [SerializeField] private GameObject debugBar;
+        [SerializeField] private GameObject developerToolBar;
         private InputHandler _inputHandler;
-        private bool _isPanelEnabled;
+
+        #region Unity Methods
 
         private void Update()
         {
@@ -20,38 +21,38 @@ namespace DarkKey.Ui.DeveloperPanels
             }
         }
 
+        #endregion
+
+        #region Private Methods
+
         private void ShowMenu()
         {
-            if (_isPanelEnabled)
+            if (_inputHandler == null)
+                GetInputHandlerAndAssignEvent();
+
+            if (developerToolBar.activeSelf)
                 DisablePanel();
             else
                 EnablePanel();
         }
 
+
         private void EnablePanel()
         {
-            if (_inputHandler == null)
-                GetInputHandlerAndAssignEvent();
-
             if (_inputHandler != null)
                 _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
 
             CursorManager.ShowCursor();
-            debugBar.SetActive(true);
-            _isPanelEnabled = true;
+            developerToolBar.SetActive(true);
         }
 
         private void DisablePanel()
         {
-            if (_inputHandler == null)
-                GetInputHandlerAndAssignEvent();
-
             if (_inputHandler != null)
                 _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
 
             CursorManager.HideCursor();
-            debugBar.SetActive(false);
-            _isPanelEnabled = false;
+            developerToolBar.SetActive(false);
         }
 
         private void GetInputHandlerAndAssignEvent()
@@ -65,5 +66,7 @@ namespace DarkKey.Ui.DeveloperPanels
                 _inputHandler.OnConsole += ShowMenu;
             }
         }
+
+        #endregion
     }
 }
