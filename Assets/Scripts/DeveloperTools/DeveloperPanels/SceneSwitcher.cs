@@ -7,7 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace DarkKey.Ui.DeveloperPanels
+namespace DarkKey.DeveloperTools.DeveloperPanels
 {
     public class SceneSwitcher : DeveloperPanel
     {

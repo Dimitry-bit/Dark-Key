@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace DarkKey.Ui.DeveloperPanels.InfoPlugins
+namespace DarkKey.DeveloperTools.DeveloperPanels.InfoPlugins
 {
     public class DisplayServerFps : NetworkBehaviour, IInfoPlugin
     {

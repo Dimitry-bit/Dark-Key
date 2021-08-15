@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace DarkKey.Ui.DeveloperPanels
+namespace DarkKey.DeveloperTools.DeveloperPanels
 {
     public abstract class DeveloperPanel : MonoBehaviour
     {

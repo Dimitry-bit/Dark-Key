@@ -1,8 +1,8 @@
-﻿using DarkKey.Ui.DeveloperPanels.InfoPlugins;
+﻿using DarkKey.DeveloperTools.DeveloperPanels.InfoPlugins;
 using TMPro;
 using UnityEngine;
 
-namespace DarkKey.Ui.DeveloperPanels
+namespace DarkKey.DeveloperTools.DeveloperPanels
 {
     public class InformationPanel : DeveloperPanel
     {
