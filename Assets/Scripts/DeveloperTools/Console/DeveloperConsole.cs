@@ -11,6 +11,7 @@ namespace DarkKey.DeveloperTools.Console
     public class DeveloperConsole : MonoBehaviour
     {
         [Header("Ui Components")]
+        [SerializeField] private GameObject consolePanel;
         [SerializeField] private TMP_Text consoleText;
         [SerializeField] private TMP_InputField consoleInputField;
         [SerializeField] private ScrollRect scrollRect;
@@ -37,10 +38,17 @@ namespace DarkKey.DeveloperTools.Console
             AddMessageToConsole("Developer Console Initialized.");
         }
 
-        private void Start() => CreateCommands();
+        private void Start()
+        {
+            consolePanel.SetActive(false);
+            CreateCommands();
+        }
 
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+                consolePanel.SetActive(!consolePanel.activeSelf);
+
             if (Input.GetKeyDown(KeyCode.Return))
             {
                 ProcessInput(consoleInputField.text);

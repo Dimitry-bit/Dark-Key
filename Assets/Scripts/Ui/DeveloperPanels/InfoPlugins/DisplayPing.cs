@@ -3,7 +3,7 @@ using Mirror;
 using TMPro;
 using UnityEngine;
 
-namespace DarkKey.Ui.Debug_Panels.InfoPlugins
+namespace DarkKey.Ui.DeveloperPanels.InfoPlugins
 {
     public class DisplayPing : MonoBehaviour, IInfoPlugin
     {

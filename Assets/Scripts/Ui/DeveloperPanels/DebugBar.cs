@@ -3,7 +3,7 @@ using DarkKey.Gameplay;
 using Mirror;
 using UnityEngine;
 
-namespace DarkKey.Ui.Debug_Panels
+namespace DarkKey.Ui.DeveloperPanels
 {
     public class DebugBar : MonoBehaviour
     {

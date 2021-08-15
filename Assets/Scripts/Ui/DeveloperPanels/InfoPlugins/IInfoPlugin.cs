@@ -1,6 +1,6 @@
 ﻿using TMPro;
 
-namespace DarkKey.Ui.Debug_Panels.InfoPlugins
+namespace DarkKey.Ui.DeveloperPanels.InfoPlugins
 {
     public interface IInfoPlugin
     {

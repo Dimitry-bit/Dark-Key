@@ -24,11 +24,15 @@ namespace DarkKey.DeveloperTools.Console.Commands
         public override void ExecuteCommand(string[] args)
         {
             if (Application.isEditor)
+            {
 #if UNITY_EDITOR
                 UnityEditor.EditorApplication.isPlaying = false;
 #endif
+            }
             else
+            {
                 Application.Quit();
+            }
         }
     }
 }

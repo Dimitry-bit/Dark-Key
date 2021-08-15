@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace DarkKey.Ui.Debug_Panels.InfoPlugins
+namespace DarkKey.Ui.DeveloperPanels.InfoPlugins
 {
     public class DisplaySceneInfo : MonoBehaviour, IInfoPlugin
     {

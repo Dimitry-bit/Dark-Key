@@ -1,15 +1,14 @@
-﻿using DarkKey.Ui.Debug_Panels.InfoPlugins;
+﻿using DarkKey.Ui.DeveloperPanels.InfoPlugins;
 using TMPro;
 using UnityEngine;
 
-namespace DarkKey.Ui.Debug_Panels
+namespace DarkKey.Ui.DeveloperPanels
 {
-    public class DebugInfoPanel : BaseDebugPanel
+    public class InformationPanel : DeveloperPanel
     {
-        [Header("InfoDrawer")]
+        [Header("Information Panel Options")]
         [SerializeField] private GameObject textTemplate;
         [SerializeField] private float updateInterval;
-
         private IInfoPlugin[] _plugins;
         private float _timePassed;
 
@@ -39,21 +38,12 @@ namespace DarkKey.Ui.Debug_Panels
 
         #region Private Methods
 
-        private TMP_Text CreateText(string textName)
-        {
-            GameObject tmpGameObject = Instantiate(textTemplate, Vector3.zero, Quaternion.identity, gridTransform);
-            tmpGameObject.name = textName;
-            return tmpGameObject.GetComponent<TMP_Text>();
-        }
-
         private void InitializePlugins()
         {
             if (_plugins == null) return;
 
             for (int index = 0; index < _plugins.Length; index++)
-            {
                 _plugins[index].InitializePlugin(CreateText($"Plugin-{index}_TMP"));
-            }
         }
 
         private void UpdatePlugins()
@@ -61,9 +51,14 @@ namespace DarkKey.Ui.Debug_Panels
             if (_plugins == null) return;
 
             foreach (var plugin in _plugins)
-            {
                 plugin.UpdateUi();
-            }
+        }
+
+        private TMP_Text CreateText(string textName)
+        {
+            GameObject tmpGameObject = Instantiate(textTemplate, Vector3.zero, Quaternion.identity, gridTransform);
+            tmpGameObject.name = textName;
+            return tmpGameObject.GetComponent<TMP_Text>();
         }
 
         #endregion
