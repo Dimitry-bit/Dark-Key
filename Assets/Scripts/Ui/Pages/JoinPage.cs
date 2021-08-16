@@ -25,7 +25,7 @@ namespace DarkKey.Ui.Pages
             NetPortal.Instance.Join(ipInputField.text, passwordInputField.text);
         }
 
-        public void Back() => ServiceLocator.Instance.GetPageController().TurnOffPage(PageType, PageType.MainPage);
+        public void Back() => PageController.Instance.TurnOffPage(PageType, PageType.MainPage);
 
         #endregion
 

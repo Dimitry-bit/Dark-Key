@@ -9,10 +9,18 @@ namespace DarkKey.Ui.Pages
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.UI};
 
+        public static PageController Instance { get; private set; }
+
         private Dictionary<PageType, Page> _pages;
         [SerializeField] private Page[] menuPages;
 
         #region Unity Functions
+
+        private void Awake()
+        {
+            if (Instance == null)
+                Instance = this;
+        }
 
         private void Start()
         {
