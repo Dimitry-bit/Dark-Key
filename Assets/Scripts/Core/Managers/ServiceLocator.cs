@@ -92,7 +92,7 @@ namespace DarkKey.Core.Managers
         private bool TryFindService(Type serviceType, out MonoBehaviour service)
         {
             MonoBehaviour foundService = (MonoBehaviour) FindObjectOfType(serviceType);
-            Debug.Log(foundService.name);
+            // Debug.Log(foundService.name);
 
             service = null;
 
