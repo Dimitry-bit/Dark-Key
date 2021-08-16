@@ -22,8 +22,8 @@ namespace DarkKey.Ui.UiHandlers
 
             // if (!isLocalPlayer) return;
 
-            playerInteraction.OnInteractableSelected += EnableUi;
-            playerInteraction.OnInteractableDeselected += DisableUi;
+            // playerInteraction.OnInteractableSelected += EnableUi;
+            // playerInteraction.OnInteractableDeselected += DisableUi;
         }
 
         private void OnDestroy()
@@ -31,8 +31,8 @@ namespace DarkKey.Ui.UiHandlers
             // if (!isLocalPlayer) return;
             if (playerInteraction == null) return;
 
-            playerInteraction.OnInteractableSelected += EnableUi;
-            playerInteraction.OnInteractableDeselected += DisableUi;
+            // playerInteraction.OnInteractableSelected += EnableUi;
+            // playerInteraction.OnInteractableDeselected += DisableUi;
         }
 
         #endregion

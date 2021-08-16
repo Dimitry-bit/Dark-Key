@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Mirror;
 using UnityEngine;
 
@@ -9,22 +8,18 @@ namespace DarkKey.Gameplay.Interaction
     {
         [SerializeField] private LayerMask interactionMask;
         [SerializeField] private float interactionMaxDistance = 5;
-        [SerializeField] private float throwForceMultiplier;
         [SerializeField] private Transform rightHandTransform;
+
         private Camera _playerCamera;
         private InputHandler _inputHandler;
         private IInteractable _selectedObject;
 
-        [SyncVar(hook = nameof(OnChangeEquipment))]
+        [SyncVar(hook = nameof(OnChangeItem))]
         public ItemTypes equippedItem;
-
-
-        public event Action<IInteractable> OnInteractableSelected;
-        public event Action OnInteractableDeselected;
 
         #region Unity Methods
 
-        private void Start()
+        public override void OnStartClient()
         {
             if (!isLocalPlayer) return;
 
@@ -32,7 +27,7 @@ namespace DarkKey.Gameplay.Interaction
             _playerCamera = GetComponentInChildren<Camera>();
 
             _inputHandler.OnInteract += InteractWithSelectedObject;
-            // _inputHandler.OnDrop += CmdDropItem;
+            _inputHandler.OnDrop += CmdDropItem;
         }
 
         private void OnDestroy()
@@ -40,7 +35,7 @@ namespace DarkKey.Gameplay.Interaction
             if (_inputHandler == null) return;
 
             _inputHandler.OnInteract -= InteractWithSelectedObject;
-            // _inputHandler.OnDrop -= CmdDropItem;
+            _inputHandler.OnDrop -= CmdDropItem;
         }
 
         private void FixedUpdate()
@@ -63,6 +58,16 @@ namespace DarkKey.Gameplay.Interaction
 
         #region Public Methods
 
+        [Command(requiresAuthority = false)]
+        public void CmdHoldItem(SceneObject sceneObject)
+        {
+            if (sceneObject.equippedItem == ItemTypes.Nothing) return;
+            if (equippedItem != ItemTypes.Nothing) return;
+
+            equippedItem = sceneObject.equippedItem;
+            NetworkServer.Destroy(sceneObject.gameObject);
+        }
+
         #endregion
 
         #region Private Methods
@@ -80,14 +85,11 @@ namespace DarkKey.Gameplay.Interaction
 
                 _selectedObject = interactable;
                 _selectedObject.OnHover(this);
-                OnInteractableSelected?.Invoke(_selectedObject);
             }
             else
             {
                 if (_selectedObject == null) return;
-
                 _selectedObject = null;
-                OnInteractableDeselected?.Invoke();
             }
         }
 
@@ -97,19 +99,45 @@ namespace DarkKey.Gameplay.Interaction
                 _selectedObject.Interact(this);
         }
 
-        private void OnChangeEquipment(ItemTypes oldEquippedItem, ItemTypes newEquippedItem) =>
-            StartCoroutine(ChangeEquipment(newEquippedItem));
+        private void OnChangeItem(ItemTypes oldEquippedItem, ItemTypes newEquippedItem) =>
+            StartCoroutine(ChangeItem(newEquippedItem));
 
-        private IEnumerator ChangeEquipment(ItemTypes newEquippedItem)
+        private IEnumerator ChangeItem(ItemTypes newItem)
         {
-            while (rightHandTransform.transform.childCount > 0)
+            while (rightHandTransform.childCount > 0)
             {
-                Destroy(rightHandTransform.transform.GetChild(0).gameObject);
+                Destroy(rightHandTransform.GetChild(0).gameObject);
                 yield return null;
             }
 
-            var newItem = ItemUtility.GetPrefabByType(newEquippedItem);
-            Instantiate(newItem, rightHandTransform);
+            if (newItem != ItemTypes.Nothing)
+            {
+                var newItemPrefab = ItemUtility.GetPrefabByType(newItem);
+                var newItemGameObject = Instantiate(newItemPrefab, rightHandTransform.position,
+                    rightHandTransform.rotation,
+                    rightHandTransform);
+
+                newItemGameObject.GetComponent<GenericItem>().DisablePhysics();
+            }
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdDropItem()
+        {
+            var position = rightHandTransform.position;
+            var rotation = rightHandTransform.rotation;
+
+            var sceneObjectPrefab = ItemUtility.GetPrefabByType(ItemTypes.SceneObject);
+            var sceneGameObject = Instantiate(sceneObjectPrefab, position, rotation);
+
+            var sceneScript = sceneGameObject.GetComponent<SceneObject>();
+
+            sceneScript.SetItem(equippedItem);
+            sceneScript.equippedItem = equippedItem;
+
+            equippedItem = ItemTypes.Nothing;
+
+            NetworkServer.Spawn(sceneGameObject);
         }
 
         #endregion

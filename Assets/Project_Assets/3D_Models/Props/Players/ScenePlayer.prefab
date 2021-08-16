@@ -322,9 +322,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   interactionMaxDistance: 5
-  playerCamera: {fileID: 7295853245839179529}
-  rightHandSlot: {fileID: 7356270440845216389}
-  throwForceMultiplier: 500
+  rightHandTransform: {fileID: 7356270440845216389}
+  equippedItem: 0
 --- !u!114 &9202522485342275421
 MonoBehaviour:
   m_ObjectHideFlags: 0

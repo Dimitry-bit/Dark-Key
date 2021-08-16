@@ -7,15 +7,12 @@ namespace DarkKey.Gameplay.Interaction
     public class GenericItem : MonoBehaviour, IInteractable
     {
         [SerializeField] private string itemName;
+        [SerializeField] private ItemTypes itemType;
         [SerializeField] private bool isPhysicsControlled;
-        [Space]
-        [SerializeField] private Vector3 inHandOffset;
-        [SerializeField] private Vector3 inFrameOffset;
         private Rigidbody _rigidbody;
+
         public string ItemName => itemName;
         public string InteractionDescription { get; private set; }
-        public Vector3 InHandOffset => inHandOffset;
-        public Vector3 InFrameOffset => inFrameOffset;
 
         #region Untiy Methods
 
@@ -39,15 +36,16 @@ namespace DarkKey.Gameplay.Interaction
 
         public void OnHover(PlayerInteraction playerInteraction) { }
 
-        public void Interact(PlayerInteraction playerInteraction) { }
+        public void Interact(PlayerInteraction playerInteraction) =>
+            playerInteraction.CmdHoldItem(GetComponentInParent<SceneObject>());
 
         #endregion
 
         #region Private Methods
 
-        private void EnablePhysics()
+        public void EnablePhysics()
         {
-            if (isPhysicsControlled) return;
+            // if (isPhysicsControlled) return;
 
             FetchComponents(out var objectCollider);
 
@@ -58,9 +56,9 @@ namespace DarkKey.Gameplay.Interaction
             isPhysicsControlled = true;
         }
 
-        private void DisablePhysics()
+        public void DisablePhysics()
         {
-            if (!isPhysicsControlled) return;
+            // if (!isPhysicsControlled) return;
 
             FetchComponents(out var objectCollider);
 
