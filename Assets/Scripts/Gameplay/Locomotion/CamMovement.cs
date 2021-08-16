@@ -24,7 +24,7 @@ namespace DarkKey.Gameplay.Locomotion
 
             _cam = GetComponentInChildren<Camera>();
             if (_cam == null)
-                ServiceLocator.Instance.GetDebugger().LogError("No camera was found.", ScriptLogLevel);
+                ServiceLocator.Instance.GetDebugger().LogErrorToServer("No camera was found.", ScriptLogLevel);
 
             SetVerticalMouseClamp();
 

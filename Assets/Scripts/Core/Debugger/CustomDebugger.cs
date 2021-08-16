@@ -25,22 +25,7 @@ namespace DarkKey.Core.Debugger
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive)
-            {
-                if (NetworkClient.isHostClient)
-                {
-                    Debug.Log(logText);
-                }
-                else
-                {
-                    Debug.Log(logText);
-                    CmdLogToServer(logText, LogTypes.Info);
-                }
-            }
-            else
-            {
-                Debug.Log(logText);
-            }
+            BaseLog(logText, LogTypes.Info);
         }
 
         public void LogWarning(object msg, DebugLogLevel[] logLevels,
@@ -52,22 +37,7 @@ namespace DarkKey.Core.Debugger
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive)
-            {
-                if (NetworkClient.isHostClient)
-                {
-                    Debug.LogWarning(logText);
-                }
-                else
-                {
-                    Debug.LogWarning(logText);
-                    CmdLogToServer(logText, LogTypes.Warning);
-                }
-            }
-            else
-            {
-                Debug.LogWarning(logText);
-            }
+            BaseLog(logText, LogTypes.Warning);
         }
 
         public void LogError(object msg, DebugLogLevel[] logLevels,
@@ -79,22 +49,42 @@ namespace DarkKey.Core.Debugger
             string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
             string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
 
-            if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive)
-            {
-                if (NetworkClient.isHostClient)
-                {
-                    Debug.LogError(logText);
-                }
-                else
-                {
-                    Debug.LogError(logText);
-                    CmdLogToServer(logText, LogTypes.Error);
-                }
-            }
-            else
-            {
-                Debug.LogError(logText);
-            }
+            BaseLog(logText, LogTypes.Error);
+        }
+
+        public void LogInfoToServer(object msg, DebugLogLevel[] logLevels,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
+        {
+            if (!IsAllowedToDebug(logLevels)) return;
+
+            string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
+            string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
+
+            BaseLogToServer(logText, LogTypes.Info);
+        }
+
+        public void LogWarningToServer(object msg, DebugLogLevel[] logLevels,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
+        {
+            if (!IsAllowedToDebug(logLevels)) return;
+
+            string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
+            string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
+            BaseLogToServer(logText, LogTypes.Warning);
+        }
+
+        public void LogErrorToServer(object msg, DebugLogLevel[] logLevels,
+            [System.Runtime.CompilerServices.CallerMemberName] string memberName = "",
+            [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
+        {
+            if (!IsAllowedToDebug(logLevels)) return;
+
+            string callerFileName = Path.GetFileNameWithoutExtension(sourceFilePath);
+            string logText = $"[NetId: ({netId})] [{callerFileName}.{memberName}()]: {msg}";
+
+            BaseLogToServer(logText, LogTypes.Error);
         }
 
         public void LogCriticalError(object msg,
@@ -112,25 +102,33 @@ namespace DarkKey.Core.Debugger
         }
 
         [Command(requiresAuthority = false)]
-        private void CmdLogToServer(string msg, LogTypes logType)
+        private void CmdLogToServer(string msg, LogTypes logType) =>
+            BaseLog(msg, logType);
+
+        private static void BaseLog(string logMessage, LogTypes logTypes)
         {
-            switch (logType)
+            switch (logTypes)
             {
                 case LogTypes.Info:
-                {
-                    Debug.Log(msg);
+                    Debug.Log(logMessage);
                     break;
-                }
                 case LogTypes.Warning:
-                {
-                    Debug.LogWarning(msg);
+                    Debug.LogWarning(logMessage);
                     break;
-                }
                 case LogTypes.Error:
-                {
-                    Debug.LogError(msg);
+                    Debug.LogError(logMessage);
                     break;
-                }
+            }
+        }
+
+        private void BaseLogToServer(string logMessage, LogTypes logType)
+        {
+            BaseLog(logMessage, logType);
+
+            if (NetworkManager.singleton != null && NetworkManager.singleton.isNetworkActive)
+            {
+                if (!NetworkClient.isHostClient)
+                    CmdLogToServer(logMessage, LogTypes.Info);
             }
         }
     }

@@ -4,19 +4,19 @@ namespace DarkKey.Core
 {
     public interface IDebugger
     {
-        public void LogInfo(object msg, DebugLogLevel[] logLevels,
+        public void LogInfoToServer(object msg, DebugLogLevel[] logLevels,
             [System.Runtime.CompilerServices.CallerMemberName]
             string memberName = "",
             [System.Runtime.CompilerServices.CallerFilePath]
             string sourceFilePath = "");
 
-        public void LogWarning(object msg, DebugLogLevel[] logLevels,
+        public void LogWarningToServer(object msg, DebugLogLevel[] logLevels,
             [System.Runtime.CompilerServices.CallerMemberName]
             string memberName = "",
             [System.Runtime.CompilerServices.CallerFilePath]
             string sourceFilePath = "");
 
-        public void LogError(object msg, DebugLogLevel[] logLevels,
+        public void LogErrorToServer(object msg, DebugLogLevel[] logLevels,
             [System.Runtime.CompilerServices.CallerMemberName]
             string memberName = "",
             [System.Runtime.CompilerServices.CallerFilePath]

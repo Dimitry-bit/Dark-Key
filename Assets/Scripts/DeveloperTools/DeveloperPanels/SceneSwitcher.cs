@@ -50,7 +50,7 @@ namespace DarkKey.DeveloperTools.DeveloperPanels
             if (_networkIdentity == null)
                 _networkIdentity = GetComponentInChildren<NetworkIdentity>();
 
-            ServiceLocator.Instance.GetDebugger().LogInfo("Fetching levels data", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer("Fetching levels data", ScriptLogLevel);
 
             foreach (var scenePath in switchableScenes)
                 RegisterLevel(scenePath);
@@ -71,7 +71,7 @@ namespace DarkKey.DeveloperTools.DeveloperPanels
             _registeredScenes.Add(sceneName, button);
             button.onClick.AddListener(() => ChangeLevel(button.name));
 
-            ServiceLocator.Instance.GetDebugger().LogInfo($"Added ({scenePath}) to scenes list.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Added ({scenePath}) to scenes list.", ScriptLogLevel);
         }
 
         private void ChangeLevel(string levelName)

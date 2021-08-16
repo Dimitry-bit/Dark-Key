@@ -29,7 +29,7 @@ namespace DarkKey.Gameplay.CorePlayer
             PlayerData = new PlayerData(playerData.ClientId, playerData.Name, playerData.Role);
             // DisableUnownedCameras();
 
-            ServiceLocator.Instance.GetDebugger().LogInfo("ScenePlayer Initialized", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer("ScenePlayer Initialized", ScriptLogLevel);
         }
 
         #endregion

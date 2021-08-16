@@ -41,7 +41,7 @@ namespace DarkKey.Ui.UiHandlers
 
         private void SetInteractionText(string text) => interactionText.text = $"Press 'E' To {text}";
 
-        private void EnableUi(Interactable interactable)
+        private void EnableUi(IInteractable interactable)
         {
             interactionPanel.SetActive(true);
             SetInteractionText(interactable.InteractionDescription);

@@ -15,7 +15,7 @@ namespace DarkKey.Ui.Utilities
             if (mainCamera != null) return;
 
             mainCamera = Camera.main;
-            ServiceLocator.Instance.GetDebugger().LogWarning(
+            ServiceLocator.Instance.GetDebugger().LogWarningToServer(
                 $"mainCamera variable is not assigned | Defaulted to Camera.Main", new[] {DebugLogLevel.UI});
         }
 

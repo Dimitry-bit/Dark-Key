@@ -1,18 +1,21 @@
-using Mirror;
-using Unity.Collections;
 using UnityEngine;
 
 namespace DarkKey.Gameplay.Interaction
 {
     [RequireComponent(typeof(Collider))]
     [RequireComponent(typeof(Rigidbody))]
-    public class GenericItem : Interactable
+    public class GenericItem : MonoBehaviour, IInteractable
     {
-        [ReadOnly] public Vector3 inHandOffset;
-        [ReadOnly] public Vector3 inFrameOffset;
+        [SerializeField] private string itemName;
         [SerializeField] private bool isPhysicsControlled;
-
+        [Space]
+        [SerializeField] private Vector3 inHandOffset;
+        [SerializeField] private Vector3 inFrameOffset;
         private Rigidbody _rigidbody;
+        public string ItemName => itemName;
+        public string InteractionDescription { get; private set; }
+        public Vector3 InHandOffset => inHandOffset;
+        public Vector3 InFrameOffset => inFrameOffset;
 
         #region Untiy Methods
 
@@ -34,23 +37,9 @@ namespace DarkKey.Gameplay.Interaction
 
         #region Public Methods
 
-        public void ThrowObject(Vector3 force)
-        {
-            EnablePhysics();
-            _rigidbody.AddForce(force);
+        public void OnHover(PlayerInteraction playerInteraction) { }
 
-            CmdEnableItemForAllPlayers();
-        }
-
-        public override void Interact(PlayerInteraction playerInteraction)
-        {
-            if (playerInteraction.IsHoldingItem()) return;
-
-            DisablePhysics();
-            playerInteraction.HoldItem(this);
-
-            // CmdDisableItemForOtherPlayers(playerInteraction.OwnerClientId);
-        }
+        public void Interact(PlayerInteraction playerInteraction) { }
 
         #endregion
 
@@ -89,23 +78,6 @@ namespace DarkKey.Gameplay.Interaction
             if (_rigidbody == null)
                 _rigidbody = GetComponent<Rigidbody>();
         }
-
-        [Command(requiresAuthority= false)]
-        public void CmdDisableItemForOtherPlayers(ulong interactedClientId) =>
-            DisableItemForOtherPlayersItemClientRpc(interactedClientId);
-
-        [ClientRpc]
-        private void DisableItemForOtherPlayersItemClientRpc(ulong interactedClientId)
-        {
-            // if (NetworkSpawnManager.GetLocalPlayerObject().OwnerClientId == interactedClientId) return;
-            gameObject.SetActive(false);
-        }
-
-        [Command(requiresAuthority = false)]
-        public void CmdEnableItemForAllPlayers() => EnableItemForAllPlayersClientRpc();
-
-        [ClientRpc]
-        private void EnableItemForAllPlayersClientRpc() => gameObject.SetActive(true);
 
         #endregion
     }

@@ -69,7 +69,7 @@ namespace DarkKey.Ui
             CursorManager.ShowCursor();
             _inputHandler.actionMap = InputHandler.InputActionMap.Ui;
 
-            ServiceLocator.Instance.GetDebugger().LogInfo("EnableMenu Executed", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer("EnableMenu Executed", ScriptLogLevel);
         }
 
         private void DisableMenu()
@@ -80,7 +80,7 @@ namespace DarkKey.Ui
             CursorManager.HideCursor();
             _inputHandler.actionMap = InputHandler.InputActionMap.Gameplay;
 
-            ServiceLocator.Instance.GetDebugger().LogInfo("Disable Executed", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer("Disable Executed", ScriptLogLevel);
         }
 
         private IEnumerator FetchPlayerInputHandler()
@@ -103,7 +103,7 @@ namespace DarkKey.Ui
                 timePassed += Time.deltaTime;
                 if (timePassed >= 60f)
                 {
-                    ServiceLocator.Instance.GetDebugger().LogError("Unable to fetch inputHandler.", ScriptLogLevel);
+                    ServiceLocator.Instance.GetDebugger().LogErrorToServer("Unable to fetch inputHandler.", ScriptLogLevel);
                     yield break;
                 }
 

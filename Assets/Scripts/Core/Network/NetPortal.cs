@@ -69,37 +69,37 @@ namespace DarkKey.Core.Network
 
         public override void OnServerConnect(NetworkConnection conn)
         {
-            ServiceLocator.Instance.GetDebugger().LogInfo($"[Client {conn.connectionId}]: connected successfully.",
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"[Client {conn.connectionId}]: connected successfully.",
                 ScriptLogLevel);
         }
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             base.OnServerDisconnect(conn);
-            ServiceLocator.Instance.GetDebugger().LogInfo($"[Client {conn.connectionId}]: disconnected successfully.",
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"[Client {conn.connectionId}]: disconnected successfully.",
                 ScriptLogLevel);
         }
 
         public override void OnClientConnect(NetworkConnection conn)
         {
             base.OnClientConnect(conn);
-            ServiceLocator.Instance.GetDebugger().LogInfo($"Joined successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Joined successfully.", ScriptLogLevel);
         }
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             base.OnClientDisconnect(conn);
-            ServiceLocator.Instance.GetDebugger().LogInfo($"Disconnected successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Disconnected successfully.", ScriptLogLevel);
         }
 
         public override void OnStartServer()
         {
-            ServiceLocator.Instance.GetDebugger().LogInfo($"Server started successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Server started successfully.", ScriptLogLevel);
         }
 
         public override void OnStopServer()
         {
-            ServiceLocator.Instance.GetDebugger().LogInfo($"Server stopped successfully.", ScriptLogLevel);
+            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Server stopped successfully.", ScriptLogLevel);
         }
 
         public override void OnServerSceneChanged(string sceneName)

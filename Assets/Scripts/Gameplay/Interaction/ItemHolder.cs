@@ -1,24 +1,17 @@
 using DarkKey.Core.Debugger;
-using DarkKey.Core.Managers;
 using Mirror;
 using UnityEngine;
 
 namespace DarkKey.Gameplay.Interaction
 {
-    public class ItemHolder : Interactable
+    public class ItemHolder : NetworkBehaviour, IInteractable
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core};
 
         [SerializeField] private Transform itemHolderTransform;
-        // private readonly NetworkVariable<GenericItem> _itemHeld = new NetworkVariable<GenericItem>(
-        //     new NetworkVariableSettings
-        //     {
-        //         ReadPermission = NetworkVariablePermission.Everyone,
-        //         WritePermission = NetworkVariablePermission.Everyone
-        //     });
-
-        [SyncVar]
-        private GenericItem _itemHeld;
+        [SerializeField] private string objectName;
+        public string ItemName { get; }
+        public string InteractionDescription { get; private set; }
 
         #region Untiy Methods
 
@@ -28,78 +21,32 @@ namespace DarkKey.Gameplay.Interaction
             if (item == null) return;
 
             var holdPosition = itemHolderTransform == null ? transform : itemHolderTransform;
-            HoldItem(item, holdPosition);
+            // CmdHoldItem(item, holdPosition);
         }
 
         #endregion
 
         #region Public Methods
 
-        public override void OnSelected(PlayerInteraction playerInteraction)
-        {
-            if (IsHoldingItem())
-                InteractionDescription =
-                    playerInteraction.IsHoldingItem() ? "" : $"Pick Up {_itemHeld.ObjectName}";
-            else
-                InteractionDescription = playerInteraction.IsHoldingItem() ? "" : $"Put Down Object";
-        }
+        public void OnHover(PlayerInteraction playerInteraction) { }
 
-        public override void Interact(PlayerInteraction playerInteraction)
-        {
-            if (IsHoldingItem())
-            {
-                AssignItemToPlayer(playerInteraction);
-            }
-            else
-            {
-                GetItemFromPlayer(playerInteraction);
-            }
-        }
+        public void Interact(PlayerInteraction playerInteraction) { }
 
-        public bool IsHoldingItem() => _itemHeld;
+        #endregion
+
+        #region Protected Methods
+
+        protected void GetItemFromPlayer(PlayerInteraction playerInteraction) { }
 
         #endregion
 
         #region Private Methods
 
-        private void HoldItem(GenericItem item, Transform holdPositionTransform)
-        {
-            if (holdPositionTransform == null)
-            {
-                ServiceLocator.Instance.GetDebugger().LogWarning("holdPositionTransform is null", ScriptLogLevel);
-                return;
-            }
+        [Command]
+        private void CmdHoldItem() { }
 
-            _itemHeld = item;
-
-            var position = holdPositionTransform.position + item.inHandOffset;
-            var rotation = holdPositionTransform.rotation;
-            var itemTransform = _itemHeld.transform;
-
-            itemTransform.SetParent(holdPositionTransform);
-            itemTransform.SetPositionAndRotation(position, rotation);
-
-            _itemHeld.CmdEnableItemForAllPlayers();
-        }
-
-
-        protected void AssignItemToPlayer(PlayerInteraction playerInteraction)
-        {
-            if (playerInteraction.IsHoldingItem()) return;
-
-            playerInteraction.HoldItem(_itemHeld);
-            _itemHeld = null;
-        }
-
-        protected void GetItemFromPlayer(PlayerInteraction playerInteraction)
-        {
-            if (!playerInteraction.IsHoldingItem()) return;
-
-            GenericItem itemToHold = playerInteraction.RemoveAndReturnItem();
-            var holdPositionTransform = itemHolderTransform == null ? transform : itemHolderTransform;
-
-            HoldItem(itemToHold, holdPositionTransform);
-        }
+        [Command]
+        protected void CmdAssignItemToPlayer() { }
 
         #endregion
     }

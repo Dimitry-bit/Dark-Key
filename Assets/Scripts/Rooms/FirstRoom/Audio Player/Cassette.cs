@@ -18,29 +18,29 @@ namespace DarkKey.Rooms.FirstRoom.Audio_Player
         #endregion
 
         #region Public Methods
-        public override void Interact(PlayerInteraction playerInteraction)
+        public void Interact(PlayerInteraction playerInteraction)
         {
-            GenericItem ItemInHand = playerInteraction.GetItemType();
-
-            if (_hasCd)
-            {
-                if (ItemInHand != null) return;
-                StopAudio();
-                AssignItemToPlayer(playerInteraction);
-                _hasCd = false;
-            }
-            else
-            {
-                if (ItemInHand == null) return;
-
-                if (ItemInHand.TryGetComponent(out CD cdScript))
-                {
-                    GetItemFromPlayer(playerInteraction);
-                    PlayAudio(cdScript);
-                    _hasCd = true;
-                    
-                }
-            }
+            // GenericItem ItemInHand = playerInteraction.GetItemType();
+            //
+            // if (_hasCd)
+            // {
+            //     if (ItemInHand != null) return;
+            //     StopAudio();
+            //     // AssignItemToPlayer(playerInteraction);
+            //     _hasCd = false;
+            // }
+            // else
+            // {
+            //     if (ItemInHand == null) return;
+            //
+            //     if (ItemInHand.TryGetComponent(out CD cdScript))
+            //     {
+            //         GetItemFromPlayer(playerInteraction);
+            //         PlayAudio(cdScript);
+            //         _hasCd = true;
+            //         
+            //     }
+            // }
         }
         #endregion
 
