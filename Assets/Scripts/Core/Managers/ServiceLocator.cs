@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using DarkKey.Core.Debugger;
 using DarkKey.Core.Network;
-using DarkKey.Ui.Pages;
 using UnityEngine;
 
 namespace DarkKey.Core.Managers
@@ -27,12 +26,10 @@ namespace DarkKey.Core.Managers
             var customDebuggerService = GetDebugger();
             var networkSceneManagerService = GetNetworkSceneManager();
             var gameManagerService = GetGameManager();
-            var pageControllerService = GetPageController();
 
             _services.Add(typeof(CustomDebugger), customDebuggerService);
             _services.Add(typeof(NetworkSceneManagerDk), networkSceneManagerService);
             _services.Add(typeof(GameManager), gameManagerService);
-            _services.Add(typeof(PageController), pageControllerService);
 
             foreach (var service in _services.Values)
             {
@@ -84,17 +81,6 @@ namespace DarkKey.Core.Managers
 
             if (TryFindService(typeof(NetworkSceneManagerDk), out MonoBehaviour service))
                 return (NetworkSceneManagerDk) service;
-
-            return null;
-        }
-
-        public PageController GetPageController()
-        {
-            if (_services.ContainsKey(typeof(PageController)))
-                return (PageController) _services[typeof(PageController)];
-
-            if (TryFindService(typeof(PageController), out MonoBehaviour service))
-                return (PageController) service;
 
             return null;
         }
