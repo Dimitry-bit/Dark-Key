@@ -1,17 +1,19 @@
 using System.Collections.Generic;
 using System.Linq;
-using DarkKey.Core.Debugger;
 using DarkKey.Core.Managers;
 using DarkKey.Gameplay.CorePlayer;
 using Mirror;
 using Mirror.Authenticators;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace DarkKey.Core.Network
 {
     public class NetPortal : NetworkManager
     {
-        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core, DebugLogLevel.Network};
+        [Header("Custom Settings")]
+        [SerializeField] private bool useAuthentication;
+        private BasicAuthenticator _authenticator;
 
         public static NetPortal Instance { get; private set; }
         public List<LobbyPlayer> LobbyPlayers { get; private set; }
@@ -23,36 +25,70 @@ namespace DarkKey.Core.Network
             if (Instance == null)
                 Instance = this;
             else if (Instance != this)
-                Destroy(this);
+                Destroy(gameObject);
+        }
+
+        public override void Start()
+        {
+            base.Start();
+
+            if (useAuthentication)
+            {
+                if (!TryGetComponent(out BasicAuthenticator networkAuthenticator))
+                {
+                    networkAuthenticator = gameObject.AddComponent<BasicAuthenticator>();
+                }
+
+                if (authenticator == null)
+                {
+                    authenticator = networkAuthenticator;
+                }
+
+                _authenticator = networkAuthenticator;
+            }
         }
 
         #region Public Methods
 
-        public void Disconnect()
-        {
-            if (NetworkClient.isHostClient)
-                StopHost();
-            else if (NetworkClient.isConnected)
-                StopClient();
-
-            SceneManager.LoadScene("OfflineScene");
-            CursorManager.ShowCursor();
-        }
-
         public void Host(string password)
         {
-            GetComponent<BasicAuthenticator>().password = password;
+            if (NetworkClient.active) return;
+
+            if (useAuthentication)
+            {
+                _authenticator.password = password;
+            }
+
             StartHost();
         }
 
         public void Join(string ipAddress, string password)
         {
+            if (NetworkClient.active) return;
+
+            if (useAuthentication)
+            {
+                _authenticator.password = password;
+            }
+
             networkAddress = ipAddress;
 
-            if (TryGetComponent(out BasicAuthenticator basicAuthenticator))
-                basicAuthenticator.password = password;
-
             StartClient();
+        }
+
+        public void Disconnect()
+        {
+            if (NetworkClient.isHostClient) // stop host if host mode
+            {
+                StopHost();
+            }
+            else if (NetworkClient.isConnected) // stop client if client-only
+            {
+                StopClient();
+            }
+
+            SceneManager.LoadScene(offlineScene);
+            CursorManager.ShowCursor();
         }
 
         public void AddLobbyPlayer(LobbyPlayer lobbyPlayer)
@@ -69,43 +105,35 @@ namespace DarkKey.Core.Network
 
         public override void OnServerConnect(NetworkConnection conn)
         {
-            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"[Client {conn.connectionId}]: connected successfully.",
-                ScriptLogLevel);
+            Debug.Log($"[Client {conn.connectionId}]: connected successfully.");
         }
 
         public override void OnServerDisconnect(NetworkConnection conn)
         {
             base.OnServerDisconnect(conn);
-            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"[Client {conn.connectionId}]: disconnected successfully.",
-                ScriptLogLevel);
+            Debug.Log($"[Client {conn.connectionId}]: disconnected successfully.");
         }
 
         public override void OnClientConnect(NetworkConnection conn)
         {
             base.OnClientConnect(conn);
-            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Joined successfully.", ScriptLogLevel);
+            Debug.Log("Joined successfully.");
         }
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             base.OnClientDisconnect(conn);
-            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Disconnected successfully.", ScriptLogLevel);
+            Debug.Log("Disconnected successfully.");
         }
 
         public override void OnStartServer()
         {
-            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Server started successfully.", ScriptLogLevel);
+            Debug.Log("Server started successfully.");
         }
 
         public override void OnStopServer()
         {
-            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Server stopped successfully.", ScriptLogLevel);
-        }
-
-        public override void OnServerSceneChanged(string sceneName)
-        {
-            onlineScene = sceneName;
-            networkSceneName = sceneName;
+            Debug.Log("Server stopped successfully.");
         }
 
         #endregion

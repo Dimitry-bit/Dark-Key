@@ -6,9 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/TestScenes/Ui/OfflineScene.unity
-    guid: 1b040fe5b2686bb4096794f8285f6a68
-  - enabled: 1
-    path: Assets/Scenes/TestScenes/Gameplay/Spawn_Test.unity
-    guid: 9a2b0139cb05549419783b4b51350f91
+    path: Assets/Scenes/TestScenes/Ui/LobbyRefactor.unity
+    guid: f5728dd39de424c4aa25843cfdb2f9fe
   m_configObjects: {}
