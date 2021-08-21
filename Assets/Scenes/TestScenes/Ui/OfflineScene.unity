@@ -540,6 +540,7 @@ MonoBehaviour:
   - {fileID: 2083589168399573892, guid: 4ecf147e027fe0d41b981a286801ca5b, type: 3}
   - {fileID: 4371865793347065166, guid: b57274aac505f7e459e2ef3e08579e0b, type: 3}
   - {fileID: 3848456086965682937, guid: 49dbef637c57bf9459bbc0970043586d, type: 3}
+  useAuthentication: 0
 --- !u!4 &1365354804
 Transform:
   m_ObjectHideFlags: 0
@@ -1552,6 +1553,10 @@ PrefabInstance:
     - target: {fileID: 2313005021815698497, guid: 6a201242607583645bb9378425c1ba01, type: 3}
       propertyPath: m_Name
       value: MainPage
+      objectReference: {fileID: 0}
+    - target: {fileID: 2313005021815698497, guid: 6a201242607583645bb9378425c1ba01, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2313005022206304592, guid: 6a201242607583645bb9378425c1ba01, type: 3}
       propertyPath: m_AnchorMax.y
