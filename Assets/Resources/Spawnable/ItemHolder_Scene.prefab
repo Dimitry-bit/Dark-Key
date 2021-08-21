@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -5721525345212570543}
   - component: {fileID: 4626673600500052681}
   m_Layer: 0
-  m_Name: SceneObject
+  m_Name: ItemHolder_Scene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87,4 +87,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  itemName: ItemHolder_Scene
+  isDestructAble: 1
+  holderTransform: {fileID: 0}
   equippedItem: 0

@@ -65,7 +65,9 @@ namespace DarkKey.Gameplay.Interaction
             if (equippedItem != ItemTypes.Nothing) return;
 
             equippedItem = sceneObject.equippedItem;
-            NetworkServer.Destroy(sceneObject.gameObject);
+
+            if (sceneObject.IsDestructAble)
+                NetworkServer.Destroy(sceneObject.gameObject);
         }
 
         #endregion
