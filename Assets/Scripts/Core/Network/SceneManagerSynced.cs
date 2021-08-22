@@ -1,4 +1,5 @@
-﻿using DarkKey.Core.Debugger;
+﻿using System.Collections;
+using DarkKey.Core.Debugger;
 using DarkKey.Core.Managers;
 using Mirror;
 using UnityEngine;
@@ -11,6 +12,9 @@ namespace DarkKey.Core.Network
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.SceneManagement};
 
+        private bool _isLoadingLoadingScreen;
+        private Coroutine _loadingScreenCoroutine;
+
         [SyncVar] private bool _isAllReady;
 
         #region Unity Methods
@@ -22,7 +26,7 @@ namespace DarkKey.Core.Network
 
             NetPortal.Instance.OnServerBeforeSceneActive += SceneOperationHandler;
             NetPortal.Instance.OnClientBeforeSceneActive += SceneOperationHandler;
-            
+
             ServiceLocator.Instance.GetDebugger().LogInfo("Registered scene switch events.", ScriptLogLevel);
         }
 
@@ -33,8 +37,8 @@ namespace DarkKey.Core.Network
 
             NetPortal.Instance.OnServerBeforeSceneActive -= SceneOperationHandler;
             NetPortal.Instance.OnClientBeforeSceneActive -= SceneOperationHandler;
-            
-            ServiceLocator.Instance.GetDebugger().LogInfo("UnRegistered scene switch events.", ScriptLogLevel);
+
+            ServiceLocator.Instance.GetDebugger().LogInfo("Unregistered scene switch events.", ScriptLogLevel);
         }
 
         #endregion
@@ -43,10 +47,34 @@ namespace DarkKey.Core.Network
 
         private void SwitchToLoadingScreen()
         {
-            ServiceLocator.Instance.GetDebugger().LogInfo("Started LoadingScreen.", ScriptLogLevel);
+            // NOTE(Dimitry): To prevent multiple LoadingScreens loading at once.
+            if (_isLoadingLoadingScreen) return;
+
+            ServiceLocator.Instance.GetDebugger().LogInfo("Started loading LoadingScreen.", ScriptLogLevel);
+
             var loadingScene = GetComponent<NetworkSceneManagerDk>().LoadingScene;
-            SceneManager.LoadSceneAsync(loadingScene);
-            ServiceLocator.Instance.GetDebugger().LogInfo("Finished LoadingScreen.", ScriptLogLevel);
+            var loadingOperation = SceneManager.LoadSceneAsync(loadingScene);
+
+            if (_loadingScreenCoroutine != null)
+            {
+                StopCoroutine(_loadingScreenCoroutine);
+            }
+            else
+            {
+                _loadingScreenCoroutine = StartCoroutine(LoadingScreenHandler(loadingOperation));
+            }
+        }
+
+        private IEnumerator LoadingScreenHandler(AsyncOperation loadingOperation)
+        {
+            while (loadingOperation != null && !loadingOperation.isDone)
+            {
+                _isLoadingLoadingScreen = true;
+                yield return null;
+            }
+
+            _isLoadingLoadingScreen = false;
+            ServiceLocator.Instance.GetDebugger().LogInfo("Finished loading LoadingScreen.", ScriptLogLevel);
         }
 
         private void SceneOperationHandler()
@@ -54,9 +82,12 @@ namespace DarkKey.Core.Network
             if (NetworkManager.loadingSceneAsync == null) return;
 
             NetworkManager.loadingSceneAsync.allowSceneActivation = true;
-            NetPortal.Instance.UpdateScene();
 
-            ServiceLocator.Instance.GetDebugger().LogInfo("Finished loading scene.", ScriptLogLevel);
+            if (NetworkManager.loadingSceneAsync.isDone)
+            {
+                NetPortal.Instance.UpdateScene();
+                ServiceLocator.Instance.GetDebugger().LogInfo("Finished loading scene.", ScriptLogLevel);
+            }
         }
 
         #endregion
