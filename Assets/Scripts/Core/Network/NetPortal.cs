@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DarkKey.Core.Managers;
@@ -14,6 +15,11 @@ namespace DarkKey.Core.Network
         [Header("Custom Settings")]
         [SerializeField] private bool useAuthentication;
         private BasicAuthenticator _authenticator;
+
+        public event Action OnServerSceneChangeStart;
+        public event Action OnClientSceneChangeStart;
+        public event Action OnServerBeforeSceneActive;
+        public event Action OnClientBeforeSceneActive;
 
         public static NetPortal Instance { get; private set; }
         public List<LobbyPlayer> LobbyPlayers { get; private set; }
@@ -45,6 +51,17 @@ namespace DarkKey.Core.Network
                 }
 
                 _authenticator = networkAuthenticator;
+            }
+        }
+
+        public override void LateUpdate()
+        {
+            if (loadingSceneAsync != null)
+            {
+                loadingSceneAsync.allowSceneActivation = false;
+
+                OnServerBeforeSceneActive?.Invoke();
+                OnClientBeforeSceneActive?.Invoke();
             }
         }
 
@@ -103,6 +120,22 @@ namespace DarkKey.Core.Network
 
         #region Private Methods
 
+        public void ResetSceneOperation()
+        {
+            if (loadingSceneAsync != null && loadingSceneAsync.isDone)
+            {
+                try
+                {
+                    FinishLoadScene();
+                }
+                finally
+                {
+                    loadingSceneAsync.allowSceneActivation = true;
+                    loadingSceneAsync = null;
+                }
+            }
+        }
+
         public override void OnServerConnect(NetworkConnection conn)
         {
             Debug.Log($"[Client {conn.connectionId}]: connected successfully.");
@@ -134,6 +167,19 @@ namespace DarkKey.Core.Network
         public override void OnStopServer()
         {
             Debug.Log("Server stopped successfully.");
+        }
+
+        public override void OnServerChangeScene(string newSceneName)
+        {
+            OnServerSceneChangeStart?.Invoke();
+        }
+
+        public override void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation,
+            bool customHandling)
+        {
+            if (NetworkClient.isHostClient) return;
+
+            OnClientSceneChangeStart?.Invoke();
         }
 
         #endregion

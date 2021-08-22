@@ -43,5 +43,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c691fe569e07284ba669a83be86a6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logLevel: 4
-  offlineScene: OfflineScene
+  dontDestroyOnLoad: 1
+  PersistNetworkManagerToOfflineScene: 0
+  runInBackground: 1
+  autoStartServerBuild: 1
+  serverTickRate: 30
+  offlineScene: Assets/Scenes/TestScenes/Ui/OfflineScene.unity
+  onlineScene: 
+  transport: {fileID: 0}
+  networkAddress: localhost
+  maxConnections: 100
+  disconnectInactiveConnections: 0
+  disconnectInactiveTimeout: 60
+  authenticator: {fileID: 0}
+  playerPrefab: {fileID: 0}
+  autoCreatePlayer: 1
+  playerSpawnMethod: 0
+  spawnPrefabs: []
+  useAuthentication: 0

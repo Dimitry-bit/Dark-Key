@@ -10,10 +10,13 @@ namespace DarkKey.Core.Network
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core};
 
         [Header("Scene")]
-        [SerializeField] [Scene]
-        private string offlineScene = "OfflineScene";
-        [SerializeField] [Scene]
-        private string onlineScene = "Multiplayer_Test";
+        [SerializeField] [Scene] private string offlineScene = "OfflineScene";
+        [SerializeField] [Scene] private string onlineScene = "Multiplayer_Test";
+        [SerializeField] [Scene] private string loadingScene = "Loading";
+
+        public string OfflineScene => offlineScene;
+        public string OnlineScene => onlineScene;
+        public string LoadingScene => loadingScene;
 
         #region Public Methods
 
@@ -21,12 +24,12 @@ namespace DarkKey.Core.Network
         {
             if (string.IsNullOrEmpty(sceneName))
             {
-                ServiceLocator.Instance.GetDebugger().LogWarningToServer($"Scene -> {sceneName} is invalid.", ScriptLogLevel);
+                ServiceLocator.Instance.GetDebugger()
+                    .LogWarningToServer($"Scene -> {sceneName} is invalid.", ScriptLogLevel);
                 return;
             }
 
-            ServiceLocator.Instance.GetDebugger().LogInfoToServer($"Starting Scene Switch ({sceneName}).", ScriptLogLevel);
-            NetPortal.Instance.ServerChangeScene(sceneName);
+            NetworkManager.singleton.ServerChangeScene(sceneName);
         }
 
         public void SwitchToOfflineScene() => SwitchScene(offlineScene);
