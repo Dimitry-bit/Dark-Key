@@ -1,4 +1,5 @@
 ﻿using DarkKey.Core.Debugger;
+using DarkKey.Core.Managers;
 using Mirror;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,21 +9,22 @@ namespace DarkKey.Core.Network
     [RequireComponent(typeof(NetworkSceneManagerDk))]
     public class SceneManagerSynced : NetworkBehaviour
     {
-        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.Core};
+        private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.SceneManagement};
 
         [SyncVar] private bool _isAllReady;
 
         #region Unity Methods
 
-        public void Start()
+        public override void OnStartClient()
         {
             NetPortal.Instance.OnServerSceneChangeStart += SwitchToLoadingScreen;
             NetPortal.Instance.OnClientSceneChangeStart += SwitchToLoadingScreen;
 
             NetPortal.Instance.OnServerBeforeSceneActive += SceneOperationHandler;
             NetPortal.Instance.OnClientBeforeSceneActive += SceneOperationHandler;
+            
+            ServiceLocator.Instance.GetDebugger().LogInfo("Registered scene switch events.", ScriptLogLevel);
         }
-
 
         public void OnDestroy()
         {
@@ -31,6 +33,8 @@ namespace DarkKey.Core.Network
 
             NetPortal.Instance.OnServerBeforeSceneActive -= SceneOperationHandler;
             NetPortal.Instance.OnClientBeforeSceneActive -= SceneOperationHandler;
+            
+            ServiceLocator.Instance.GetDebugger().LogInfo("UnRegistered scene switch events.", ScriptLogLevel);
         }
 
         #endregion
@@ -39,8 +43,10 @@ namespace DarkKey.Core.Network
 
         private void SwitchToLoadingScreen()
         {
+            ServiceLocator.Instance.GetDebugger().LogInfo("Started LoadingScreen.", ScriptLogLevel);
             var loadingScene = GetComponent<NetworkSceneManagerDk>().LoadingScene;
             SceneManager.LoadSceneAsync(loadingScene);
+            ServiceLocator.Instance.GetDebugger().LogInfo("Finished LoadingScreen.", ScriptLogLevel);
         }
 
         private void SceneOperationHandler()
@@ -48,11 +54,9 @@ namespace DarkKey.Core.Network
             if (NetworkManager.loadingSceneAsync == null) return;
 
             NetworkManager.loadingSceneAsync.allowSceneActivation = true;
-
-            // ServiceLocator.Instance.GetDebugger().LogInfo("Finished loading scene.", ScriptLogLevel);
-            Debug.Log("Finished loading scene.");
-
             NetPortal.Instance.ResetSceneOperation();
+
+            ServiceLocator.Instance.GetDebugger().LogInfo("Finished loading scene.", ScriptLogLevel);
         }
 
         #endregion

@@ -10,7 +10,25 @@ namespace DarkKey.Core.Managers
     {
         public static ServiceLocator Instance { get; private set; }
         private Dictionary<Type, MonoBehaviour> _services;
-        public Dictionary<Type, MonoBehaviour> Services => _services; 
+        public Dictionary<Type, MonoBehaviour> Services => _services;
+
+
+        #region Temproray Code
+
+        // HACK(Dimitry): Simple workaround initialization bug in builds.
+
+        public GameManager gameManager;
+        public NetworkSceneManagerDk networkSceneManager;
+        public CustomDebugger customDebugger;
+
+        private void AssignServices()
+        {
+            _services.Add(typeof(CustomDebugger), customDebugger);
+            _services.Add(typeof(NetworkSceneManagerDk), networkSceneManager);
+            _services.Add(typeof(GameManager), gameManager);
+        }
+
+        #endregion
 
         #region Unity Methods
 
@@ -24,13 +42,15 @@ namespace DarkKey.Core.Managers
         {
             _services = new Dictionary<Type, MonoBehaviour>();
 
-            var customDebuggerService = GetDebugger();
-            var networkSceneManagerService = GetNetworkSceneManager();
-            var gameManagerService = GetGameManager();
+            // var customDebuggerService = GetDebugger();
+            // var networkSceneManagerService = GetNetworkSceneManager();
+            // var gameManagerService = GetGameManager();
+            //
+            // _services.Add(typeof(CustomDebugger), customDebuggerService);
+            // _services.Add(typeof(NetworkSceneManagerDk), networkSceneManagerService);
+            // _services.Add(typeof(GameManager), gameManagerService);
 
-            _services.Add(typeof(CustomDebugger), customDebuggerService);
-            _services.Add(typeof(NetworkSceneManagerDk), networkSceneManagerService);
-            _services.Add(typeof(GameManager), gameManagerService);
+            AssignServices();
 
             foreach (var service in _services.Values)
             {

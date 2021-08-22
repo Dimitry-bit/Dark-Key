@@ -218,6 +218,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79a378a4f1fc45e18f9acb8006eae291, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
+  networkSceneManager: {fileID: 1003400935}
+  customDebugger: {fileID: 1753854346}
 --- !u!4 &494490750
 Transform:
   m_ObjectHideFlags: 0
@@ -409,42 +412,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f776970462a038428510ea8fc1e4da5, type: 3}
---- !u!1 &1003400934 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3615901413417978193, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
+--- !u!114 &1003400935 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8841370732191987705, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
   m_PrefabInstance: {fileID: 1735974853}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1003400935
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1003400934}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01a2b640a9fc47afbe234993bb37d743, type: 3}
+  m_Script: {fileID: 11500000, guid: b9af1f8beaa8400f82c2cea599f7384d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
---- !u!114 &1003400936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1003400934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 2369174680
-  serverOnly: 0
-  visible: 0
-  m_AssetId: 95827ffe4121254469c7246e3c90e6b5
-  hasSpawned: 0
 --- !u!1001 &1119938000
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -505,8 +483,12 @@ PrefabInstance:
       value: Assets/Scenes/Tests/SimpleLobby.unity
       objectReference: {fileID: 0}
     - target: {fileID: 5007794092322541191, guid: c5b614082d4c0e543a28d91151769581, type: 3}
+      propertyPath: playerPrefab
+      value: 
+      objectReference: {fileID: 8483288302056938209, guid: 165039ed7e4ece944a5d5ceeffed60bb, type: 3}
+    - target: {fileID: 5007794092322541191, guid: c5b614082d4c0e543a28d91151769581, type: 3}
       propertyPath: autoCreatePlayer
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5007794092322541191, guid: c5b614082d4c0e543a28d91151769581, type: 3}
       propertyPath: spawnPrefabs.Array.size
@@ -741,15 +723,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3615901413417978198, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -260.6574
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3615901413417978198, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 699.14185
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3615901413417978198, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -121.59503
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3615901413417978198, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: m_LocalRotation.w
@@ -757,15 +739,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3615901413417978198, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3615901413417978198, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3615901413417978198, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3615901413417978198, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -779,28 +761,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3615901413417978199, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
-      propertyPath: onlineScene
-      value: Assets/Scenes/Tests/SimpleScene.unity
-      objectReference: {fileID: 0}
     - target: {fileID: 5668524491336843879, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
       propertyPath: sceneId
-      value: 751914018
+      value: 1501637554
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
---- !u!114 &1735974854 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3615901413417978199, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
-  m_PrefabInstance: {fileID: 1735974853}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1003400934}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9af1f8beaa8400f82c2cea599f7384d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1753854345
 GameObject:
   m_ObjectHideFlags: 0
@@ -833,7 +799,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  currentLogLevel: 11
+  currentLogLevel: 16
 --- !u!114 &1753854347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -894,7 +860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd543f6969da55745826da012ed54d97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NetworkSceneManagerDk: {fileID: 1735974854}
+  NetworkSceneManagerDk: {fileID: 1003400935}
 --- !u!4 &1754100221
 Transform:
   m_ObjectHideFlags: 0
