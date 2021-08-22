@@ -100,6 +100,7 @@ namespace DarkKey.DeveloperTools.Console
             var commandClear = new CommandClear();
             var commandQuit = new CommandQuit();
             var commandSpawn = new CommandSpawn();
+            var commandServices = new CommandServices();
         }
 
         private void ProcessInput(string input)

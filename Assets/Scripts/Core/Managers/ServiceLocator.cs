@@ -10,6 +10,7 @@ namespace DarkKey.Core.Managers
     {
         public static ServiceLocator Instance { get; private set; }
         private Dictionary<Type, MonoBehaviour> _services;
+        public Dictionary<Type, MonoBehaviour> Services => _services; 
 
         #region Unity Methods
 
