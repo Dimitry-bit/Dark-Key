@@ -48,7 +48,7 @@ MonoBehaviour:
   runInBackground: 1
   autoStartServerBuild: 1
   serverTickRate: 30
-  offlineScene: Assets/Scenes/TestScenes/Ui/OfflineScene.unity
+  offlineScene: 
   onlineScene: 
   transport: {fileID: 0}
   networkAddress: localhost
@@ -61,3 +61,4 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs: []
   useAuthentication: 0
+  isCustomHandlingSceneSwitch: 1

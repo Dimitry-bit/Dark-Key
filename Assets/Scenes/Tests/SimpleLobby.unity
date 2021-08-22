@@ -498,6 +498,10 @@ PrefabInstance:
       propertyPath: spawnPrefabs.Array.data[0]
       value: 
       objectReference: {fileID: 3615901413417978193, guid: 95827ffe4121254469c7246e3c90e6b5, type: 3}
+    - target: {fileID: 5007794092322541191, guid: c5b614082d4c0e543a28d91151769581, type: 3}
+      propertyPath: isCustomHandlingSceneSwitch
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c5b614082d4c0e543a28d91151769581, type: 3}
 --- !u!1 &1195082290

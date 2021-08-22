@@ -14,6 +14,7 @@ namespace DarkKey.Core.Network
     {
         [Header("Custom Settings")]
         [SerializeField] private bool useAuthentication;
+        public bool isCustomHandlingSceneSwitch;
         private BasicAuthenticator _authenticator;
 
         public event Action OnServerSceneChangeStart;
@@ -40,29 +41,14 @@ namespace DarkKey.Core.Network
 
             if (useAuthentication)
             {
-                if (!TryGetComponent(out BasicAuthenticator networkAuthenticator))
-                {
-                    networkAuthenticator = gameObject.AddComponent<BasicAuthenticator>();
-                }
-
-                if (authenticator == null)
-                {
-                    authenticator = networkAuthenticator;
-                }
-
-                _authenticator = networkAuthenticator;
+                InitializeAuthenticator();
             }
         }
 
+
         public override void LateUpdate()
         {
-            if (loadingSceneAsync != null)
-            {
-                loadingSceneAsync.allowSceneActivation = false;
-
-                OnServerBeforeSceneActive?.Invoke();
-                OnClientBeforeSceneActive?.Invoke();
-            }
+            HandleSceneUpdateRequest();
         }
 
         #region Public Methods
@@ -120,7 +106,22 @@ namespace DarkKey.Core.Network
 
         #region Private Methods
 
-        public void ResetSceneOperation()
+        private void InitializeAuthenticator()
+        {
+            if (!TryGetComponent(out BasicAuthenticator networkAuthenticator))
+            {
+                networkAuthenticator = gameObject.AddComponent<BasicAuthenticator>();
+            }
+
+            if (authenticator == null)
+            {
+                authenticator = networkAuthenticator;
+            }
+
+            _authenticator = networkAuthenticator;
+        }
+
+        public void UpdateScene()
         {
             if (loadingSceneAsync != null && loadingSceneAsync.isDone)
             {
@@ -133,6 +134,29 @@ namespace DarkKey.Core.Network
                     loadingSceneAsync.allowSceneActivation = true;
                     loadingSceneAsync = null;
                 }
+            }
+        }
+
+        private void HandleSceneUpdateRequest()
+        {
+            if (loadingSceneAsync == null) return;
+
+            if (isCustomHandlingSceneSwitch)
+            {
+                loadingSceneAsync.allowSceneActivation = false;
+
+                if (OnServerBeforeSceneActive == null && OnClientBeforeSceneActive == null)
+                {
+                    Debug.LogWarning(
+                        "(IsCustomHandlingSceneSwitch) is enable, But no event hooked. (May result in scene not switching)");
+                }
+
+                OnServerBeforeSceneActive?.Invoke();
+                OnClientBeforeSceneActive?.Invoke();
+            }
+            else
+            {
+                UpdateScene();
             }
         }
 

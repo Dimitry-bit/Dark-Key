@@ -54,7 +54,7 @@ namespace DarkKey.Core.Network
             if (NetworkManager.loadingSceneAsync == null) return;
 
             NetworkManager.loadingSceneAsync.allowSceneActivation = true;
-            NetPortal.Instance.ResetSceneOperation();
+            NetPortal.Instance.UpdateScene();
 
             ServiceLocator.Instance.GetDebugger().LogInfo("Finished loading scene.", ScriptLogLevel);
         }
