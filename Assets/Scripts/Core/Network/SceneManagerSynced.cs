@@ -12,40 +12,45 @@ namespace DarkKey.Core.Network
     {
         private static readonly DebugLogLevel[] ScriptLogLevel = {DebugLogLevel.SceneManagement};
 
+        private bool _hasInitialized;
         private bool _isLoadingLoadingScreen;
         private Coroutine _loadingScreenCoroutine;
 
-        [SyncVar] private bool _isAllReady;
-
         #region Unity Methods
 
-        public override void OnStartClient()
-        {
-            NetPortal.Instance.OnServerSceneChangeStart += SwitchToLoadingScreen;
-            NetPortal.Instance.OnClientSceneChangeStart += SwitchToLoadingScreen;
+        private void Start() => RegisterEvents();
+        public void OnDestroy() => UnRegisterEvents();
 
-            NetPortal.Instance.OnServerBeforeSceneActive += SceneOperationHandler;
-            NetPortal.Instance.OnClientBeforeSceneActive += SceneOperationHandler;
-
-            ServiceLocator.Instance.GetDebugger().LogInfo("Registered scene switch events.", ScriptLogLevel);
-        }
-
-        public void OnDestroy()
-        {
-            NetPortal.Instance.OnServerSceneChangeStart -= SwitchToLoadingScreen;
-            NetPortal.Instance.OnClientSceneChangeStart -= SwitchToLoadingScreen;
-
-            NetPortal.Instance.OnServerBeforeSceneActive -= SceneOperationHandler;
-            NetPortal.Instance.OnClientBeforeSceneActive -= SceneOperationHandler;
-
-            ServiceLocator.Instance.GetDebugger().LogInfo("Unregistered scene switch events.", ScriptLogLevel);
-        }
+        public override void OnStartClient() => RegisterEvents();
+        public override void OnStopClient() => UnRegisterEvents();
 
         #endregion
 
         #region Private Methods
 
-        private void SwitchToLoadingScreen()
+        private void RegisterEvents()
+        {
+            if (_hasInitialized) return;
+
+            NetPortal.Instance.OnSceneChangeStart += SwitchToLoadingScreen;
+            NetPortal.Instance.OnSceneActivateHalt += SceneOperationHandler;
+            _hasInitialized = true;
+
+            ServiceLocator.Instance.GetDebugger().LogInfo("Registered scene switch events.", ScriptLogLevel);
+        }
+
+        private void UnRegisterEvents()
+        {
+            if (_hasInitialized) return;
+
+            NetPortal.Instance.OnSceneChangeStart -= SwitchToLoadingScreen;
+            NetPortal.Instance.OnSceneActivateHalt -= SceneOperationHandler;
+            _hasInitialized = false;
+
+            ServiceLocator.Instance.GetDebugger().LogInfo("Unregistered scene switch events.", ScriptLogLevel);
+        }
+
+        private void SwitchToLoadingScreen(string newScene)
         {
             // NOTE(Dimitry): To prevent multiple LoadingScreens loading at once.
             if (_isLoadingLoadingScreen) return;

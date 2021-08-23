@@ -6,7 +6,6 @@ using DarkKey.Gameplay.CorePlayer;
 using Mirror;
 using Mirror.Authenticators;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace DarkKey.Core.Network
 {
@@ -17,10 +16,8 @@ namespace DarkKey.Core.Network
         public bool isCustomHandlingSceneSwitch;
         private BasicAuthenticator _authenticator;
 
-        public event Action OnServerSceneChangeStart;
-        public event Action OnClientSceneChangeStart;
-        public event Action OnServerBeforeSceneActive;
-        public event Action OnClientBeforeSceneActive;
+        public event Action<string> OnSceneChangeStart;
+        public event Action OnSceneActivateHalt;
 
         public static NetPortal Instance { get; private set; }
         public List<LobbyPlayer> LobbyPlayers { get; private set; }
@@ -81,16 +78,15 @@ namespace DarkKey.Core.Network
 
         public void Disconnect()
         {
-            if (NetworkClient.isHostClient) // stop host if host mode
+            if (NetworkClient.isHostClient) // Stop host if host mode.
             {
                 StopHost();
             }
-            else if (NetworkClient.isConnected) // stop client if client-only
+            else if (NetworkClient.isConnected) // Stop client if client-only.
             {
                 StopClient();
             }
 
-            SceneManager.LoadScene(offlineScene);
             CursorManager.ShowCursor();
         }
 
@@ -141,18 +137,19 @@ namespace DarkKey.Core.Network
         {
             if (loadingSceneAsync == null) return;
 
-            if (isCustomHandlingSceneSwitch)
+            // NOTE(Dimitry): Checking isNetworkActive to fix a loadingScreen issue. Where NetworkManager doesn't Persist To Offline Scene.
+            // This creates collisions between NetworkManagers which have to be resolved manually. 
+            if (isCustomHandlingSceneSwitch && isNetworkActive)
             {
                 loadingSceneAsync.allowSceneActivation = false;
 
-                if (OnServerBeforeSceneActive == null && OnClientBeforeSceneActive == null)
+                if (OnSceneActivateHalt == null)
                 {
                     Debug.LogWarning(
-                        "(IsCustomHandlingSceneSwitch) is enable, But no event hooked. (May result in scene not switching)");
+                        "(IsCustomHandlingSceneSwitch) is enable, But OnSceneActivateHalt event isn't hooked. (May result in scene not switching)");
                 }
 
-                OnServerBeforeSceneActive?.Invoke();
-                OnClientBeforeSceneActive?.Invoke();
+                OnSceneActivateHalt?.Invoke();
             }
             else
             {
@@ -195,7 +192,7 @@ namespace DarkKey.Core.Network
 
         public override void OnServerChangeScene(string newSceneName)
         {
-            OnServerSceneChangeStart?.Invoke();
+            OnSceneChangeStart?.Invoke(newSceneName);
         }
 
         public override void OnClientChangeScene(string newSceneName, SceneOperation sceneOperation,
@@ -203,7 +200,7 @@ namespace DarkKey.Core.Network
         {
             if (NetworkClient.isHostClient) return;
 
-            OnClientSceneChangeStart?.Invoke();
+            OnSceneChangeStart?.Invoke(newSceneName);
         }
 
         #endregion
