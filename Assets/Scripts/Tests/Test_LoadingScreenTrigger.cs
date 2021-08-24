@@ -1,17 +1,19 @@
-using DarkKey.Core.Network;
+using DarkKey.Core.Managers;
 using UnityEngine;
 
 namespace DarkKey.Tests
 {
     public class Test_LoadingScreenTrigger : MonoBehaviour
     {
-        public NetworkSceneManagerDk NetworkSceneManagerDk;
-        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.X))
             {
-                NetworkSceneManagerDk.SwitchToOnlineScene();
+                var serviceLocator = ServiceLocator.Instance;
+                if (serviceLocator != null && serviceLocator.GetNetworkSceneManager() != null)
+                {
+                    serviceLocator.GetNetworkSceneManager().SwitchToOnlineScene();
+                }
             }
         }
     }

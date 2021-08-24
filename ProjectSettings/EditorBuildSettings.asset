@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Tests/SimpleScene.unity
     guid: 8df1847e537069946a38478444358642
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/BootScenes/ServicesBootScene.unity
+    guid: f533931df6d55e24cbc388ebc36ad002
+  - enabled: 1
+    path: Assets/Scenes/TestScenes/BootScenes/DeveloperToolsBootScene.unity
+    guid: 1a9344b1385c6bb408d371b187313e4e
   m_configObjects: {}
