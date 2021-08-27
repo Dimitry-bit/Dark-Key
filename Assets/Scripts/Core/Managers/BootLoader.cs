@@ -5,13 +5,13 @@ using UnityEngine.SceneManagement;
 
 namespace DarkKey.Core.Managers
 {
-    public class BootManager : MonoBehaviour
+    public class BootLoader : MonoBehaviour
     {
         [SerializeField] [Scene] private string bootScene;
         [SerializeField] [Scene] private string developerToolsScene;
         [SerializeField] private bool isDeveloper = true;
 
-        private static BootManager _instance;
+        private static BootLoader _instance;
         private string _currentScenePath;
 
         private void Awake()

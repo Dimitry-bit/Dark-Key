@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 1560036624}
   - component: {fileID: 1560036625}
   m_Layer: 0
-  m_Name: System_BootManager
+  m_Name: System_BootLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
